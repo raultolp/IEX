@@ -31,17 +31,7 @@ public class Stock {
     }
 
 
-    public void setCurretPrice(double curretPrice) {
-        this.curretPrice = curretPrice;
-    }
 
-    public void setInitialPrice(double initialPrice) {
-        this.initialPrice = initialPrice;
-    }
-
-    public void setFinalPrice(double finalPrice) {
-        this.finalPrice = finalPrice;
-    }
 
 
 }

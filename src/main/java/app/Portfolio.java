@@ -18,9 +18,9 @@ public class Portfolio {
         return portfolio.get(ticker);
     }
 
-    public double calculateTotal(){
+/*    public double calculateTotal(){
 
-    }
+    }*/
 
     public Map<String, Stock> getPortfolio() {
         return portfolio;
