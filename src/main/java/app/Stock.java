@@ -3,15 +3,21 @@ package app;
 public class Stock {
 
     private final String companyName;
-    private final String ticker;
-    private double curretPrice;
-    private double initialPrice;
-    private double finalPrice;
+    private final String ticker; //aktsia sümbol
+    private double bid; // parim ostuhind (alumine hind)
+    private double ask; // parim müügihind (ülemine hind)
+    //private double curretPrice;  //hetke hind
+    //private double initialPrice;
+    //private double finalPrice;
 
-    public Stock(String companyName, String ticker, double price) {
+    //TODO:
+    //P/E, EPS, Div yield, div date
+    //market cap, net income
+
+    public Stock(String companyName, String ticker, double bid, double ask) {
         this.companyName = companyName;
         this.ticker = ticker;
-        this.initialPrice = initialPrice;
+        //this.initialPrice = initialPrice;
     }
 
 
