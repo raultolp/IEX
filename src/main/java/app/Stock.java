@@ -81,7 +81,7 @@ public class Stock {
             previousClose=rootobj.getAsJsonObject("quote").get("previousClose").getAsDouble();
 
             //TODO:
-            //Include bid price, bid size, ask price, ask size and respective calculations -
+            //Maybe include bid price, bid size, ask price, ask size and respective calculations -
             // in order to take into account the volume of each buy/sell order
             // (would avoid selling/buying more stocks than included in the respective bid/ask)
 
@@ -197,13 +197,28 @@ public class Stock {
             JsonArray rootArray = root.getAsJsonArray(); // here, it is JsonArray instead...
 
             for (JsonElement jsonElement : rootArray) {
-                JsonObject dateObject=jsonElement.getAsJsonObject();
-                String date=dateObject.get("date").getAsString();
-                double price=dateObject.get("close").getAsDouble();
-                long volumeAsLong=dateObject.get("volume").getAsLong();
-                double volume= (int)(volumeAsLong/1000000); //miljonites dollarites
+                JsonObject timeObject=jsonElement.getAsJsonObject();
+
+                double price, volume;
+                String timeDataPoint;
+
+                if (period.equals("1d")){
+                    timeDataPoint=timeObject.get("minute").getAsString();
+                    price=timeObject.get("average").getAsDouble();
+                    long volumeAsLong=timeObject.get("volume").getAsLong();
+                    volume= (int)(volumeAsLong/1000); //tuhandetes dollarites - NB!
+                    //Note: in one day chart, the number of data points is ca 390.
+                }
+                else{
+                    timeDataPoint=timeObject.get("date").getAsString();
+                    price=timeObject.get("close").getAsDouble();
+                    long volumeAsLong=timeObject.get("volume").getAsLong();
+                    volume= (int)(volumeAsLong/1000000); //miljonites dollarites - NB!
+                }
+
+
                 Double [] priceAndVolume= {price, volume};
-                historical.put(date, priceAndVolume);
+                historical.put(timeDataPoint, priceAndVolume);
             }
 
             request.disconnect();
@@ -232,9 +247,72 @@ public class Stock {
 
     //-----------------------------------------------
 
+
+    public String getSymbol() {
+        return symbol;
+    }
+
     public String getCompanyName() {
         return companyName;
     }
 
+    public String getSector() {
+        return sector;
+    }
 
+    public String getIndustry() {
+        return industry;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getCEO() {
+        return CEO;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public double getDividendYield() {
+        return dividendYield;
+    }
+
+    public double getEps() {
+        return eps;
+    }
+
+    public int getMarketCap() {
+        return marketCap;
+    }
+
+    public double getPeRatio() {
+        return peRatio;
+    }
+
+    public double getPreviousClose() {
+        return previousClose;
+    }
+
+    public double getChange1Year() {
+        return change1Year;
+    }
+
+    public double getChange1Month() {
+        return change1Month;
+    }
+
+    public double getChange3Month() {
+        return change3Month;
+    }
+
+    public double getShortRatio() {
+        return shortRatio;
+    }
+
+    public double getCurrentPrice() {
+        return currentPrice;
+    }
 }
