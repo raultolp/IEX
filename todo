@@ -1,0 +1,53 @@
+User
+- Name
+- Liquid funds (MONEY)
+- Portfolio ->
+
+Portfolio
+- Sotck name
+- Purchase price
+- Purchase date
+- Qty
+
+Stocks
+- Base fundamental data ->
+- Historical info ->
+
+Base fundamental data
+- Name
+- Short name
+- Sector
+- Additional description
+- Bid
+- Ask
+- P/E
+- EPS
+- Volatility
+- Dividend yield
+- 1yr estimated growth?
+
+Historical info
+- Close price (1Y/1D close)
+
+Views
+- Stock historical price (1Y/1D)
+- Portfolios Comparison
+
+
+TODO:
+Data from IEX - JSON read
+Graph views
+Graph menu selector design
+Files save/read
+ALL OTHER STUFF - NO SLEEP and other stuff .. hard coding only
+
+
+Menu
+- add user
+- buy stock to user (transaction fee)
+- sell stock from user (transaction fee)
+- view user portfolio status
+- view portfolios comparison
+- view stock base data
+- view stock historical data
+- refresh button
