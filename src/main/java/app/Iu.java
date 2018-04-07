@@ -58,7 +58,7 @@ public class Iu {
         Scanner sc = new Scanner(System.in);
 
         while(!quitProgram) {
-            int choice = 0;
+            int choice;
             printMenu(mainMenu);
             System.out.print("Active:" + active.getUserName() + "> ");
 
@@ -71,12 +71,21 @@ public class Iu {
 
             switch (choice) {
                 case 1: String name = enterUserName(sc);
-                        if (name.length() > 0) {
+                        if (name.length() < 1 || nameInList(name, userList)) {
+                            System.out.println("Name already exists!");
+                        } else {
                             userList.add(new User(name, new Portfolio(), 100000));
                             System.out.println("Created user: " + name);
                         }
                     break;
                 case 2:
+                    System.out.println("Defined users:");
+                    int count = 0;
+                    for (User item: userList) {
+                        System.out.print(item.getUserName() + "\t" + (count++ > 5 ? "\n" : ""));
+                        if (count > 5)
+                            count = 0;
+                    }
                     break;
                 case 3:
                     break;
@@ -121,6 +130,14 @@ public class Iu {
         } while (name.length() == 0 || isAlphaNumeric(name));
 
         return name;
+    }
+
+    private static boolean nameInList(String name, List<User> userList) {
+        for (User user: userList) {
+            if (user.getUserName().equals(name))
+                return true;
+        }
+        return false;
     }
 
     private static boolean isAlphaNumeric(String text) {
