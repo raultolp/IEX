@@ -10,4 +10,12 @@ public class User {
         this.portfolio = portfolio;
         this.cashmoneybiatcheees = cashmoneybiatcheees;
     }
+
+    public void setCashmoneybiatcheees(double cashmoneybiatcheees) {
+        this.cashmoneybiatcheees = cashmoneybiatcheees;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
 }

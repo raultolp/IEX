@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Portfolio {
+    public Portfolio() {
+    }
 
     //private List<Stock> portfolio= new ArrayList<>();
     private Map<String, Stock>portfolio=new HashMap<>();
