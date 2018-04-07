@@ -7,30 +7,22 @@ package app;
 //SteelBlue 	#4682B4
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 
 public class UserInterface extends Application {
-    Portfolio portfolio;
-
-    Object[][] data = {
-            {"César Cielo", "Filho", "Brazil", "50m freestyle", 1, "21.30"},
-            {"Amaury", "Leveaux", "France", "50m freestyle", 2, "21.45"}};
+    private Portfolio portfolio;
 
 
     public static void main(String[] args) {
-
-
         {
             launch(args);
         }
@@ -40,11 +32,6 @@ public class UserInterface extends Application {
     public void start(Stage stage) {
 
         GridPane gridPane = new GridPane();
-        /*gridPane.setPadding(new Insets(10, 10, 10, 10));
-        gridPane.setVgap(8);
-        gridPane.setHgap(10);*/
-
-        StackPane stackPane = new StackPane();
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(addFlowPane());
@@ -78,7 +65,6 @@ public class UserInterface extends Application {
     }
 
     private FlowPane addFlowPane() {
-        // Map<String, Stock> hm = portfolio.getPortfolio();
 
         FlowPane flowPane = new FlowPane();
         flowPane.setPadding(new Insets(5, 0, 5, 0));
@@ -88,12 +74,6 @@ public class UserInterface extends Application {
         flowPane.setStyle("-fx-background-color: DAE6F3");
 
 
-        /*for (String key : hm.keySet()) {
-            Stock stock = hm.get(key);
-            double price = stock.getLatestPrice();
-
-        }*/
-
         String[] columnNames = {"Stock symbol", "Price", "Volume"
                 , "Total", "Buy/sell", "Number"};
 
@@ -101,6 +81,18 @@ public class UserInterface extends Application {
         flowPane.getChildren().addAll();
 
         return flowPane;
+    }
+
+    public ObservableList<Stock> getProduct() {
+        Map<String, Stock> hm = portfolio.getPortfolio();
+
+        ObservableList<Stock> stocks = FXCollections.observableArrayList();
+
+        for (String key : hm.keySet()) {
+            Stock stock = hm.get(key);
+            stocks.add(stock);
+        }
+        return stocks;
     }
 
 
