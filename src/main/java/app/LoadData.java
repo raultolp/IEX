@@ -1,4 +1,3 @@
-/*
 package app;
 
 import com.oracle.tools.packager.IOUtils;
@@ -22,4 +21,4 @@ public class LoadData {
 
     InputStream sisse = new URL("http://ut.ee/").openStream();
 
-}*/
+}
