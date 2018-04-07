@@ -72,13 +72,6 @@ public class UserInterface extends Application {
 
     private TableView<Stock> addTableView() {
 
-       /* FlowPane flowPane = new FlowPane();
-        flowPane.setPadding(new Insets(5, 0, 5, 0));
-        flowPane.setVgap(4);
-        flowPane.setHgap(4);
-        flowPane.setPrefWrapLength(230);*/
-
-
         //Stock symbols
         TableColumn<Stock, String> symbolColumn = new TableColumn<>("Stock");
         symbolColumn.setMinWidth(100);
@@ -101,7 +94,8 @@ public class UserInterface extends Application {
         ChoiceBox<String> buySellBox = new ChoiceBox<>();
         buySellBox.getItems().addAll("Buy", "Sell");
         TableColumn<Stock, String> tradeColumn = new TableColumn<>("Buy/sell");
-        volumeColumn.setMinWidth(100);
+        tradeColumn.setMinWidth(100);
+        tradeColumn.setCellValueFactory(new PropertyValueFactory<>("buySellBox"));
 
         ///Amount
         TableColumn<Stock, String> numberColumn = new TableColumn<>("Number");
