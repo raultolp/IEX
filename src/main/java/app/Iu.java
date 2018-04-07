@@ -70,7 +70,11 @@ public class Iu {
             }
 
             switch (choice) {
-                case 1: addUser(sc);
+                case 1: String name = enterUserName(sc);
+                        if (name.length() > 0) {
+                            userList.add(new User(name, new Portfolio(), 100000));
+                            System.out.println("Created user: " + name);
+                        }
                     break;
                 case 2:
                     break;
@@ -109,13 +113,12 @@ public class Iu {
         }
     }
 
-    private static String addUser(Scanner sc) {
+    private static String enterUserName(Scanner sc) {
         String name;
         do {
             System.out.print("Enter user name: ");
             name = sc.next();
         } while (name.length() == 0 || isAlphaNumeric(name));
-        System.out.println("Created user: " + name);
 
         return name;
     }
