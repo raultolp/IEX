@@ -13,18 +13,18 @@ Stocks
 - Base fundamental data ->
 - Historical info ->
 
-Base fundametnal data
+Base fundamental data
 - Name
 - Short name
 - Sector
-- Additional descrpition
+- Additional description
 - Bid
 - Ask
 - P/E
 - EPS
 - Volatility
 - Dividend yield
-- 1yr estimated growth ?
+- 1yr estimated growth?
 
 Historical info
 - Close price (1Y/1D close)
@@ -51,4 +51,3 @@ Menu
 - view stock base data
 - view stock historical data
 - refresh button
-
