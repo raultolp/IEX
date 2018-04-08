@@ -84,14 +84,6 @@ public class UserInterface extends Application {
 
     private TableView<MapEntry<String, Stock>> addTableView() {
 
-        /**stock
-        price
-        volume
-        position total
-        unrealized P/L
-        Avg price paid
-        realized P/L**/
-
         Map<String, Stock> hm = new HashMap<>();
         //Map<String, Stock> hm = portfolio.getPortfolio();
         ObservableMap<String, Stock> map = FXCollections.observableHashMap();
@@ -155,39 +147,4 @@ public class UserInterface extends Application {
 
         return table;
     }
-
-
-    public final class MapEntry<K, V> {
-
-        private final K key;
-        private final V value;
-
-        public MapEntry(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            // check equality only based on keys
-            if (obj instanceof app.MapEntry) {
-                app.MapEntry<?, ?> other = (app.MapEntry<?, ?>) obj;
-                return Objects.equals(key, other.getKey());
-            } else {
-                return false;
-            }
-        }
-
-        public K getKey() {
-            return key;
-        }
-
-        public V getValue() {
-            return value;
-        }
-
-    }
-
-
-
 }
