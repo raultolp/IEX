@@ -363,7 +363,7 @@ public class Iu {
 
         sc.nextLine();
 
-        System.out.print("Enter filename: ");
+        System.out.print("Enter filename to save data: ");
         String filename = sc.nextLine();
 
         File file = new File(filename);
