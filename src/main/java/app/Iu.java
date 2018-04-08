@@ -1,10 +1,8 @@
 package app;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Stream;
+
 
 public class Iu {
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -329,8 +327,7 @@ public class Iu {
 
         Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
         for (User user : userList) {
-            System.out.println(user.getPortfolio().toString());
-            writer.write(user.getUserName() + "'s Portfolio: \n" + user.getPortfolio().toString());
+            writer.write(user.getUserName() + ": \n" + user.getPortfolio().toStringForFile());
         }
         writer.close();
 
@@ -349,8 +346,8 @@ public class Iu {
             try ( BufferedReader br = new BufferedReader(new FileReader(file)) ) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    String[] pieces = line.split(" ");
-                    System.out.println(Arrays.toString(pieces));
+                    System.out.println(line);
+
                 }
             }
         }
