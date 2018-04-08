@@ -52,6 +52,20 @@ public class Iu {
         System.out.println("AAPL CEO: " + portfell.getPortfolio().get("AAPL").getCEO());
 
 
+/*        //TESTING PORTFOLIO2:
+        User pedro =new User("Pedro", new Portfolio(), 10); //String userName, Portfolio portfolio, double availableFunds
+        //User pedro =new User("Pedro", new Portfolio(), 1000000);
+        Portfolio portfell2 = pedro.getPortfolio();
+        try {
+            portfell2.buyStock("AAPL", 200);
+            portfell2.buyStock("MSFT", 100);
+            System.out.println("Total profit: " + portfell2.getTotalProfitOrLoss());
+            System.out.println("AAPL CEO: " + portfell2.getPortfolio().get("AAPL").getCEO());
+        } catch (RuntimeException e){
+            System.out.println("püütud!");
+        }*/
+
+
         //------------------------------------
 
 
@@ -152,23 +166,31 @@ public class Iu {
 
                     if (Arrays.asList(availableStocks).contains(name)) {
                         qty = enterQty(sc);
-                        // kontrolli kas on piisavalt raha koos teenustasudega
-                        // kui on, lisa portfelli ja võta raha maha
-//                        active.getPortfolio().lisaAktsia(name, qty, date);
+                        Portfolio portfolio=active.getPortfolio();
+
+                        try{
+                            portfolio.buyStock(name, qty);
+                        } catch (RuntimeException e){ //if not enough funds
+                            System.out.println("Not enough funds!");
+                        }
                     } else
                         System.out.println(ANSI_RED + "This stock is not available." + ANSI_RESET);
                     break;
 
-                //Sell stock"
+                //Sell stock
                 case 6:
-                    if (active.getPortfolio() != null)
-                        active.getPortfolio().toString();
-
+                    Portfolio portfolio=active.getPortfolio();
+                    if (portfolio != null)
+                        portfolio.toString();
                     name = enterStockName(sc);
 
-                    // sell name(qty)
-
-                    System.out.println("Tuleb hiljem");
+                    if (portfolio.getSymbolList().contains(name)){
+                        qty = enterQty(sc);
+                        portfolio.sellStock(name, qty);
+                    }
+                    else {
+                        System.out.println("Stock not included on portfolio!");
+                    }
                     break;
 
                 //View user portfolio
