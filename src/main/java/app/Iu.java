@@ -3,7 +3,6 @@ package app;
 import java.io.*;
 import java.util.*;
 
-
 public class Iu {
     public static final String ANSI_YELLOW = "\u001B[33m";
     public static final String ANSI_BLUE = "\u001B[34m";
@@ -13,61 +12,23 @@ public class Iu {
     private static List<User> userList = new ArrayList<>();
     private static List<Portfolio> portfolioList = new ArrayList<>();
 
+    private static final User admin = new User("admin", new Portfolio(), 0);
+    private static User active = admin;
+
+    private static final String[] availableStocks = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
+            "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
+            "TSLA", "TWTR", "V", "WMT"};
+
+    //ORIGINAL
+//    private static final String[] availableStocks = {"AAPL", "AMZN", "AMD", "BA", "BABA", "BAC", "BBY", "BIDU",
+//            "C", "CAT", "COST", "CRM", "CSCO", "DE", "F", "FSLR", "GE", "GM", "GME", "GOOG", "GS",
+//            "HD", "HLF", "HPE", "HPQ", "HTZ", "IBM", "INTC", "JAZZ", "JCP", "JNJ", "JNPR", "JPM",
+//            "K", "KO", "LMT", "LOGI", "MA", "MCD", "MMM", "MS", "MSFT", "NFLX", "NKE", "NTAP",
+//            "NTNX", "NVDA", "ORCL", "P", "PEP", "PG", "QCOM", "RHT", "SBUX", "SINA", "SSYS", "STX",
+//            "SYMC", "TGT", "TIF", "TRIP", "TSLA", "TWTR", "TXN", "UA", "UAL", "V", "VMW", "VNET",
+//            "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
 
     public static void main(String[] args) throws IOException {
-
-        //------------------------------------
-        //TESTING STOCK:
-//        String symbol="AAPL";
-//
-//        Stock aapl=new Stock("AAPL");
-//
-//        System.out.println(aapl.getCompanyName());
-//
-//        double aaplLatestPrice=aapl.getLatestPrice();
-//        System.out.println("AAPL current price: " +aaplLatestPrice);
-//
-//        //Testing historical info for dates:
-//        Map<String, Double []> aaplHistorical=aapl.getHistoricalPrices("1m");
-//        Double [] aaplPriceAndVolume=aaplHistorical.get("2018-04-06");
-//        double aaplPrice=aaplPriceAndVolume[0];
-//        double aaplVolume=aaplPriceAndVolume[1];
-//        System.out.println("AAPL price at 2018-04-06: "+aaplPrice+", volume: "+aaplVolume+" (volume in millions)");
-//
-//        //Testing historical info for minutes (in case of 1-day chart):
-//        Map<String, Double []> aaplIntraday=aapl.getHistoricalPrices("1d");
-//        Double [] aaplPriceAndVolume2=aaplIntraday.get("09:32");
-//        double aaplPrice2=aaplPriceAndVolume2[0];
-//        double aaplVolume2=aaplPriceAndVolume2[1];
-//        System.out.println("AAPL price at 09:32: "+aaplPrice2+", volume: "+aaplVolume2+" (volume in thousands)");
-
-
-        //------------------------------------
-        //TESTING PORTFOLIO:
-        Portfolio portfell = new Portfolio();
-        User pets = new User("Peeter", portfell, 1000000); //testing Pets
-        portfell.buyStock("CAT", 200);
-        portfell.buyStock("AAPL", 1);
-        System.out.println("Total profit: " + portfell.getTotalProfitOrLoss());
-        System.out.println("AAPL CEO: " + portfell.getPortfolio().get("AAPL").getCEO());
-
-
-/*        //TESTING PORTFOLIO2:
-        User pedro =new User("Pedro", new Portfolio(), 10); //String userName, Portfolio portfolio, double availableFunds
-        //User pedro =new User("Pedro", new Portfolio(), 1000000);
-        Portfolio portfell2 = pedro.getPortfolio();
-        try {
-            portfell2.buyStock("AAPL", 200);
-            portfell2.buyStock("MSFT", 100);
-            System.out.println("Total profit: " + portfell2.getTotalProfitOrLoss());
-            System.out.println("AAPL CEO: " + portfell2.getPortfolio().get("AAPL").getCEO());
-        } catch (RuntimeException e){
-            System.out.println("püütud!");
-        }*/
-
-
-        //------------------------------------
-
 
         final String[] mainMenu = {"Add user",
                 "Delete user",
@@ -77,7 +38,8 @@ public class Iu {
                 "Sell stock",
                 "View user portfolio",
                 "View available stock list",
-                "View stock data base data",
+                "View stock list base data",
+                "View stock base data",
                 "View stock historical data",
                 "View all portfolios performance",
                 "Refresh data from web",
@@ -85,21 +47,15 @@ public class Iu {
                 "Save data file",
                 "Quit"};
 
-        final String[] availableStocks = {"AAPL", "AMZN", "AMD", "BA", "BABA", "BAC", "BBY", "BIDU",
-                "C", "CAT", "COST", "CRM", "CSCO", "DE", "FSLR", "GE", "GM", "GME", "GOOG", "GS",
-                "HD", "HLF", "HPE", "HPQ", "HTZ", "IBM", "INTC", "JAZZ", "JCP", "JNJ", "JNPR", "JPM",
-                "K", "KO", "LMT", "LOGI", "MA", "MCD", "MMM", "MS", "MSFT", "NFLX", "NKE", "NTAP",
-                "NTNX", "NVDA", "ORCL", "P", "PEP", "PG", "QCOM", "RHT", "SBUX", "SINA", "SSYS", "STX",
-                "SYMC", "TGT", "TIF", "TRIP", "TSLA", "TWTR", "TXN", "UA", "UAL", "V", "VMW", "VNET",
-                "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
+        Map<String, Stock> stockMap = new HashMap<>();
 
+        for (String symbol : availableStocks) {
+            Stock stock = new Stock(symbol);
+            stockMap.put(symbol, stock);
+        }
 
-        User admin = new User("admin", new Portfolio(), 0);
-        User active = admin;
         boolean quitProgram = false;
-
-        userList.add(pets); //et saaks midagi kirjutada
-
+        System.out.println("\n+++ BÖRSIMÄNG +++\n\nLoading stock data from web ...\n");
 
         while (!quitProgram) {
             String name;
@@ -124,7 +80,7 @@ public class Iu {
                 //Add user
                 case 1:
                     name = enterUserName(sc);
-                    if (name != null && nameInList(name, userList) > -1) {
+                    if (name != null && nameInList(name) > -1) {
                         System.out.println(ANSI_RED + "Name already exists!" + ANSI_RESET);
                     } else if (name != null) {
                         userList.add(new User(name, new Portfolio(), 100000));
@@ -135,7 +91,7 @@ public class Iu {
                 //Delete user
                 case 2:
                     name = enterUserName(sc);
-                    index = nameInList(name, userList);
+                    index = nameInList(name);
                     if (index > -1) {
                         userList.remove(index);
                         System.out.println(ANSI_YELLOW + "User " + name + " has been deleted." + ANSI_RESET);
@@ -145,14 +101,14 @@ public class Iu {
 
                 //List users
                 case 3:
-                    showUsersList(userList);
+                    showUsersList();
                     break;
 
                 //Set active user
                 case 4:
-                    showUsersList(userList);
+                    showUsersList();
                     name = enterUserName(sc);
-                    index = nameInList(name, userList);
+                    index = nameInList(name);
                     if (index > -1) {
                         active = userList.get(index);
                         System.out.println(ANSI_YELLOW + "User " + name + " is now active." + ANSI_RESET);
@@ -161,16 +117,16 @@ public class Iu {
 
                 //Buy stock
                 case 5:
-                    showStockList(availableStocks);
+                    showStockList();
                     name = enterStockName(sc);
 
                     if (Arrays.asList(availableStocks).contains(name)) {
                         qty = enterQty(sc);
-                        Portfolio portfolio=active.getPortfolio();
+                        Portfolio portfolio = active.getPortfolio();
 
-                        try{
+                        try {
                             portfolio.buyStock(name, qty);
-                        } catch (RuntimeException e){ //if not enough funds
+                        } catch (RuntimeException e) { //if not enough funds
                             System.out.println("Not enough funds!");
                         }
                     } else
@@ -179,62 +135,69 @@ public class Iu {
 
                 //Sell stock
                 case 6:
-                    Portfolio portfolio=active.getPortfolio();
+                    Portfolio portfolio = active.getPortfolio();
                     if (portfolio != null)
                         portfolio.toString();
                     name = enterStockName(sc);
 
-                    if (portfolio.getSymbolList().contains(name)){
+                    if (portfolio.getSymbolList().contains(name)) {
                         qty = enterQty(sc);
                         portfolio.sellStock(name, qty);
-                    }
-                    else {
-                        System.out.println("Stock not included on portfolio!");
+                    } else {
+                        System.out.println("Stock not included in portfolio!");
                     }
                     break;
 
                 //View user portfolio
                 case 7:
-                    System.out.println("Tuleb hiljem");
+                    showUserPortfolio(sc);
                     break;
 
                 //View available stock list
                 case 8:
-                    showStockList(availableStocks);
+                    showStockList();
                     break;
-
-                //View stock data base data
+                //View stock list base data
                 case 9:
                     System.out.println("Tuleb hiljem");
                     break;
 
-                //View stock historical data graph
+                //View stock base data
                 case 10:
-                    System.out.println("Tuleb hiljem");
+                    showStockBaseData(sc);
                     break;
 
-                //View all portfolios progress graph"
+                //View stock historical data
                 case 11:
-                    System.out.println("Tuleb hiljem");
+                    showStockHistoricalData(sc);
                     break;
 
-                //Refresh data from web
+                //View all portfolios progress
                 case 12:
                     System.out.println("Tuleb hiljem");
                     break;
 
-                //Load data file
+                //Refresh data from web (refreshes stock prices in stockMap)
                 case 13:
+                    for (String symbol : stockMap.keySet()) {
+                        Stock stock = stockMap.get(symbol);
+                        double price = stock.getLatestPrice();
+                        stock.setCurrentPrice(price);
+                    }
+                    break;
+
+                //Load data file
+                case 14:
                     loadData(sc);
                     break;
 
                 //Save data file
-                case 14:
+                case 15:
                     saveData(sc);
                     break;
 
                 //Quit
-                case 15:
+                case 16:
                     saveData(sc);
                     quitProgram = true;
                     System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
@@ -244,7 +207,6 @@ public class Iu {
                 default:
                     System.out.println(ANSI_RED + "Wrong input, choose between 1.." + mainMenu.length + "!" + ANSI_RESET);
             } //switch menu options
-//            sc.close();
         } //main menu endless loop
     }
 
@@ -306,7 +268,7 @@ public class Iu {
         return qty;
     }
 
-    private static int nameInList(String name, List<User> userList) {
+    private static int nameInList(String name) {
         for (User user : userList) {
             if (user.getUserName().equals(name))
                 return userList.indexOf(user);
@@ -314,7 +276,7 @@ public class Iu {
         return -1;
     }
 
-    private static void showUsersList(List<User> userList) {
+    private static void showUsersList() {
         System.out.println("Defined users:");
         if (userList.size() > 0) {
             for (User item : userList) {
@@ -325,14 +287,14 @@ public class Iu {
         System.out.println();
     }
 
-    private static void showStockList(String[] stockList) {
+    private static void showStockList() {
         System.out.println("Avilable stocks:");
-        Arrays.sort(stockList);
+        Arrays.sort(availableStocks);
         int i;
-        for (i = 0; i < stockList.length; i++) {
-            System.out.printf("%-5s%s", stockList[i], (i + 1) % 10 == 0 ? "\n" : " ");
+        for (i = 0; i < availableStocks.length; i++) {
+            System.out.printf("%-5s%s", availableStocks[i], (i + 1) % 10 == 0 ? "\n" : " ");
         }
-        if ((i + 1) % 10 != 0)
+        if (i % 10 != 0)
             System.out.println();
     }
 
@@ -340,7 +302,7 @@ public class Iu {
 
         sc.nextLine();
 
-        System.out.print("Enter filename: ");
+        System.out.print("Enter filename to save data: ");
         String filename = sc.nextLine();
 
         File file = new File(filename);
@@ -354,9 +316,15 @@ public class Iu {
 
     }
 
-
     public static void loadData(Scanner sc) throws IOException {
+        double availableFunds = 0.0;
+        double transactionFee = 0.1;
+        double totalUnrealisedProfitOrLoss = 0.0;
+        double totalProfitOrLoss = 0.0;
+        double totalCurrentValueOfPositions = 0.0;
+        List<Double> unrealisedProfitsLosses = new ArrayList<>();
 
+        listFiles();
         sc.nextLine();
 
         System.out.print("Enter filename: ");
@@ -367,9 +335,10 @@ public class Iu {
         if (file.exists()) {
             try ( BufferedReader br = new BufferedReader(new FileReader(file)) ) {
                 String line;
-                //reads all lines from file and adds users and portfolios to arraylists
+                //reads all lines from file and adds users and portfolios to their respective arraylists
 
                 while ((line = br.readLine()) != null) {
+
 
                     String[] elements = line.split(";");
 
@@ -377,51 +346,71 @@ public class Iu {
                     String[] syms = elements[2].split(",");
                     List<String> symbols = new ArrayList<>();
                     for (String sym : syms) {
-                        symbols.add(sym.replaceAll("[\\W]", ""));
+                        if (!(sym.equals("[]")))
+                            symbols.add(sym.replaceAll("[\\W]", ""));
+                        else symbols.add("");
                     }
 
                     String[] price = elements[3].split(",");
                     List<Double> prices = new ArrayList<>();
                     for (String pri : price) {
-                        prices.add(Double.parseDouble(pri.replaceAll("[\\W]", "")));
+                        if (!(pri.equals("[]")))
+                            prices.add(Double.parseDouble(pri.replaceAll("[\\W]", "")));
                     }
 
                     String[] vols = elements[4].split(",");
                     List<Integer> volumes = new ArrayList<>();
                     for (String number : vols) {
-                        volumes.add(Integer.parseInt(number.replaceAll("[\\W]", "")));
+                        if (!(number.equals("[]")))
+                            volumes.add(Integer.parseInt(number.replaceAll("[\\W]", "")));
                     }
 
                     String[] avgPrc = elements[5].split(",");
                     List<Double> averagePrices = new ArrayList<>();
                     for (String avg : avgPrc) {
-                        averagePrices.add(Double.parseDouble(avg.replaceAll("[\\W]", "")));
+                        if (!(avg.equals("[]")))
+                            averagePrices.add(Double.parseDouble(avg.replaceAll("[\\W]", "")));
                     }
 
                     String[] profLoss = elements[6].split(",");
                     List<Double> profitsOrLosses = new ArrayList<>();
                     for (String profL : profLoss) {
-                        profitsOrLosses.add(Double.parseDouble(profL.replaceAll("[\\W]", "")));
+                        if (!(profL.equals("[]")))
+                            profitsOrLosses.add(Double.parseDouble(profL.replaceAll("[\\W]", "")));
                     }
 
                     String[] unreals = elements[7].split(",");
                     List<Double> unrealisedProfitsOrLosses = new ArrayList<>();
                     for (String pl : unreals) {
-                        unrealisedProfitsOrLosses.add(Double.parseDouble(pl.replaceAll("[\\W]", "")));
+                        if (!(pl.equals("[]")))
+                            unrealisedProfitsOrLosses.add(Double.parseDouble(pl.replaceAll("[\\W]", "")));
                     }
 
                     String[] currs = elements[8].split(",");
                     List<Double> currentValuesOfPositions = new ArrayList<>();
                     for (String cr : currs) {
-                        currentValuesOfPositions.add(Double.parseDouble(cr.replaceAll("[\\W]", "")));
+                        if (!(cr.equals("[]")))
+                            currentValuesOfPositions.add(Double.parseDouble(cr.replaceAll("[\\W]", "")));
+                        else
+                            currentValuesOfPositions.add(0.0);
+
                     }
 
+                    if (!(elements[1].equals("[]")))
+                        availableFunds = Double.parseDouble(elements[1]);
 
-                    double availableFunds = Double.parseDouble(elements[1]);
-                    double totalCurrentValueOfPositions = Double.parseDouble(elements[9]);
-                    double totalProfitOrLoss = Double.parseDouble(elements[10]);
-                    double totalUnrealisedProfitOrLoss = Double.parseDouble(elements[11]);
-                    double transactionFee = Double.parseDouble(elements[12]);
+                    if (!(elements[9].equals("[]")))
+                        totalCurrentValueOfPositions = Double.parseDouble(elements[9]);
+
+                    if (!(elements[10].equals("[]")))
+                        totalProfitOrLoss = Double.parseDouble(elements[10]);
+
+                    if (!(elements[11].equals("[]")))
+                        totalUnrealisedProfitOrLoss = Double.parseDouble(elements[11]);
+
+                    if (!(elements[12].equals("[]")))
+                        transactionFee = Double.parseDouble(elements[12]);
+
 
                     User user = new User(elements[0], new Portfolio(), Double.parseDouble(elements[1]));
 
@@ -435,10 +424,70 @@ public class Iu {
 
                     portfolioList.add(port);
                     userList.add(newUser);
-
                 }
-
             }
+        }
+    }
+
+    private static void listFiles() {
+        File folder = new File(".");
+        File[] files = folder.listFiles();
+        int i = 1;
+        for (File file : files) {
+            if (file.getName().endsWith(".game"))
+                System.out.printf("%15s%s", file.getName(), i++ % 4 == 0 ? "\n" : " ");
+        }
+        if ((i - 1) % 4 != 0)
+            System.out.println();
+    }
+
+    private static void showUserPortfolio(Scanner sc) {
+        String username;
+
+        sc.nextLine();
+        showUsersList();
+        System.out.print("Enter username: ");
+        username = sc.nextLine();
+
+        if (username.length() < 3)
+            username = active.getUserName();
+
+        for (User user : userList) {
+            if (user.getUserName().equals(username)) {
+                Portfolio portfolio = user.getPortfolio();
+                System.out.println(portfolio.toString());
+            }
+        }
+    }
+
+    private static void showStockBaseData(Scanner sc) {
+
+        sc.nextLine();
+        System.out.println("Enter stock symbol: ");
+        String stockSym = sc.nextLine();
+
+        try {
+            System.out.println(new Stock(stockSym));
+        } catch (Exception e) {
+            System.out.println("Stock information not available.");
+        }
+    }
+
+    private static void showStockHistoricalData(Scanner sc) {
+
+        //TODO: add option to choose time period
+
+        sc.nextLine();
+        System.out.println("Enter stock symbol: ");
+        String stockSym = sc.nextLine();
+
+        try {
+            Stock stock = new Stock(stockSym);
+            System.out.println("One month: " + stock.getChange1Month() + '\n' +
+                    "Three months: " + stock.getChange3Month() + '\n' +
+                    "Year: " + stock.getChange1Year());
+        } catch (Exception e) {
+            System.out.println("Stock info not available.");
         }
     }
 

@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ee.ut.cs.courses.oop</groupId>
-    <artifactId>sample-maven-app</artifactId>
+    <groupId>group.id</groupId>
+    <artifactId>stock</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -34,12 +34,6 @@
             <version>20180130</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>javaFX</artifactId>
-            <version>2.2</version>
-        </dependency>
-
 
     </dependencies>
 
@@ -59,6 +53,7 @@
 
 
         </plugins>
+
     </build>
 
 </project>

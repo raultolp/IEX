@@ -1,0 +1,57 @@
+        //------------------------------------
+        //TESTING STOCK:
+//        String symbol="AAPL";
+//
+//        Stock aapl=new Stock("AAPL");
+//
+//        System.out.println(aapl.getCompanyName());
+//
+//        double aaplLatestPrice=aapl.getLatestPrice();
+//        System.out.println("AAPL current price: " +aaplLatestPrice);
+//
+//        //Testing historical info for dates:
+//        Map<String, Double []> aaplHistorical=aapl.getHistoricalPrices("1m");
+//        Double [] aaplPriceAndVolume=aaplHistorical.get("2018-04-06");
+//        double aaplPrice=aaplPriceAndVolume[0];
+//        double aaplVolume=aaplPriceAndVolume[1];
+//        System.out.println("AAPL price at 2018-04-06: "+aaplPrice+", volume: "+aaplVolume+" (volume in millions)");
+//
+//        //Testing historical info for minutes (in case of 1-day chart):
+//        Map<String, Double []> aaplIntraday=aapl.getHistoricalPrices("1d");
+//        Double [] aaplPriceAndVolume2=aaplIntraday.get("09:32");
+//        double aaplPrice2=aaplPriceAndVolume2[0];
+//        double aaplVolume2=aaplPriceAndVolume2[1];
+//        System.out.println("AAPL price at 09:32: "+aaplPrice2+", volume: "+aaplVolume2+" (volume in thousands)");
+
+
+        //------------------------------------
+        //TESTING PORTFOLIO:
+        Portfolio portfell = new Portfolio();
+        User pets = new User("Peeter", portfell, 1000000); //testing Pets
+        userList.add(pets); //et saaks midagi kirjutada
+        portfell.buyStock("CAT", 200);
+        portfell.buyStock("AAPL", 1);
+        System.out.println("Total profit: " + portfell.getTotalProfitOrLoss());
+        System.out.println("AAPL CEO: " + portfell.getPortfolio().get("AAPL").getCEO());
+
+
+/*        //TESTING PORTFOLIO2:
+        User pedro =new User("Pedro", new Portfolio(), 10); //String userName, Portfolio portfolio, double availableFunds
+        //User pedro =new User("Pedro", new Portfolio(), 1000000);
+        Portfolio portfell2 = pedro.getPortfolio();
+        try {
+            portfell2.buyStock("AAPL", 200);
+            portfell2.buyStock("MSFT", 100);
+            System.out.println("Total profit: " + portfell2.getTotalProfitOrLoss());
+            System.out.println("AAPL CEO: " + portfell2.getPortfolio().get("AAPL").getCEO());
+        } catch (RuntimeException e){
+            System.out.println("püütud!");
+        }*/
+
+
+        //------------------------------------
+
+/*        //TESTING STOCKLIST:
+        stockList.add(new Stock("AAPL"));*/  //asendatud muutujaga "stockMap"
+
+        //------------------------------------
