@@ -36,6 +36,7 @@ public class Portfolio {
     //Constructor - creates an empty portfolio:
     public Portfolio() {
         this.portfolio = new HashMap<>();
+
         this.symbolList = new ArrayList<>();
         this.prices = new ArrayList<>();
         this.volumes = new ArrayList<>();
@@ -43,11 +44,13 @@ public class Portfolio {
         this.averagePrices = new ArrayList<>();
         this.profitsOrLosses = new ArrayList<>();
         this.unrealisedProfitsOrLosses= new ArrayList<>();
+
         this.totalCurrentValueOfPositions = 0.0;
         this.totalProfitOrLoss = 0.0;
         this.totalUnrealisedProfitOrLoss = 0.0;
-        this.transactionFee = transactionFee;
         this.availableFunds=0.0;
+
+        this.transactionFee = transactionFee;
         this.user=user;
     }
 

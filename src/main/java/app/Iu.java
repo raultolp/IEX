@@ -153,6 +153,7 @@ public class Iu {
 
                     if (Arrays.asList(availableStocks).contains(name)) {
                         qty = enterQty(sc);
+
                         // kontrolli kas on piisavalt raha koos teenustasudega
                         // kui on, lisa portfelli ja võta raha maha
 //                        active.getPortfolio().lisaAktsia(name, qty, date);
