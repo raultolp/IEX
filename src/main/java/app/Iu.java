@@ -35,17 +35,19 @@ public class Iu {
 
 
         final String[] mainMenu = {"\n 1 - Add user",
-                " 2 - List users",
-                " 3 - Set active user",
-                " 4 - Buy stock",
-                " 5 - Sell stock",
-                " 6 - View user portfolio",
-                " 7 - View stock data base data",
-                " 8 - View stock historical data graph",
-                " 9 - View all portfolios progress graph",
-                "10 - Refresh data from web",
-                "11 - Save data",
-                "12 - Quit"};
+                " 2 - Delete user",
+                " 3 - List users",
+                " 4 - Set active user",
+                " 5 - Buy stock",
+                " 6 - Sell stock",
+                " 7 - View user portfolio",
+                " 8 - View stock data base data",
+                " 9 - View stock historical data graph",
+                "10 - View all portfolios progress graph",
+                "11 - Refresh data from web",
+                "12 - Load data file",
+                "13 - Save data file",
+                "14 - Quit"};
 
         List<User> userList = new ArrayList<>();
         List<Portfolio> portfolioList = new ArrayList<>();
@@ -59,6 +61,8 @@ public class Iu {
 
         while(!quitProgram) {
             int choice;
+            String name;
+
             printMenu(mainMenu);
             System.out.print("Active:" + active.getUserName() + "> ");
 
@@ -70,42 +74,68 @@ public class Iu {
             }
 
             switch (choice) {
-                case 1: String name = enterUserName(sc);
-                        if (name.length() < 1 || nameInList(name, userList)) {
-                            System.out.println("Name already exists!");
-                        } else {
-                            userList.add(new User(name, new Portfolio(), 100000));
-                            System.out.println("Created user: " + name);
-                        }
+                // 1 - Add user
+                case 1:
+                    name = enterUserName(sc);
+                    if (name.length() < 1 || nameInList(name, userList) > -1) {
+                        System.out.println("Name already exists!");
+                    } else {
+                        userList.add(new User(name, new Portfolio(), 100000));
+                        System.out.println("Created user: " + name);
+                    }
                     break;
+                //2 - Delete user
                 case 2:
+                    name = enterUserName(sc);
+                    int index = nameInList(name, userList);
+                    if (index > -1) {
+                        userList.remove(index);
+                        System.out.println("User " + name + " has been deleted.");
+                    }
+
+                    break;
+                //3 - List users
+                case 3:
                     System.out.println("Defined users:");
                     int count = 0;
                     for (User item: userList) {
-                        System.out.print(item.getUserName() + "\t" + (count++ > 5 ? "\n" : ""));
-                        if (count > 5)
+                        System.out.printf("%-12s%s", item.getUserName(), (count++ > 5 ? "\n" : " "));
+                        if (count > 6)
                             count = 0;
                     }
                     break;
-                case 3:
-                    break;
+                //4 - Set active user
                 case 4:
                     break;
+                //5 - Buy stock
                 case 5:
                     break;
+                //6 - Sell stock"
                 case 6:
                     break;
+                //7 - View user portfolio
                 case 7:
                     break;
+                //8 - View stock data base data
                 case 8:
                     break;
+                //9 - View stock historical data graph
                 case 9:
                     break;
+                //10 - View all portfolios progress graph"
                 case 10:
                     break;
+                //11 - Refresh data from web
                 case 11:
                     break;
+                //12 - Load data file
                 case 12:
+                    break;
+                //13 - Save data file
+                case 13:
+                    break;
+                //14 - Quit
+                case 14:
 //                    saveData();
                     quitProgram = true;
                     System.out.println("Bye-bye!");
@@ -127,20 +157,22 @@ public class Iu {
         do {
             System.out.print("Enter user name: ");
             name = sc.next();
-        } while (name.length() == 0 || isAlphaNumeric(name));
+            if (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name))
+                System.out.println("Use name with 3..12 characters and numbers.");
+        } while (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name));
 
         return name;
     }
 
-    private static boolean nameInList(String name, List<User> userList) {
+    private static int nameInList(String name, List<User> userList) {
         for (User user: userList) {
             if (user.getUserName().equals(name))
-                return true;
+                return userList.indexOf(user);
         }
-        return false;
+        return -1;
     }
 
     private static boolean isAlphaNumeric(String text) {
-        return text.matches("^.*[^a-zA-Z0-9 ].*$");
+        return !text.matches("^.*[^a-zA-Z0-9].*$");
     }
 }
