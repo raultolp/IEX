@@ -17,8 +17,6 @@ import java.util.Map;
 
 public class Stock {
 
-    private ChoiceBox<String> buySellBox;
-
     private final String symbol; //aktsia sümbol
     private String companyName;
     private String sector;
@@ -50,8 +48,6 @@ public class Stock {
 
     public Stock(String symbol) {
         this.symbol = symbol;
-        this.buySellBox = new ChoiceBox<>(FXCollections.observableArrayList(
-                "Buy", "Sell")); //lisatud
         loadDataFromIEX();
     }
 
@@ -325,12 +321,5 @@ public class Stock {
         this.currentPrice = currentPrice;
     }
 
-    public ChoiceBox<String> getBuySellBox() {
-        return buySellBox;
-    }
-
-    public void setBuySellBox(ChoiceBox<String> buySellBox) {
-        this.buySellBox = buySellBox;
-    }
 
 }
