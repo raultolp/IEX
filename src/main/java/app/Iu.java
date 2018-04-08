@@ -3,6 +3,7 @@ package app;
 import java.io.*;
 import java.util.*;
 
+
 public class Iu {
     public static final String ANSI_YELLOW = "\u001B[33m";
     public static final String ANSI_BLUE = "\u001B[34m";
@@ -42,8 +43,9 @@ public class Iu {
         //------------------------------------
         //TESTING PORTFOLIO:
         Portfolio portfell = new Portfolio();
-        portfell.buyStock("AAPL", 200);
-        portfell.buyStock("MSFT", 100);
+        User pets = new User("Peeter", portfell, 1000000); //testing Pets
+        portfell.buyStock("CAT", 200);
+        portfell.buyStock("AAPL", 1);
         System.out.println("Total profit: " + portfell.getTotalProfitOrLoss());
         System.out.println("AAPL CEO: " + portfell.getPortfolio().get("AAPL").getCEO());
 
@@ -79,7 +81,6 @@ public class Iu {
         List<Portfolio> portfolioList = new ArrayList<>();
         List<Stock> stockList = new ArrayList<>();
 
-        User pets = new User("Peeter", portfell, 100);
 
         User admin = new User("admin", new Portfolio(), 0);
         User active = admin;
@@ -153,7 +154,6 @@ public class Iu {
 
                     if (Arrays.asList(availableStocks).contains(name)) {
                         qty = enterQty(sc);
-
                         // kontrolli kas on piisavalt raha koos teenustasudega
                         // kui on, lisa portfelli ja võta raha maha
 //                        active.getPortfolio().lisaAktsia(name, qty, date);
@@ -205,19 +205,20 @@ public class Iu {
 
                 //Load data file
                 case 13:
-                    System.out.println("Tuleb hiljem");
+                    loadData(sc);
                     break;
 
                 //Save data file
                 case 14:
-                    saveData();
+                    saveData(sc);
                     break;
 
                 //Quit
                 case 15:
-//                    saveData();
+                    //saveData(sc);
                     quitProgram = true;
                     System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
+                    sc.close();
                     break;
 
                 default:
@@ -264,7 +265,7 @@ public class Iu {
                 System.out.println(ANSI_RED + "Choose right stock name." + ANSI_RESET);
             if (name.length() == 0)
                 return null;
-        } while (name.length() < 1 || name.length() > 5 || !isAlpha(name));
+        } while (name.length() > 5 || !isAlpha(name));
 
         return name.toUpperCase();
     }
@@ -279,7 +280,6 @@ public class Iu {
                 qty = sc.nextInt();
             } catch (InputMismatchException e) {
                 System.out.println("Wrong input: " + sc.nextLine());
-                continue;
             }
         } while (qty < 1 || qty > 1000);
 
@@ -316,20 +316,93 @@ public class Iu {
             System.out.println();
     }
 
-    private static void saveData() throws IOException {
-        String filename = "data.game";
+    private static void saveData(Scanner sc) throws IOException {
 
-        //TODO: add a way to get different filenames
+        sc.nextLine();
+
+        System.out.print("Enter filename: ");
+        String filename = sc.nextLine();
 
         File file = new File(filename);
         file.createNewFile();
 
         Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
         for (User user : userList) {
-            System.out.println(user.getPortfolio().toString());
-            writer.write(user.getUserName() + "'s Portfolio: \n" + user.getPortfolio().toString());
+            writer.write(user.getPortfolio().toStringForFile());
         }
         writer.close();
+
+    }
+
+
+    public static void loadData(Scanner sc) throws IOException {
+        sc.nextLine();
+
+        System.out.print("Enter filename: ");
+        String filename = sc.nextLine();
+
+        File file = new File(filename);
+
+        if (file.exists()) {
+            try ( BufferedReader br = new BufferedReader(new FileReader(file)) ) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] elements = line.split(";");
+
+                    System.out.println(Arrays.toString(elements));
+
+                    String[] syms = elements[3].split(",");
+                    List<String> symbols = new ArrayList<>();
+                    for (String sym : syms) {
+                        symbols.add(sym.trim());
+                    }
+
+                    String[] price = elements[4].split(",");
+                    List<Double> prices = new ArrayList<>();
+                    for (String pri : price) {
+                        prices.add(Double.parseDouble(pri));
+                    }
+
+                    String[] vols = elements[4].split(",");
+                    List<Double> volumes = new ArrayList<>();
+                    for (String number : vols) {
+                        volumes.add(Double.parseDouble(number));
+                    }
+
+                    String[] avgPrc = elements[5].split(",");
+                    List<Integer> averagePrices = new ArrayList<>();
+                    for (String avg : avgPrc) {
+                        averagePrices.add(Integer.parseInt(avg));
+                    }
+
+                    String[] profLoss = elements[6].split(",");
+                    List<Double> profitsOrLosses = new ArrayList<>();
+                    for (String profL : profLoss) {
+                        profitsOrLosses.add(Double.parseDouble(profL));
+                    }
+
+                    String[] unreals = elements[7].split(",");
+                    List<Double> unrealisedProfitsOrLosses = new ArrayList<>();
+                    for (String pl : unreals) {
+                        unrealisedProfitsOrLosses.add(Double.parseDouble(pl));
+                    }
+
+                    String[] currs = elements[8].split(",");
+                    List<Double> currentValuesOfPositions = new ArrayList<>();
+                    for (String cr : currs) {
+                        currentValuesOfPositions.add(Double.parseDouble(cr));
+                    }
+                   /* Portfolio port = new Portfolio(Double.parseDouble(elements[1]),
+                            new User(elements[0], new Portfolio(), Double.parseDouble(elements[1])),
+                                    symbols, prices, volumes, averagePrices, profitsOrLosses, unrealisedProfitsOrLosses,
+                                    currentValuesOfPositions, Double.parseDouble(elements[9]), Double.parseDouble(elements[10]),
+                            Double.parseDouble(elements[11]));
+                }*/
+                }
+            }
+        }
+
+
     }
 
 
