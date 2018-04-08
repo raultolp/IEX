@@ -107,10 +107,10 @@ public class Iu {
                 "Save data file",
                 "Quit"};
 
-        Map <String, Stock> stockMap=new HashMap<>();
+        Map<String, Stock> stockMap = new HashMap<>();
 
         for (String symbol : availableStocks) {
-            Stock stock=new Stock(symbol);
+            Stock stock = new Stock(symbol);
             stockMap.put(symbol, stock);
         }
 
@@ -229,7 +229,7 @@ public class Iu {
 
                 //View stock historical data
                 case 11:
-                    System.out.println("Tuleb hiljem");
+                    showStockHistoricalData(sc);
                     break;
 
                 //View all portfolios progress
@@ -535,6 +535,24 @@ public class Iu {
         }
 
 
+    }
+
+    private static void showStockHistoricalData(Scanner sc) {
+
+        //TODO: add option to choose time period
+
+        sc.nextLine();
+        System.out.println("Enter stock symbol: ");
+        String stockSym = sc.nextLine();
+
+        try {
+            Stock stock = new Stock(stockSym);
+            System.out.println("One month: " + stock.getChange1Month() + '\n' +
+                    "Three months: " + stock.getChange3Month() + '\n' +
+                    "Year: " + stock.getChange1Year());
+        } catch (Exception e) {
+            System.out.println("Stock info not available.");
+        }
     }
 
 
