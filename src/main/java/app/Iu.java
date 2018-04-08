@@ -3,7 +3,6 @@ package app;
 import java.io.*;
 import java.util.*;
 
-
 public class Iu {
     public static final String ANSI_YELLOW = "\u001B[33m";
     public static final String ANSI_BLUE = "\u001B[34m";
@@ -166,11 +165,11 @@ public class Iu {
 
                     if (Arrays.asList(availableStocks).contains(name)) {
                         qty = enterQty(sc);
-                        Portfolio portfolio=active.getPortfolio();
+                        Portfolio portfolio = active.getPortfolio();
 
-                        try{
+                        try {
                             portfolio.buyStock(name, qty);
-                        } catch (RuntimeException e){ //if not enough funds
+                        } catch (RuntimeException e) { //if not enough funds
                             System.out.println("Not enough funds!");
                         }
                     } else
@@ -179,23 +178,22 @@ public class Iu {
 
                 //Sell stock
                 case 6:
-                    Portfolio portfolio=active.getPortfolio();
+                    Portfolio portfolio = active.getPortfolio();
                     if (portfolio != null)
                         portfolio.toString();
                     name = enterStockName(sc);
 
-                    if (portfolio.getSymbolList().contains(name)){
+                    if (portfolio.getSymbolList().contains(name)) {
                         qty = enterQty(sc);
                         portfolio.sellStock(name, qty);
-                    }
-                    else {
+                    } else {
                         System.out.println("Stock not included on portfolio!");
                     }
                     break;
 
                 //View user portfolio
                 case 7:
-                    System.out.println("Tuleb hiljem");
+                    showUserPortfolio(sc);
                     break;
 
                 //View available stock list
@@ -440,6 +438,23 @@ public class Iu {
 
             }
         }
+    }
+
+    private static void showUserPortfolio(Scanner sc) {
+        String username;
+
+        sc.nextLine();
+        System.out.print("Enter username: ");
+        username = sc.nextLine();
+
+        for (User user : userList) {
+            if (user.getUserName().equals(username)) {
+                Portfolio portfolio = user.getPortfolio();
+                System.out.println(portfolio.toString());
+            }
+        }
+
+
     }
 
 
