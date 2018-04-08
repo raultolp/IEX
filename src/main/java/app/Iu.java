@@ -129,7 +129,7 @@ public class Iu {
                 //Add user
                 case 1:
                     name = enterUserName(sc);
-                    if (name != null && nameInList(name, userList) > -1) {
+                    if (name != null && nameInList(name) > -1) {
                         System.out.println(ANSI_RED + "Name already exists!" + ANSI_RESET);
                     } else if (name != null) {
                         userList.add(new User(name, new Portfolio(), 100000));
@@ -140,7 +140,7 @@ public class Iu {
                 //Delete user
                 case 2:
                     name = enterUserName(sc);
-                    index = nameInList(name, userList);
+                    index = nameInList(name);
                     if (index > -1) {
                         userList.remove(index);
                         System.out.println(ANSI_YELLOW + "User " + name + " has been deleted." + ANSI_RESET);
@@ -150,14 +150,14 @@ public class Iu {
 
                 //List users
                 case 3:
-                    showUsersList(userList);
+                    showUsersList();
                     break;
 
                 //Set active user
                 case 4:
-                    showUsersList(userList);
+                    showUsersList();
                     name = enterUserName(sc);
-                    index = nameInList(name, userList);
+                    index = nameInList(name);
                     if (index > -1) {
                         active = userList.get(index);
                         System.out.println(ANSI_YELLOW + "User " + name + " is now active." + ANSI_RESET);
@@ -314,7 +314,7 @@ public class Iu {
         return qty;
     }
 
-    private static int nameInList(String name, List<User> userList) {
+    private static int nameInList(String name) {
         for (User user : userList) {
             if (user.getUserName().equals(name))
                 return userList.indexOf(user);
@@ -322,7 +322,7 @@ public class Iu {
         return -1;
     }
 
-    private static void showUsersList(List<User> userList) {
+    private static void showUsersList() {
         System.out.println("Defined users:");
         if (userList.size() > 0) {
             for (User item : userList) {
@@ -333,12 +333,12 @@ public class Iu {
         System.out.println();
     }
 
-    private static void showStockList(String[] stockList) {
+    private static void showStockList(String[] availableStocks) {
         System.out.println("Avilable stocks:");
-        Arrays.sort(stockList);
+        Arrays.sort(availableStocks);
         int i;
-        for (i = 0; i < stockList.length; i++) {
-            System.out.printf("%-5s%s", stockList[i], (i + 1) % 10 == 0 ? "\n" : " ");
+        for (i = 0; i < availableStocks.length; i++) {
+            System.out.printf("%-5s%s", availableStocks[i], (i + 1) % 10 == 0 ? "\n" : " ");
         }
         if (i % 10 != 0)
             System.out.println();
