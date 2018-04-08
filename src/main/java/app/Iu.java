@@ -1,5 +1,6 @@
 package app;
 
+import java.io.*;
 import java.util.*;
 
 public class Iu {
@@ -8,8 +9,9 @@ public class Iu {
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_RESET = "\u001B[0m";
+    private static List<User> userList = new ArrayList<>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         //------------------------------------
         //TESTING STOCK:
@@ -39,15 +41,14 @@ public class Iu {
 
         //------------------------------------
         //TESTING PORTFOLIO:
-/*        Portfolio portfell= new Portfolio();
+        Portfolio portfell = new Portfolio();
         portfell.buyStock("AAPL", 200);
         portfell.buyStock("MSFT", 100);
-        System.out.println("Total profit: "+portfell.getTotalProfitOrLoss());
-        System.out.println("AAPL CEO: "+ portfell.getPortfolio().get("AAPL").getCEO());*/
+        System.out.println("Total profit: " + portfell.getTotalProfitOrLoss());
+        System.out.println("AAPL CEO: " + portfell.getPortfolio().get("AAPL").getCEO());
 
 
         //------------------------------------
-
 
 
         final String[] mainMenu = {"Add user",
@@ -74,16 +75,20 @@ public class Iu {
                 "SYMC", "TGT", "TIF", "TRIP", "TSLA", "TWTR", "TXN", "UA", "UAL", "V", "VMW", "VNET",
                 "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
 
-        List<User> userList = new ArrayList<>();
+
         List<Portfolio> portfolioList = new ArrayList<>();
         List<Stock> stockList = new ArrayList<>();
+
+        User pets = new User("Peeter", portfell, 100);
 
         User admin = new User("admin", new Portfolio(), 0);
         User active = admin;
         boolean quitProgram = false;
 
+        userList.add(pets); //et saaks midagi kirjutada
 
-        while(!quitProgram) {
+
+        while (!quitProgram) {
             String name;
             int index;
             int choice;
@@ -108,7 +113,7 @@ public class Iu {
                     name = enterUserName(sc);
                     if (name != null && nameInList(name, userList) > -1) {
                         System.out.println(ANSI_RED + "Name already exists!" + ANSI_RESET);
-                    } else if (name != null){
+                    } else if (name != null) {
                         userList.add(new User(name, new Portfolio(), 100000));
                         System.out.println(ANSI_YELLOW + "Created user: " + name + ANSI_RESET);
                     }
@@ -204,7 +209,7 @@ public class Iu {
 
                 //Save data file
                 case 14:
-                    System.out.println("Tuleb hiljem");
+                    saveData();
                     break;
 
                 //Quit
@@ -224,7 +229,7 @@ public class Iu {
     private static void printMenu(String[] menu) {
         System.out.println();
         for (int i = 0; i < menu.length / 2 + menu.length % 2; i++) {
-            int next =  menu.length / 2 + i + menu.length % 2;
+            int next = menu.length / 2 + i + menu.length % 2;
             System.out.printf("%2d) %-30s ", i + 1, menu[i]);
             if (next < menu.length)
                 System.out.printf("%2d) %-30s\n", next + 1, menu[next]);
@@ -281,7 +286,7 @@ public class Iu {
     }
 
     private static int nameInList(String name, List<User> userList) {
-        for (User user: userList) {
+        for (User user : userList) {
             if (user.getUserName().equals(name))
                 return userList.indexOf(user);
         }
@@ -309,6 +314,23 @@ public class Iu {
         if ((i + 1) % 10 != 0)
             System.out.println();
     }
+
+    private static void saveData() throws IOException {
+        String filename = "data.game";
+
+        //TODO: add a way to get different filenames
+
+        File file = new File(filename);
+        file.createNewFile();
+
+        Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+        for (User user : userList) {
+            System.out.println(user.getPortfolio().toString());
+            writer.write(user.getUserName() + "'s Portfolio: \n" + user.getPortfolio().toString());
+        }
+        writer.close();
+    }
+
 
     private static boolean isAlphaNumeric(String text) {
         return text.matches("[a-zA-Z0-9]+");
