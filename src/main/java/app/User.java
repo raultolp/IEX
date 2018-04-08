@@ -3,24 +3,24 @@ package app;
 public class User {
     private String userName;
     private Portfolio portfolio;
-    private double cashmoneybiatcheees;
+    private double availableFunds;
 
-    public User(String userName, Portfolio portfolio, double cashmoneybiatcheees) {
+    public User(String userName, Portfolio portfolio, double availableFunds) {
         this.userName = userName;
         this.portfolio = portfolio;
-        this.cashmoneybiatcheees = cashmoneybiatcheees;
+        this.availableFunds = availableFunds;
     }
 
-    public void setCashmoneybiatcheees(double cashmoneybiatcheees) {
-        this.cashmoneybiatcheees = cashmoneybiatcheees;
+    public void setAvailableFunds(double availableFunds) {
+        this.availableFunds = availableFunds;
     }
 
     public Portfolio getPortfolio() {
         return portfolio;
     }
 
-    public double getCashmoneybiatcheees() {
-        return cashmoneybiatcheees;
+    public double getAvailableFunds() {
+        return availableFunds;
     }
 
     public String getUserName() {

@@ -38,6 +38,17 @@ public class Iu {
 
 
         //------------------------------------
+        //TESTING PORTFOLIO:
+/*        Portfolio portfell= new Portfolio();
+        portfell.buyStock("AAPL", 200);
+        portfell.buyStock("MSFT", 100);
+        System.out.println("Total profit: "+portfell.getTotalProfitOrLoss());
+        System.out.println("AAPL CEO: "+ portfell.getPortfolio().get("AAPL").getCEO());*/
+
+
+        //------------------------------------
+
+
 
         final String[] mainMenu = {"Add user",
                 "Delete user",
