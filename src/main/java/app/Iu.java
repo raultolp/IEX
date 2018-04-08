@@ -235,7 +235,7 @@ public class Iu {
 
                 //Quit
                 case 15:
-                    //saveData(sc);
+                    saveData(sc);
                     quitProgram = true;
                     System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
                     sc.close();
