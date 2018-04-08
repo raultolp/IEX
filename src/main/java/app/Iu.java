@@ -396,7 +396,7 @@ public class Iu {
         if (file.exists()) {
             try ( BufferedReader br = new BufferedReader(new FileReader(file)) ) {
                 String line;
-                //reads all lines from file and adds users and portfolios to arraylists
+                //reads all lines from file and adds users and portfolios to their respective arraylists
 
                 while ((line = br.readLine()) != null) {
 
@@ -431,7 +431,6 @@ public class Iu {
                     for (String avg : avgPrc) {
                         if (!(avg.equals("[]")))
                             averagePrices.add(Double.parseDouble(avg.replaceAll("[\\W]", "")));
-                        //   else averagePrices.add(0.0);
                     }
 
                     String[] profLoss = elements[6].split(",");
