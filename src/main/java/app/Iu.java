@@ -11,6 +11,8 @@ public class Iu {
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_RESET = "\u001B[0m";
     private static List<User> userList = new ArrayList<>();
+    private static List<Portfolio> portfolioList = new ArrayList<>();
+
 
     public static void main(String[] args) throws IOException {
 
@@ -76,10 +78,6 @@ public class Iu {
                 "NTNX", "NVDA", "ORCL", "P", "PEP", "PG", "QCOM", "RHT", "SBUX", "SINA", "SSYS", "STX",
                 "SYMC", "TGT", "TIF", "TRIP", "TSLA", "TWTR", "TXN", "UA", "UAL", "V", "VMW", "VNET",
                 "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
-
-
-        List<Portfolio> portfolioList = new ArrayList<>();
-        List<Stock> stockList = new ArrayList<>();
 
 
         User admin = new User("admin", new Portfolio(), 0);
@@ -336,6 +334,7 @@ public class Iu {
 
 
     public static void loadData(Scanner sc) throws IOException {
+
         sc.nextLine();
 
         System.out.print("Enter filename: ");
@@ -346,63 +345,79 @@ public class Iu {
         if (file.exists()) {
             try ( BufferedReader br = new BufferedReader(new FileReader(file)) ) {
                 String line;
+                //reads all lines from file and adds users and portfolios to arraylists
+
                 while ((line = br.readLine()) != null) {
+
                     String[] elements = line.split(";");
 
-                    System.out.println(Arrays.toString(elements));
 
-                    String[] syms = elements[3].split(",");
+                    String[] syms = elements[2].split(",");
                     List<String> symbols = new ArrayList<>();
                     for (String sym : syms) {
-                        symbols.add(sym.trim());
+                        symbols.add(sym.replaceAll("[\\W]", ""));
                     }
 
-                    String[] price = elements[4].split(",");
+                    String[] price = elements[3].split(",");
                     List<Double> prices = new ArrayList<>();
                     for (String pri : price) {
-                        prices.add(Double.parseDouble(pri));
+                        prices.add(Double.parseDouble(pri.replaceAll("[\\W]", "")));
                     }
 
                     String[] vols = elements[4].split(",");
-                    List<Double> volumes = new ArrayList<>();
+                    List<Integer> volumes = new ArrayList<>();
                     for (String number : vols) {
-                        volumes.add(Double.parseDouble(number));
+                        volumes.add(Integer.parseInt(number.replaceAll("[\\W]", "")));
                     }
 
                     String[] avgPrc = elements[5].split(",");
-                    List<Integer> averagePrices = new ArrayList<>();
+                    List<Double> averagePrices = new ArrayList<>();
                     for (String avg : avgPrc) {
-                        averagePrices.add(Integer.parseInt(avg));
+                        averagePrices.add(Double.parseDouble(avg.replaceAll("[\\W]", "")));
                     }
 
                     String[] profLoss = elements[6].split(",");
                     List<Double> profitsOrLosses = new ArrayList<>();
                     for (String profL : profLoss) {
-                        profitsOrLosses.add(Double.parseDouble(profL));
+                        profitsOrLosses.add(Double.parseDouble(profL.replaceAll("[\\W]", "")));
                     }
 
                     String[] unreals = elements[7].split(",");
                     List<Double> unrealisedProfitsOrLosses = new ArrayList<>();
                     for (String pl : unreals) {
-                        unrealisedProfitsOrLosses.add(Double.parseDouble(pl));
+                        unrealisedProfitsOrLosses.add(Double.parseDouble(pl.replaceAll("[\\W]", "")));
                     }
 
                     String[] currs = elements[8].split(",");
                     List<Double> currentValuesOfPositions = new ArrayList<>();
                     for (String cr : currs) {
-                        currentValuesOfPositions.add(Double.parseDouble(cr));
+                        currentValuesOfPositions.add(Double.parseDouble(cr.replaceAll("[\\W]", "")));
                     }
-                   /* Portfolio port = new Portfolio(Double.parseDouble(elements[1]),
-                            new User(elements[0], new Portfolio(), Double.parseDouble(elements[1])),
-                                    symbols, prices, volumes, averagePrices, profitsOrLosses, unrealisedProfitsOrLosses,
-                                    currentValuesOfPositions, Double.parseDouble(elements[9]), Double.parseDouble(elements[10]),
-                            Double.parseDouble(elements[11]));
-                }*/
+
+
+                    double availableFunds = Double.parseDouble(elements[1]);
+                    double totalCurrentValueOfPositions = Double.parseDouble(elements[9]);
+                    double totalProfitOrLoss = Double.parseDouble(elements[10]);
+                    double totalUnrealisedProfitOrLoss = Double.parseDouble(elements[11]);
+                    double transactionFee = Double.parseDouble(elements[12]);
+
+                    User user = new User(elements[0], new Portfolio(), Double.parseDouble(elements[1]));
+
+
+                    Portfolio port = new Portfolio(availableFunds, user,
+                            symbols, prices, volumes, averagePrices, profitsOrLosses, unrealisedProfitsOrLosses,
+                            currentValuesOfPositions, totalCurrentValueOfPositions, totalProfitOrLoss,
+                            totalUnrealisedProfitOrLoss, transactionFee);
+
+                    User newUser = new User(elements[0], port, Double.parseDouble(elements[1]));
+
+                    portfolioList.add(port);
+                    userList.add(newUser);
+
                 }
+
             }
         }
-
-
     }
 
 

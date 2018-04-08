@@ -354,7 +354,7 @@ public class Portfolio {
     public String toStringForFile() {
         return
                 "" + user.getUserName() + ";" + availableFunds + ";" +
-                        symbolList.toString() + ';' +
+                        symbolList + ';' +
                         prices + ';' +
                         volumes + ';' +
                         averagePrices + ';' +
