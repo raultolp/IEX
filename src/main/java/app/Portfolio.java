@@ -28,5 +28,11 @@ public class Portfolio {
         return portfolio;
     }
 
+    @Override
+    public String toString() {
+        return "Portfolio{" +
+                "portfolio=" + portfolio +
+                '}';
+    }
 }
 

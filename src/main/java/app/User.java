@@ -15,6 +15,14 @@ public class User {
         this.cashmoneybiatcheees = cashmoneybiatcheees;
     }
 
+    public Portfolio getPortfolio() {
+        return portfolio;
+    }
+
+    public double getCashmoneybiatcheees() {
+        return cashmoneybiatcheees;
+    }
+
     public String getUserName() {
         return userName;
     }

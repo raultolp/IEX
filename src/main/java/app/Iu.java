@@ -48,8 +48,8 @@ public class Iu {
                 "View user portfolio",
                 "View available stock list",
                 "View stock data base data",
-                "View stock historical data graph",
-                "View all portfolios progress graph",
+                "View stock historical data",
+                "View all portfolios performance",
                 "Refresh data from web",
                 "Load data file",
                 "Save data file",
@@ -77,6 +77,7 @@ public class Iu {
             String name;
             int index;
             int choice;
+            int qty;
 
             printMenu(mainMenu);
             System.out.print("Active:" + ANSI_GREEN + active.getUserName() + ANSI_RESET + "> ");
@@ -89,82 +90,120 @@ public class Iu {
             }
 
             switch (choice) {
+
                 //Add user
                 case 1:
-                    name = enterUserName(sc);
-                    if (name.length() < 1 || nameInList(name, userList) > -1) {
-                        System.out.println("Name already exists!");
-                    } else {
+                    name = enterUserName();
+                    if (name != null && nameInList(name, userList) > -1) {
+                        System.out.println(ANSI_RED + "Name already exists!" + ANSI_RESET);
+                    } else if (name != null){
                         userList.add(new User(name, new Portfolio(), 100000));
-                        System.out.println("Created user: " + name);
+                        System.out.println(ANSI_YELLOW + "Created user: " + name + ANSI_RESET);
                     }
                     break;
+
                 //Delete user
                 case 2:
-                    name = enterUserName(sc);
+                    name = enterUserName();
                     index = nameInList(name, userList);
                     if (index > -1) {
                         userList.remove(index);
-                        System.out.println("User " + name + " has been deleted.");
+                        System.out.println(ANSI_YELLOW + "User " + name + " has been deleted." + ANSI_RESET);
                     }
 
                     break;
+
                 //List users
                 case 3:
                     showUsersList(userList);
                     break;
+
                 //Set active user
                 case 4:
                     showUsersList(userList);
-                    name = enterUserName(sc);
+                    name = enterUserName();
                     index = nameInList(name, userList);
                     if (index > -1) {
                         active = userList.get(index);
-                        System.out.println("User " + name + " is now active.");
+                        System.out.println(ANSI_YELLOW + "User " + name + " is now active." + ANSI_RESET);
                     }
                     break;
 
                 //Buy stock
                 case 5:
                     showStockList(availableStocks);
-                    //List of available stocks
+                    name = enterStockName();
+
+                    if (Arrays.asList(availableStocks).contains(name)) {
+                        qty = enterQty();
+                        // kontrolli kas on piisavalt raha koos teenustasudega
+                        // kui on, lisa portfelli ja võta raha maha
+//                        active.getPortfolio().lisaAktsia(name, qty, date);
+                    } else
+                        System.out.println(ANSI_RED + "This stock is not available." + ANSI_RESET);
                     break;
+
                 //Sell stock"
                 case 6:
+                    if (active.getPortfolio() != null)
+                        active.getPortfolio().toString();
+
+                    name = enterStockName();
+
+                    // sell name(qty)
+
+                    System.out.println("Tuleb hiljem");
                     break;
+
                 //View user portfolio
                 case 7:
+                    System.out.println("Tuleb hiljem");
                     break;
+
                 //View available stock list
                 case 8:
                     showStockList(availableStocks);
                     break;
+
                 //View stock data base data
                 case 9:
+                    System.out.println("Tuleb hiljem");
                     break;
+
                 //View stock historical data graph
                 case 10:
+                    System.out.println("Tuleb hiljem");
                     break;
+
                 //View all portfolios progress graph"
                 case 11:
+                    System.out.println("Tuleb hiljem");
                     break;
+
                 //Refresh data from web
                 case 12:
+                    System.out.println("Tuleb hiljem");
                     break;
+
                 //Load data file
                 case 13:
+                    System.out.println("Tuleb hiljem");
                     break;
+
                 //Save data file
                 case 14:
+                    System.out.println("Tuleb hiljem");
                     break;
+
                 //Quit
                 case 15:
 //                    saveData();
                     quitProgram = true;
-                    System.out.println("Bye-bye!");
+                    System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
                     break;
+
                 default:
-                    System.out.println("Wrong input, choose between 1.." + mainMenu.length + "!");
+                    System.out.println(ANSI_RED + "Wrong input, choose between 1.." + mainMenu.length + "!" + ANSI_RESET);
             }
         }
     }
@@ -181,17 +220,53 @@ public class Iu {
         }
     }
 
-    private static String enterUserName(Scanner sc) {
+    private static String enterUserName() {
+        Scanner sc = new Scanner(System.in);
         String name;
         do {
             System.out.print("Enter user name: ");
-            name = sc.next();
+            name = sc.nextLine().trim();
             if (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name))
-                System.out.println("Use name with 3..12 characters and numbers.");
-            System.out.println(name.length());
+                System.out.println(ANSI_RED + "Use name with 3..12 characters and numbers." + ANSI_RESET);
+            if (name.length() == 0)
+                return null;
         } while (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name));
 
         return name;
+    }
+
+    private static String enterStockName() {
+        Scanner sc = new Scanner(System.in);
+        String name;
+        do {
+            System.out.print("Enter stock name: ");
+            name = sc.nextLine().trim();
+            if (name.length() < 1 || name.length() > 5 || !isAlpha(name))
+                System.out.println(ANSI_RED + "Choose right stock name." + ANSI_RESET);
+            if (name.length() == 0)
+                return null;
+        } while (name.length() < 1 || name.length() > 5 || !isAlpha(name));
+
+        return name.toUpperCase();
+    }
+
+    private static int enterQty() {
+        Scanner sc = new Scanner(System.in);
+        int qty = 0;
+        do {
+            System.out.print("Enter quantity [1-1000]: ");
+            try {
+                qty = sc.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Wrong input: " + sc.nextLine());
+                continue;
+            }
+//            qty = sc.nextInt();
+//            if (!isNumeric(qty) || qty < 1 !! qty > 1000) {
+//                System.out.println(ANSI_RED + "Choose right quantity." + ANSI_RESET);
+        } while (qty < 1 || qty > 1000);
+
+        return qty;
     }
 
     private static int nameInList(String name, List<User> userList) {
@@ -214,6 +289,7 @@ public class Iu {
 
     private static void showStockList(String[] stockList) {
         System.out.println("Avilable stocks:");
+        Arrays.sort(stockList);
         int i;
         for (i = 0; i < stockList.length; i++) {
             System.out.printf("%-5s%s", stockList[i], (i + 1) % 10 == 0 ? "\n" : " ");
@@ -223,6 +299,14 @@ public class Iu {
     }
 
     private static boolean isAlphaNumeric(String text) {
-        return !text.matches("^.*[^a-zA-Z0-9].*$");
+        return text.matches("[a-zA-Z0-9]+");
+    }
+
+    private static boolean isAlpha(String text) {
+        return text.matches("[a-zA-Z]+");
+    }
+
+    private static boolean isNumeric(String text) {
+        return text.matches("[0-9]+");
     }
 }
