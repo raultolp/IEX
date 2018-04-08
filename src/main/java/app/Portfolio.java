@@ -51,7 +51,7 @@ public class Portfolio {
         this.user = user;
     }
 
-    public Portfolio(double availableFunds, User user, Map<String, Stock> portfolio, List<String> symbolList,
+    public Portfolio(double availableFunds, User user, List<String> symbolList,
                      List<Double> prices, List<Integer> volumes, List<Double> averagePrices,
                      List<Double> profitsOrLosses,
                      List<Double> unrealisedProfitsOrLosses, List<Double> currentValuesOfPositions,
@@ -61,7 +61,6 @@ public class Portfolio {
 
         this.availableFunds = availableFunds;
         this.user = user;
-        this.portfolio = portfolio;
         this.symbolList = symbolList;
         this.prices = prices;
         this.volumes = volumes;
@@ -354,17 +353,18 @@ public class Portfolio {
 
     public String toStringForFile() {
         return
-                "" + symbolList.toString() + '\n' +
-                        prices.toString() + '\n' +
-                        volumes.toString() + '\n' +
-                        averagePrices + '\n' +
-                        profitsOrLosses + '\n' +
-                        unrealisedProfitsOrLosses + '\n' +
-                        currentValuesOfPositions + '\n' +
-                        totalCurrentValueOfPositions + '\n' +
-                        totalProfitOrLoss + '\n' +
-                        totalUnrealisedProfitOrLoss + '\n' +
-                        transactionFee + '\n' + '\n';
+                "" + user.getUserName() + ";" + availableFunds + ";" +
+                        symbolList.toString() + ';' +
+                        prices + ';' +
+                        volumes + ';' +
+                        averagePrices + ';' +
+                        profitsOrLosses + ';' +
+                        unrealisedProfitsOrLosses + ';' +
+                        currentValuesOfPositions + ';' +
+                        totalCurrentValueOfPositions + ';' +
+                        totalProfitOrLoss + ';' +
+                        totalUnrealisedProfitOrLoss + ';' +
+                        transactionFee + '\n';
     }
 
 }
