@@ -160,53 +160,51 @@ public class Portfolio {
 
     public void sellStock(String symbol, int volume) {
 
-        if (!portfolio.containsKey(symbol)){ // LISATUD
-            System.out.println("Stock not included in portfolio!");
+        //checking if stock is present in portfolio is already included in main class
+
+        int indexOfStock = symbolList.indexOf(symbol);
+
+        if (volumes.get(indexOfStock) < volume) { //max number of shares to be sold is their number in portfolio
+            System.out.println("Portfolio only contains "+volume+ "stocks. Now selling them all");  //LISATUD
+            volume = volumes.get(indexOfStock); //if user tries to sell more, only the max number is sold
         }
-        else { //stock can be sold only if it is present in portfolio
-            int indexOfStock = symbolList.indexOf(symbol);
 
-            if (volumes.get(indexOfStock) < volume) { //max number of shares to be sold is their number in portfolio
-                System.out.println("Portfolio only contains "+volume+ "stocks. Now selling them all");  //LISATUD
-                volume = volumes.get(indexOfStock); //if user tries to sell more, only the max number is sold
-            }
+        double transactionFeeTotal = volume * transactionFee;
+        Stock stock = portfolio.get(symbol);
+        double price = stock.getLatestPrice();  //current price
+        int prevVolume = volumes.get(indexOfStock);
+        double prevTotal = currentValuesOfPositions.get(indexOfStock);
+        double prevAveragePrice = averagePrices.get(indexOfStock);
+        double prevProfitOrLoss = profitsOrLosses.get(indexOfStock);
 
-            double transactionFeeTotal = volume * transactionFee;
-            Stock stock = portfolio.get(symbol);
-            double price = stock.getLatestPrice();  //current price
-            int prevVolume = volumes.get(indexOfStock);
-            double prevTotal = currentValuesOfPositions.get(indexOfStock);
-            double prevAveragePrice = averagePrices.get(indexOfStock);
-            double prevProfitOrLoss = profitsOrLosses.get(indexOfStock);
+        volumes.set(indexOfStock, prevVolume - volume);
+        prices.set(indexOfStock, price); //current price uuendamine
+        currentValuesOfPositions.set(indexOfStock, price * (prevVolume - volume)); //current value of stock in portfolio
 
-            volumes.set(indexOfStock, prevVolume - volume);
-            prices.set(indexOfStock, price); //current price uuendamine
-            currentValuesOfPositions.set(indexOfStock, price * (prevVolume - volume)); //current value of stock in portfolio
+        //Increasing the previous profit from this stock:
+        double profitFromSell = volume * (price - prevAveragePrice) - transactionFeeTotal;
+        profitsOrLosses.set(indexOfStock, prevProfitOrLoss + profitFromSell);
 
-            //Increasing the previous profit from this stock:
-            double profitFromSell = volume * (price - prevAveragePrice) - transactionFeeTotal;
-            profitsOrLosses.set(indexOfStock, prevProfitOrLoss + profitFromSell);
+        totalCurrentValueOfPositions = calculateTotal(currentValuesOfPositions);
+        totalProfitOrLoss = calculateTotal(profitsOrLosses);
+        totalUnrealisedProfitOrLoss = calculateTotal(unrealisedProfitsOrLosses);
 
-            totalCurrentValueOfPositions = calculateTotal(currentValuesOfPositions);
-            totalProfitOrLoss = calculateTotal(profitsOrLosses);
-            totalUnrealisedProfitOrLoss = calculateTotal(unrealisedProfitsOrLosses);
-
-            //average purchase price (in averagePrices) remains the same
+        //average purchase price (in averagePrices) remains the same
 
 
-            //New unrealised proft/loss calculation:
-            unrealisedProfitsOrLosses.set(indexOfStock, (prevVolume - volume) * (price - averagePrices.get(indexOfStock)));
+        //New unrealised proft/loss calculation:
+        unrealisedProfitsOrLosses.set(indexOfStock, (prevVolume - volume) * (price - averagePrices.get(indexOfStock)));
 
-            //If all stocks are sold from portfolio and profit gained from the stook is zero:
-            removeRedundantStock(symbol);
+        //If all stocks are sold from portfolio and profit gained from the stook is zero:
+        removeRedundantStock(symbol);
 
-            availableFunds += volume * (price - transactionFee);
-            user.setAvailableFunds(availableFunds);
+        availableFunds += volume * (price - transactionFee);
+        user.setAvailableFunds(availableFunds);
 
 
-            //TODO:
-            //Possibility for short selling could be added (allows negative number of stocks)
-        }
+        //TODO:
+        //Possibility for short selling could be added (allows negative number of stocks)
+
 
     }
 
@@ -354,7 +352,7 @@ public class Portfolio {
     public String toStringForFile() {
         return
                 "" + user.getUserName() + ";" + availableFunds + ";" +
-                        symbolList.toString() + ';' +
+                        symbolList + ';' +
                         prices + ';' +
                         volumes + ';' +
                         averagePrices + ';' +
