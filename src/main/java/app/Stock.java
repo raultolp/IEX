@@ -4,8 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import javafx.collections.FXCollections;
-import javafx.scene.control.ChoiceBox;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,7 +70,6 @@ public class Stock {
             JsonParser jp = new JsonParser(); //from gson
             InputStream is = (InputStream) request.getContent();
             JsonElement root = jp.parse(new InputStreamReader(is));
-            //JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //from input stream to json
             JsonObject rootobj = root.getAsJsonObject(); // array or object
             currentPrice = rootobj.getAsJsonObject("quote").get("latestPrice").getAsDouble(); //168.38
             long marketCapAsLong = rootobj.getAsJsonObject("quote").get("marketCap").getAsLong();
@@ -98,9 +95,7 @@ public class Stock {
             JsonParser jp2 = new JsonParser(); //from gson
             InputStream is2 = (InputStream) request2.getContent();
             JsonElement root2 = jp.parse(new InputStreamReader(is2));
-            //JsonElement root2 = jp.parse(new InputStreamReader((InputStream) request2.getContent())); //from input stream to json
             JsonObject rootobj2 = root2.getAsJsonObject(); // array or object
-            //dividendYield=rootobj2.getAsJsonObject("dividendYield").getAsDouble();
             dividendYield = rootobj2.get("dividendYield").getAsDouble();
             eps = rootobj2.get("latestEPS").getAsDouble();
             change1Year = rootobj2.get("year1ChangePercent").getAsDouble();
