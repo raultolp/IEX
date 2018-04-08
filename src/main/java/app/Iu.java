@@ -11,8 +11,23 @@ public class Iu {
     public static final String ANSI_RESET = "\u001B[0m";
     private static List<User> userList = new ArrayList<>();
     private static List<Portfolio> portfolioList = new ArrayList<>();
-    private static List<Stock> stockList = new ArrayList<>();
+    //private static List<Stock> stockList = new ArrayList<>();
 
+    private static final User admin = new User("admin", new Portfolio(), 0);
+    private static User active = admin;
+
+    private static final String[] availableStocks = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
+            "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
+            "TSLA", "TWTR", "V", "WMT"};
+
+    //ORIGINAL
+//    private static final String[] availableStocks = {"AAPL", "AMZN", "AMD", "BA", "BABA", "BAC", "BBY", "BIDU",
+//            "C", "CAT", "COST", "CRM", "CSCO", "DE", "F", "FSLR", "GE", "GM", "GME", "GOOG", "GS",
+//            "HD", "HLF", "HPE", "HPQ", "HTZ", "IBM", "INTC", "JAZZ", "JCP", "JNJ", "JNPR", "JPM",
+//            "K", "KO", "LMT", "LOGI", "MA", "MCD", "MMM", "MS", "MSFT", "NFLX", "NKE", "NTAP",
+//            "NTNX", "NVDA", "ORCL", "P", "PEP", "PG", "QCOM", "RHT", "SBUX", "SINA", "SSYS", "STX",
+//            "SYMC", "TGT", "TIF", "TRIP", "TSLA", "TWTR", "TXN", "UA", "UAL", "V", "VMW", "VNET",
+//            "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
 
     public static void main(String[] args) throws IOException {
 
@@ -69,8 +84,8 @@ public class Iu {
 
         //------------------------------------
 
-        //TESTING STOCKLIST:
-        stockList.add(new Stock("AAPL"));
+/*        //TESTING STOCKLIST:
+        stockList.add(new Stock("AAPL"));*/  //asendatud muutujaga "stockMap"
 
         //------------------------------------
 
@@ -92,17 +107,13 @@ public class Iu {
                 "Save data file",
                 "Quit"};
 
-        final String[] availableStocks = {"AAPL", "AMZN", "AMD", "BA", "BABA", "BAC", "BBY", "BIDU",
-                "C", "CAT", "COST", "CRM", "CSCO", "DE", "FSLR", "GE", "GM", "GME", "GOOG", "GS",
-                "HD", "HLF", "HPE", "HPQ", "HTZ", "IBM", "INTC", "JAZZ", "JCP", "JNJ", "JNPR", "JPM",
-                "K", "KO", "LMT", "LOGI", "MA", "MCD", "MMM", "MS", "MSFT", "NFLX", "NKE", "NTAP",
-                "NTNX", "NVDA", "ORCL", "P", "PEP", "PG", "QCOM", "RHT", "SBUX", "SINA", "SSYS", "STX",
-                "SYMC", "TGT", "TIF", "TRIP", "TSLA", "TWTR", "TXN", "UA", "UAL", "V", "VMW", "VNET",
-                "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
+        Map <String, Stock> stockMap=new HashMap<>();
 
+        for (String symbol : availableStocks) {
+            Stock stock=new Stock(symbol);
+            stockMap.put(symbol, stock);
+        }
 
-        User admin = new User("admin", new Portfolio(), 0);
-        User active = admin;
         boolean quitProgram = false;
 
 
@@ -129,7 +140,7 @@ public class Iu {
                 //Add user
                 case 1:
                     name = enterUserName(sc);
-                    if (name != null && nameInList(name, userList) > -1) {
+                    if (name != null && nameInList(name) > -1) {
                         System.out.println(ANSI_RED + "Name already exists!" + ANSI_RESET);
                     } else if (name != null) {
                         userList.add(new User(name, new Portfolio(), 100000));
@@ -140,7 +151,7 @@ public class Iu {
                 //Delete user
                 case 2:
                     name = enterUserName(sc);
-                    index = nameInList(name, userList);
+                    index = nameInList(name);
                     if (index > -1) {
                         userList.remove(index);
                         System.out.println(ANSI_YELLOW + "User " + name + " has been deleted." + ANSI_RESET);
@@ -150,14 +161,14 @@ public class Iu {
 
                 //List users
                 case 3:
-                    showUsersList(userList);
+                    showUsersList();
                     break;
 
                 //Set active user
                 case 4:
-                    showUsersList(userList);
+                    showUsersList();
                     name = enterUserName(sc);
-                    index = nameInList(name, userList);
+                    index = nameInList(name);
                     if (index > -1) {
                         active = userList.get(index);
                         System.out.println(ANSI_YELLOW + "User " + name + " is now active." + ANSI_RESET);
@@ -166,7 +177,7 @@ public class Iu {
 
                 //Buy stock
                 case 5:
-                    showStockList(availableStocks);
+                    showStockList();
                     name = enterStockName(sc);
 
                     if (Arrays.asList(availableStocks).contains(name)) {
@@ -204,7 +215,7 @@ public class Iu {
 
                 //View available stock list
                 case 8:
-                    showStockList(availableStocks);
+                    showStockList();
                     break;
                 //View stock list base data
                 case 9:
@@ -226,9 +237,13 @@ public class Iu {
                     System.out.println("Tuleb hiljem");
                     break;
 
-                //Refresh data from web
+                //Refresh data from web (refreshes stock prices in stockMap)
                 case 13:
-                    System.out.println("Tuleb hiljem");
+                    for (String symbol : stockMap.keySet()) {
+                        Stock stock = stockMap.get(symbol);
+                        double price = stock.getLatestPrice();
+                        stock.setCurrentPrice(price);
+                    }
                     break;
 
                 //Load data file
@@ -314,7 +329,7 @@ public class Iu {
         return qty;
     }
 
-    private static int nameInList(String name, List<User> userList) {
+    private static int nameInList(String name) {
         for (User user : userList) {
             if (user.getUserName().equals(name))
                 return userList.indexOf(user);
@@ -322,7 +337,7 @@ public class Iu {
         return -1;
     }
 
-    private static void showUsersList(List<User> userList) {
+    private static void showUsersList() {
         System.out.println("Defined users:");
         if (userList.size() > 0) {
             for (User item : userList) {
@@ -333,12 +348,12 @@ public class Iu {
         System.out.println();
     }
 
-    private static void showStockList(String[] stockList) {
+    private static void showStockList() {
         System.out.println("Avilable stocks:");
-        Arrays.sort(stockList);
+        Arrays.sort(availableStocks);
         int i;
-        for (i = 0; i < stockList.length; i++) {
-            System.out.printf("%-5s%s", stockList[i], (i + 1) % 10 == 0 ? "\n" : " ");
+        for (i = 0; i < availableStocks.length; i++) {
+            System.out.printf("%-5s%s", availableStocks[i], (i + 1) % 10 == 0 ? "\n" : " ");
         }
         if (i % 10 != 0)
             System.out.println();
@@ -492,8 +507,12 @@ public class Iu {
         String username;
 
         sc.nextLine();
+        showUsersList();
         System.out.print("Enter username: ");
         username = sc.nextLine();
+
+        if (username.length() < 3)
+            username = active.getUserName();
 
         for (User user : userList) {
             if (user.getUserName().equals(username)) {
