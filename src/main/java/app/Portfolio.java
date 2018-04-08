@@ -143,12 +143,8 @@ public class Portfolio {
             totalCurrentValueOfPositions = calculateTotal(currentValuesOfPositions);
             totalProfitOrLoss = calculateTotal(profitsOrLosses);
             totalUnrealisedProfitOrLoss = calculateTotal(unrealisedProfitsOrLosses);
-            ;
         }
 
-
-        //TODO:
-        //Check if user has enough money for the transaction
     }
 
     //-----------------------------------------------
