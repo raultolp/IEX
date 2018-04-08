@@ -340,7 +340,7 @@ public class Iu {
         for (i = 0; i < stockList.length; i++) {
             System.out.printf("%-5s%s", stockList[i], (i + 1) % 10 == 0 ? "\n" : " ");
         }
-        if ((i + 1) % 10 != 0)
+        if (i % 10 != 0)
             System.out.println();
     }
 
@@ -364,6 +364,7 @@ public class Iu {
 
     public static void loadData(Scanner sc) throws IOException {
 
+        listFiles();
         sc.nextLine();
 
         System.out.print("Enter filename: ");
@@ -442,11 +443,21 @@ public class Iu {
 
                     portfolioList.add(port);
                     userList.add(newUser);
-
                 }
-
             }
         }
+    }
+
+    private static void listFiles() {
+        File folder = new File(".");
+        File[] files = folder.listFiles();
+        int i = 1;
+        for (File file: files) {
+            if (file.getName().endsWith(".game"))
+                System.out.printf("%15s%s", file.getName(), i++ % 4 == 0 ? "\n" : " ");
+        }
+        if ((i - 1) % 4 != 0)
+            System.out.println();
     }
 
     private static void showUserPortfolio(Scanner sc) {
@@ -462,8 +473,6 @@ public class Iu {
                 System.out.println(portfolio.toString());
             }
         }
-
-
     }
 
     private static void showStockBaseData(Scanner sc) {
