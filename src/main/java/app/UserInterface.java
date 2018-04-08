@@ -7,8 +7,13 @@ package app;
 //SteelBlue 	#4682B4
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,6 +22,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
 import java.util.*;
@@ -40,8 +46,11 @@ public class UserInterface extends Application {
         centerGrid.add(addTableView(), 0, 0);
 
         BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(addTableView());
+        borderPane.setCenter(centerGrid);
+        //borderPane.setCenter(addTableView());
         borderPane.setBottom(addBottomHBox());
+
+        addTableView();
 
 
         Scene scene = new Scene(borderPane, 600, 550);
@@ -70,64 +79,115 @@ public class UserInterface extends Application {
         return hbox;
     }
 
-    private TableView<Stock> addTableView() {
-
-        //Stock symbols
-        TableColumn<Stock, String> symbolColumn = new TableColumn<>("Stock");
-        symbolColumn.setMinWidth(100);
-        symbolColumn.setCellValueFactory(new PropertyValueFactory<>("symbol"));
-
-        //Prices
-        TableColumn<Stock, Double> priceColumn = new TableColumn<>("Price");
-        priceColumn.setMinWidth(100);
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("currentPrice"));
-
-        ///Volume
-        TableColumn<Stock, String> volumeColumn = new TableColumn<>("Volume");
-        volumeColumn.setMinWidth(100);
-
-        ///Total
-        TableColumn<Stock, String> totalColumn = new TableColumn<>("Total");
-        volumeColumn.setMinWidth(100);
-
-        ///Buy/sell
-        ChoiceBox<String> buySellBox = new ChoiceBox<>();
-        buySellBox.getItems().addAll("Buy", "Sell");
-        TableColumn<Stock, String> tradeColumn = new TableColumn<>("Buy/sell");
-        tradeColumn.setMinWidth(100);
-        tradeColumn.setCellValueFactory(new PropertyValueFactory<>("buySellBox"));
-
-        ///Amount
-        TableColumn<Stock, String> numberColumn = new TableColumn<>("Number");
-        volumeColumn.setMinWidth(100);
-
-        TableView table = new TableView<Stock>();
-        table.setEditable(true);
-        table.setItems(getStocksFromPortfolio());
-        table.getColumns().addAll(symbolColumn, priceColumn, volumeColumn, totalColumn, tradeColumn, numberColumn);
+    //https://stackoverflow.com/questions/38487797/javafx-populate-tableview-with-an-observablemap-that-has-a-custom-class-for-its
 
 
-        //flowPane.getChildren().addAll(table);
+    private TableView<MapEntry<String, Stock>> addTableView() {
+
+        /**stock
+        price
+        volume
+        position total
+        unrealized P/L
+        Avg price paid
+        realized P/L**/
+
+        Map<String, Stock> hm = new HashMap<>();
+        //Map<String, Stock> hm = portfolio.getPortfolio();
+        ObservableMap<String, Stock> map = FXCollections.observableHashMap();
+
+        ObservableList<MapEntry<String, Stock>> stocks = FXCollections.observableArrayList();
+
+        final TableView<MapEntry<String, Stock>> table = new TableView<>(stocks);
+        Stock stock1 = new Stock("AAPL");
+        hm.put("AAPL", stock1);
+        for (String key : hm.keySet()) {
+            Stock stock = hm.get(key);
+            map.put(key, stock);
+            System.out.println(hm);
+        }
+
+
+        map.addListener((MapChangeListener.Change<? extends String, ? extends Stock> change) -> {
+            boolean removed = change.wasRemoved();
+            if (removed != change.wasAdded()) {
+                if (removed) {
+                    // no put for existing key, remove pair completely
+                    stocks.remove(new MapEntry<>(change.getKey(), (Stock) null));
+                } else {
+                    // add new entry
+                    stocks.add(new MapEntry<>(change.getKey(), change.getValueAdded()));
+                }
+            } else {
+                // replace existing entry
+                MapEntry<String, Stock> entry = new MapEntry<>(change.getKey(), change.getValueAdded());
+
+                int index = stocks.indexOf(entry);
+                stocks.set(index, entry);
+            }
+        });
+
+        TableColumn<MapEntry<String, Stock>, String> stockSymbols = new TableColumn<>("Stock");
+        stockSymbols.setCellValueFactory(cd -> Bindings.createStringBinding(() -> cd.getValue().getKey()));
+
+        TableColumn<MapEntry<String, Stock>, String> price = new TableColumn<>("Price");
+        price.setCellValueFactory(new PropertyValueFactory<>("Prices"));
+
+        TableColumn<MapEntry<String, Stock>, String> volume = new TableColumn<>("Volume");
+        price.setCellValueFactory(new PropertyValueFactory<>("Volumes"));
+
+        TableColumn<MapEntry<String, Stock>, String> positionTotal = new TableColumn<>("Position total");
+        positionTotal.setCellValueFactory(new PropertyValueFactory<>("CurrentValuesOfPositions"));
+
+        TableColumn<MapEntry<String, Stock>, String> unrealised = new TableColumn<>("Unrealised P/L");
+        positionTotal.setCellValueFactory(new PropertyValueFactory<>("UnrealisedProfitsOrLosses"));
+
+        TableColumn<MapEntry<String, Stock>, String> avgPaid = new TableColumn<>("AVG price paid");
+        avgPaid.setCellValueFactory(new PropertyValueFactory<>("AveragePrices"));
+
+        TableColumn<MapEntry<String, Stock>, String> realised = new TableColumn<>("Realised P/L");
+        realised.setCellValueFactory(new PropertyValueFactory<>("ProfitsOrLosses"));
+
+
+        table.getColumns().addAll(stockSymbols, price, volume, positionTotal, unrealised, avgPaid, realised);
+
+
 
         return table;
     }
 
-    private ObservableList<Stock> getStocksFromPortfolio() {
-        //Map<String, Stock> hm = portfolio.getPortfolio();
-        Stock stock1 = new Stock("AAPL");
-        Map<String, Stock> hm = new HashMap<>();
-        hm.put("AAPL", stock1);
-      //  Portfolio portfolio = new Portfolio(hm);
 
-        ObservableList<Stock> stocks = FXCollections.observableArrayList();
+    public final class MapEntry<K, V> {
 
-        for (String key : hm.keySet()) {
-            Stock stock = hm.get(key);
-            stocks.add(stock);
+        private final K key;
+        private final V value;
+
+        public MapEntry(K key, V value) {
+            this.key = key;
+            this.value = value;
         }
-        // System.out.println(stocks);
-        return stocks;
+
+        @Override
+        public boolean equals(Object obj) {
+            // check equality only based on keys
+            if (obj instanceof app.MapEntry) {
+                app.MapEntry<?, ?> other = (app.MapEntry<?, ?>) obj;
+                return Objects.equals(key, other.getKey());
+            } else {
+                return false;
+            }
+        }
+
+        public K getKey() {
+            return key;
+        }
+
+        public V getValue() {
+            return value;
+        }
+
     }
+
 
 
 }
