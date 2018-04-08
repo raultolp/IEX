@@ -3,6 +3,12 @@ package app;
 import java.util.*;
 
 public class Iu {
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_RESET = "\u001B[0m";
+
     public static void main(String[] args) {
 
         //------------------------------------
@@ -33,21 +39,22 @@ public class Iu {
 
         //------------------------------------
 
+        final String[] mainMenu = {"Add user",
+                "Delete user",
+                "List users",
+                "Set active user",
+                "Buy stock",
+                "Sell stock",
+                "View user portfolio",
+                "View stock data base data",
+                "View stock historical data graph",
+                "View all portfolios progress graph",
+                "Refresh data from web",
+                "Load data file",
+                "Save data file",
+                "Quit"};
 
-        final String[] mainMenu = {"\n 1 - Add user",
-                " 2 - Delete user",
-                " 3 - List users",
-                " 4 - Set active user",
-                " 5 - Buy stock",
-                " 6 - Sell stock",
-                " 7 - View user portfolio",
-                " 8 - View stock data base data",
-                " 9 - View stock historical data graph",
-                "10 - View all portfolios progress graph",
-                "11 - Refresh data from web",
-                "12 - Load data file",
-                "13 - Save data file",
-                "14 - Quit"};
+
 
         List<User> userList = new ArrayList<>();
         List<Portfolio> portfolioList = new ArrayList<>();
@@ -60,11 +67,12 @@ public class Iu {
         Scanner sc = new Scanner(System.in);
 
         while(!quitProgram) {
-            int choice;
             String name;
+            int index;
+            int choice;
 
             printMenu(mainMenu);
-            System.out.print("Active:" + active.getUserName() + "> ");
+            System.out.print("Active:" + ANSI_GREEN + active.getUserName() + ANSI_RESET + "> ");
 
             try {
                 choice = sc.nextInt();
@@ -74,7 +82,7 @@ public class Iu {
             }
 
             switch (choice) {
-                // 1 - Add user
+                //Add user
                 case 1:
                     name = enterUserName(sc);
                     if (name.length() < 1 || nameInList(name, userList) > -1) {
@@ -84,57 +92,59 @@ public class Iu {
                         System.out.println("Created user: " + name);
                     }
                     break;
-                //2 - Delete user
+                //Delete user
                 case 2:
                     name = enterUserName(sc);
-                    int index = nameInList(name, userList);
+                    index = nameInList(name, userList);
                     if (index > -1) {
                         userList.remove(index);
                         System.out.println("User " + name + " has been deleted.");
                     }
 
                     break;
-                //3 - List users
+                //List users
                 case 3:
-                    System.out.println("Defined users:");
-                    int count = 0;
-                    for (User item: userList) {
-                        System.out.printf("%-12s%s", item.getUserName(), (count++ > 5 ? "\n" : " "));
-                        if (count > 6)
-                            count = 0;
+                    showUsersList(userList);
+                    break;
+                //Set active user
+                case 4:
+                    showUsersList(userList);
+                    name = enterUserName(sc);
+                    index = nameInList(name, userList);
+                    if (index > -1) {
+                        active = userList.get(index);
+                        System.out.println("User " + name + " is now active.");
                     }
                     break;
-                //4 - Set active user
-                case 4:
-                    break;
-                //5 - Buy stock
+                //Buy stock
                 case 5:
+                    //List of available stocks
                     break;
-                //6 - Sell stock"
+                //Sell stock"
                 case 6:
                     break;
-                //7 - View user portfolio
+                //View user portfolio
                 case 7:
                     break;
-                //8 - View stock data base data
+                //View stock data base data
                 case 8:
                     break;
-                //9 - View stock historical data graph
+                //View stock historical data graph
                 case 9:
                     break;
-                //10 - View all portfolios progress graph"
+                //View all portfolios progress graph"
                 case 10:
                     break;
-                //11 - Refresh data from web
+                //Refresh data from web
                 case 11:
                     break;
-                //12 - Load data file
+                //Load data file
                 case 12:
                     break;
-                //13 - Save data file
+                //Save data file
                 case 13:
                     break;
-                //14 - Quit
+                //Quit
                 case 14:
 //                    saveData();
                     quitProgram = true;
@@ -147,9 +157,14 @@ public class Iu {
     }
 
     private static void printMenu(String[] menu) {
-        for (String item: menu) {
-            System.out.println(item);
+        System.out.println();
+        for (int i = 0; i < menu.length / 2; i++) {
+            int next =  menu.length / 2 + i;
+            System.out.printf("%2d) %-30s %2d) %-30s\n", i + 1, menu[i], next + 1, menu[next] != null ? menu[next] : "");
         }
+//        for (String item: menu) {
+//            System.out.println(item);
+//        }
     }
 
     private static String enterUserName(Scanner sc) {
@@ -159,6 +174,7 @@ public class Iu {
             name = sc.next();
             if (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name))
                 System.out.println("Use name with 3..12 characters and numbers.");
+            System.out.println(name.length());
         } while (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name));
 
         return name;
@@ -170,6 +186,16 @@ public class Iu {
                 return userList.indexOf(user);
         }
         return -1;
+    }
+
+    private static void showUsersList(List<User> userList) {
+        System.out.println("Defined users:");
+        if (userList.size() > 0) {
+            for (User item : userList) {
+                System.out.printf("%-12s%s", item.getUserName(), (userList.indexOf(item) + 1) % 6 == 0 ? "\n" : " ");
+            }
+        } else
+            System.out.println("None");
     }
 
     private static boolean isAlphaNumeric(String text) {
