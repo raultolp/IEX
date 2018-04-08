@@ -46,6 +46,7 @@ public class Iu {
                 "Buy stock",
                 "Sell stock",
                 "View user portfolio",
+                "View available stock list",
                 "View stock data base data",
                 "View stock historical data graph",
                 "View all portfolios progress graph",
@@ -54,7 +55,13 @@ public class Iu {
                 "Save data file",
                 "Quit"};
 
-
+        final String[] availableStocks = {"AAPL", "AMZN", "AMD", "BA", "BABA", "BAC", "BBY", "BIDU",
+                "C", "CAT", "COST", "CRM", "CSCO", "DE", "FSLR", "GE", "GM", "GME", "GOOG", "GS",
+                "HD", "HLF", "HPE", "HPQ", "HTZ", "IBM", "INTC", "JAZZ", "JCP", "JNJ", "JNPR", "JPM",
+                "K", "KO", "LMT", "LOGI", "MA", "MCD", "MMM", "MS", "MSFT", "NFLX", "NKE", "NTAP",
+                "NTNX", "NVDA", "ORCL", "P", "PEP", "PG", "QCOM", "RHT", "SBUX", "SINA", "SSYS", "STX",
+                "SYMC", "TGT", "TIF", "TRIP", "TSLA", "TWTR", "TXN", "UA", "UAL", "V", "VMW", "VNET",
+                "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
 
         List<User> userList = new ArrayList<>();
         List<Portfolio> portfolioList = new ArrayList<>();
@@ -116,8 +123,10 @@ public class Iu {
                         System.out.println("User " + name + " is now active.");
                     }
                     break;
+
                 //Buy stock
                 case 5:
+                    showStockList(availableStocks);
                     //List of available stocks
                     break;
                 //Sell stock"
@@ -126,26 +135,30 @@ public class Iu {
                 //View user portfolio
                 case 7:
                     break;
-                //View stock data base data
+                //View available stock list
                 case 8:
+                    showStockList(availableStocks);
                     break;
-                //View stock historical data graph
+                //View stock data base data
                 case 9:
                     break;
-                //View all portfolios progress graph"
+                //View stock historical data graph
                 case 10:
                     break;
-                //Refresh data from web
+                //View all portfolios progress graph"
                 case 11:
                     break;
-                //Load data file
+                //Refresh data from web
                 case 12:
                     break;
-                //Save data file
+                //Load data file
                 case 13:
                     break;
-                //Quit
+                //Save data file
                 case 14:
+                    break;
+                //Quit
+                case 15:
 //                    saveData();
                     quitProgram = true;
                     System.out.println("Bye-bye!");
@@ -158,13 +171,14 @@ public class Iu {
 
     private static void printMenu(String[] menu) {
         System.out.println();
-        for (int i = 0; i < menu.length / 2; i++) {
-            int next =  menu.length / 2 + i;
-            System.out.printf("%2d) %-30s %2d) %-30s\n", i + 1, menu[i], next + 1, menu[next] != null ? menu[next] : "");
+        for (int i = 0; i < menu.length / 2 + menu.length % 2; i++) {
+            int next =  menu.length / 2 + i + menu.length % 2;
+            System.out.printf("%2d) %-30s ", i + 1, menu[i]);
+            if (next < menu.length)
+                System.out.printf("%2d) %-30s\n", next + 1, menu[next]);
+            else
+                System.out.println();
         }
-//        for (String item: menu) {
-//            System.out.println(item);
-//        }
     }
 
     private static String enterUserName(Scanner sc) {
@@ -196,6 +210,16 @@ public class Iu {
             }
         } else
             System.out.println("None");
+    }
+
+    private static void showStockList(String[] stockList) {
+        System.out.println("Avilable stocks:");
+        int i;
+        for (i = 0; i < stockList.length; i++) {
+            System.out.printf("%-5s%s", stockList[i], (i + 1) % 10 == 0 ? "\n" : " ");
+        }
+        if ((i + 1) % 10 != 0)
+            System.out.println();
     }
 
     private static boolean isAlphaNumeric(String text) {
