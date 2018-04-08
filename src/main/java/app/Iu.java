@@ -1,7 +1,10 @@
 package app;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class Iu {
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -42,8 +45,9 @@ public class Iu {
         //------------------------------------
         //TESTING PORTFOLIO:
         Portfolio portfell = new Portfolio();
+        User pets = new User("Peeter", portfell, 1000000); //testing Pets
         portfell.buyStock("AAPL", 200);
-        portfell.buyStock("MSFT", 100);
+        portfell.buyStock("AAPL", 1);
         System.out.println("Total profit: " + portfell.getTotalProfitOrLoss());
         System.out.println("AAPL CEO: " + portfell.getPortfolio().get("AAPL").getCEO());
 
@@ -79,7 +83,6 @@ public class Iu {
         List<Portfolio> portfolioList = new ArrayList<>();
         List<Stock> stockList = new ArrayList<>();
 
-        User pets = new User("Peeter", portfell, 100);
 
         User admin = new User("admin", new Portfolio(), 0);
         User active = admin;
@@ -204,17 +207,17 @@ public class Iu {
 
                 //Load data file
                 case 13:
-                    System.out.println("Tuleb hiljem");
+                    loadData(sc);
                     break;
 
                 //Save data file
                 case 14:
-                    saveData();
+                    saveData(sc);
                     break;
 
                 //Quit
                 case 15:
-//                    saveData();
+                    //saveData(sc);
                     quitProgram = true;
                     System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
                     break;
@@ -263,7 +266,7 @@ public class Iu {
                 System.out.println(ANSI_RED + "Choose right stock name." + ANSI_RESET);
             if (name.length() == 0)
                 return null;
-        } while (name.length() < 1 || name.length() > 5 || !isAlpha(name));
+        } while (name.length() > 5 || !isAlpha(name));
 
         return name.toUpperCase();
     }
@@ -278,7 +281,6 @@ public class Iu {
                 qty = sc.nextInt();
             } catch (InputMismatchException e) {
                 System.out.println("Wrong input: " + sc.nextLine());
-                continue;
             }
         } while (qty < 1 || qty > 1000);
 
@@ -315,10 +317,12 @@ public class Iu {
             System.out.println();
     }
 
-    private static void saveData() throws IOException {
-        String filename = "data.game";
+    private static void saveData(Scanner sc) throws IOException {
 
-        //TODO: add a way to get different filenames
+        sc.nextLine();
+
+        System.out.print("Enter filename: ");
+        String filename = sc.nextLine();
 
         File file = new File(filename);
         file.createNewFile();
@@ -329,6 +333,29 @@ public class Iu {
             writer.write(user.getUserName() + "'s Portfolio: \n" + user.getPortfolio().toString());
         }
         writer.close();
+
+    }
+
+
+    public static void loadData(Scanner sc) throws IOException {
+        sc.nextLine();
+
+        System.out.print("Enter filename: ");
+        String filename = sc.nextLine();
+
+        File file = new File(filename);
+
+        if (file.exists()) {
+            try ( BufferedReader br = new BufferedReader(new FileReader(file)) ) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] pieces = line.split(" ");
+                    System.out.println(Arrays.toString(pieces));
+                }
+            }
+        }
+
+
     }
 
 
