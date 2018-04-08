@@ -9,14 +9,17 @@ public class User {
         this.userName = userName;
         this.portfolio = portfolio;
         this.availableFunds = availableFunds;
+        portfolio.setAvailableFunds(availableFunds);
+        portfolio.setUser(this);
+    }
+
+
+    public Portfolio getPortfolio() {
+        return portfolio;
     }
 
     public void setAvailableFunds(double availableFunds) {
         this.availableFunds = availableFunds;
-    }
-
-    public Portfolio getPortfolio() {
-        return portfolio;
     }
 
     public double getAvailableFunds() {
@@ -26,4 +29,7 @@ public class User {
     public String getUserName() {
         return userName;
     }
+
+
+
 }
