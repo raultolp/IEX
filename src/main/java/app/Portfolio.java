@@ -91,6 +91,9 @@ public class Portfolio {
             } else {
                 double averagePrice = price + transactionFee;
 
+                System.out.println(volume+ " "+symbol+ " stocks bought @"+price+ " USD (total value "+
+                        volume*(price+transactionFee)+" USD).");
+
                 portfolio.put(symbol, stock);
                 symbolList.add(symbol);
                 volumes.add(volume);
@@ -119,6 +122,9 @@ public class Portfolio {
                 double prevTotal = currentValuesOfPositions.get(indexOfStock);
                 double prevAveragePrice = averagePrices.get(indexOfStock);
                 double prevProfitOrLoss = profitsOrLosses.get(indexOfStock);
+
+                System.out.println(volume+ " "+symbol+ " stocks bought @"+price+ " USD (total value "+
+                        volume*(price+transactionFee)+" USD).");
 
                 volumes.set(indexOfStock, prevVolume + volume);
                 prices.set(indexOfStock, price); //current price
@@ -172,6 +178,9 @@ public class Portfolio {
         double prevTotal = currentValuesOfPositions.get(indexOfStock);
         double prevAveragePrice = averagePrices.get(indexOfStock);
         double prevProfitOrLoss = profitsOrLosses.get(indexOfStock);
+
+        System.out.println(volume+ " "+symbol+ " stocks sold @"+price+ " USD (total value "+
+                volume*(price-transactionFee)+" USD).");
 
         volumes.set(indexOfStock, prevVolume - volume);
         prices.set(indexOfStock, price); //current price uuendamine

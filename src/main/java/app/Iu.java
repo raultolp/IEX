@@ -11,7 +11,7 @@ public class Iu {
     public static final String ANSI_RESET = "\u001B[0m";
     private static List<User> userList = new ArrayList<>();
     private static List<Portfolio> portfolioList = new ArrayList<>();
-    private static List<Stock> stockList = new ArrayList<>();
+    //private static List<Stock> stockList = new ArrayList<>();
 
 
     public static void main(String[] args) throws IOException {
@@ -69,8 +69,8 @@ public class Iu {
 
         //------------------------------------
 
-        //TESTING STOCKLIST:
-        stockList.add(new Stock("AAPL"));
+/*        //TESTING STOCKLIST:
+        stockList.add(new Stock("AAPL"));*/  //asendatud muutujaga "stockMap"
 
         //------------------------------------
 
@@ -99,6 +99,13 @@ public class Iu {
                 "NTNX", "NVDA", "ORCL", "P", "PEP", "PG", "QCOM", "RHT", "SBUX", "SINA", "SSYS", "STX",
                 "SYMC", "TGT", "TIF", "TRIP", "TSLA", "TWTR", "TXN", "UA", "UAL", "V", "VMW", "VNET",
                 "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
+
+        Map <String, Stock> stockMap=new HashMap<>();
+
+        for (String symbol : availableStocks) {
+            Stock stock=new Stock(symbol);
+            stockMap.put(symbol, stock);
+        }
 
 
         User admin = new User("admin", new Portfolio(), 0);
@@ -226,9 +233,13 @@ public class Iu {
                     System.out.println("Tuleb hiljem");
                     break;
 
-                //Refresh data from web
+                //Refresh data from web (refreshes stock prices in stockMap)
                 case 13:
-                    System.out.println("Tuleb hiljem");
+                    for (String symbol : stockMap.keySet()) {
+                        Stock stock = stockMap.get(symbol);
+                        double price = stock.getLatestPrice();
+                        stock.setCurrentPrice(price);
+                    }
                     break;
 
                 //Load data file
