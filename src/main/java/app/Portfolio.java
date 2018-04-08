@@ -15,13 +15,13 @@ public class Portfolio {
     private List<Double> prices;  //current price
     private List<Integer> volumes; //number of stocks
     private List<Double> averagePrices; //average purchase prices (includes transaction fees) -
-    //necessary also in order to take into account that
-    // stocks can be bought with different prices at different times.
+                                        //necessary also in order to take into account that
+                                        // stocks can be bought with different prices at different times.
     private List<Double> profitsOrLosses;  //realised profit/loss from each stock in portfolio
-    //("realised profit/loss" means profit loss from transactions made)
+                            //("realised profit/loss" means profit loss from transactions made)
     private List<Double> unrealisedProfitsOrLosses; //"unrealised proft/loss" means profit/loss that would
-    // be gained if stocks were sold at current market price
-    //(does not include transaction fee)
+                                                // be gained if stocks were sold at current market price
+                                                //(does not include transaction fee)
     private List<Double> currentValuesOfPositions;  // volume*current price, i.e. current value of stock in portfolio
 
     //Totals:
@@ -210,7 +210,6 @@ public class Portfolio {
         //TODO:
         //Possibility for short selling could be added (allows negative number of stocks)
 
-
     }
 
     //-----------------------------------------------
@@ -243,7 +242,6 @@ public class Portfolio {
         return total;
     }
 
-
     //-----------------------------------------------
 
     //update current prices of all stocks in portfolio:
@@ -271,6 +269,7 @@ public class Portfolio {
     //-----------------------------------------------
 
     public boolean checkSufficiencyOfFunds(double price, int volume) {
+        System.out.println(availableFunds);
         if ((price + transactionFee) * volume > availableFunds) {
             return false;
         }
@@ -278,7 +277,7 @@ public class Portfolio {
     }
 
     //-----------------------------------------------
-    //GETTERS:
+    //GETTER & SETTERS:
 
     //Getting stock from portfolio:
     public Stock getStock(String symbol) {
@@ -337,6 +336,9 @@ public class Portfolio {
     public void setUser(User user) {
         this.user = user;
     }
+
+
+    //-----------------------------------------------
 
     @Override
     public String toString() {

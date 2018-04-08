@@ -29,7 +29,7 @@ public class Stock {
 
 
     private int marketCap; //turukapitalisatsioon miljonites dollarites (näitab ettevõtte suurust)
-    // (s.o kõigi noteeritud aktsiate hetkehindade summa)
+                            // (s.o kõigi noteeritud aktsiate hetkehindade summa)
     private double peRatio;
     private double previousClose; //eelmine sulgemishind
     private double change1Year; //hinnamuutus viimase 1 aasta jooksul (protsendina)
@@ -73,7 +73,6 @@ public class Stock {
             JsonParser jp = new JsonParser(); //from gson
             InputStream is=(InputStream) request.getContent();
             JsonElement root = jp.parse(new InputStreamReader(is));
-            //JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //from input stream to json
             JsonObject rootobj = root.getAsJsonObject(); // array or object
             currentPrice=rootobj.getAsJsonObject("quote").get("latestPrice").getAsDouble(); //168.38
             long marketCapAsLong=rootobj.getAsJsonObject("quote").get("marketCap").getAsLong();
@@ -99,9 +98,7 @@ public class Stock {
             JsonParser jp2 = new JsonParser(); //from gson
             InputStream is2=(InputStream) request2.getContent();
             JsonElement root2 = jp.parse(new InputStreamReader(is2));
-            //JsonElement root2 = jp.parse(new InputStreamReader((InputStream) request2.getContent())); //from input stream to json
             JsonObject rootobj2 = root2.getAsJsonObject(); // array or object
-            //dividendYield=rootobj2.getAsJsonObject("dividendYield").getAsDouble();
             dividendYield=rootobj2.get("dividendYield").getAsDouble();
             eps=rootobj2.get("latestEPS").getAsDouble();
             change1Year=rootobj2.get("year1ChangePercent").getAsDouble();
@@ -131,12 +128,9 @@ public class Stock {
             CEO=rootobj3.get("CEO").getAsString();
             website=rootobj3.get("website").getAsString();
 
-
             request3.disconnect();
             is3.close();
             //------------------------------------------------
-
-
 
         } catch (IOException e) {
             System.out.println("Connection to IEX failed.");
