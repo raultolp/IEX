@@ -13,6 +13,16 @@ public class Iu {
     private static List<Portfolio> portfolioList = new ArrayList<>();
     //private static List<Stock> stockList = new ArrayList<>();
 
+    private static final User admin = new User("admin", new Portfolio(), 0);
+    private static User active = admin;
+
+    private static final String[] availableStocks = {"AAPL", "AMZN", "AMD", "BA", "BABA", "BAC", "BBY", "BIDU",
+            "C", "CAT", "COST", "CRM", "CSCO", "DE", "FSLR", "GE", "GM", "GME", "GOOG", "GS",
+            "HD", "HLF", "HPE", "HPQ", "HTZ", "IBM", "INTC", "JAZZ", "JCP", "JNJ", "JNPR", "JPM",
+            "K", "KO", "LMT", "LOGI", "MA", "MCD", "MMM", "MS", "MSFT", "NFLX", "NKE", "NTAP",
+            "NTNX", "NVDA", "ORCL", "P", "PEP", "PG", "QCOM", "RHT", "SBUX", "SINA", "SSYS", "STX",
+            "SYMC", "TGT", "TIF", "TRIP", "TSLA", "TWTR", "TXN", "UA", "UAL", "V", "VMW", "VNET",
+            "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
 
     public static void main(String[] args) throws IOException {
 
@@ -92,21 +102,12 @@ public class Iu {
                 "Save data file",
                 "Quit"};
 
-        final String[] availableStocks = {"AAPL", "AMZN", "AMD", "BA", "BABA", "BAC", "BBY", "BIDU",
-                "C", "CAT", "COST", "CRM", "CSCO", "DE", "FSLR", "GE", "GM", "GME", "GOOG", "GS",
-                "HD", "HLF", "HPE", "HPQ", "HTZ", "IBM", "INTC", "JAZZ", "JCP", "JNJ", "JNPR", "JPM",
-                "K", "KO", "LMT", "LOGI", "MA", "MCD", "MMM", "MS", "MSFT", "NFLX", "NKE", "NTAP",
-                "NTNX", "NVDA", "ORCL", "P", "PEP", "PG", "QCOM", "RHT", "SBUX", "SINA", "SSYS", "STX",
-                "SYMC", "TGT", "TIF", "TRIP", "TSLA", "TWTR", "TXN", "UA", "UAL", "V", "VMW", "VNET",
-                "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
-
         Map <String, Stock> stockMap=new HashMap<>();
 
         for (String symbol : availableStocks) {
             Stock stock=new Stock(symbol);
             stockMap.put(symbol, stock);
         }
-
 
         User admin = new User("admin", new Portfolio(), 0);
         User active = admin;
@@ -173,7 +174,7 @@ public class Iu {
 
                 //Buy stock
                 case 5:
-                    showStockList(availableStocks);
+                    showStockList();
                     name = enterStockName(sc);
 
                     if (Arrays.asList(availableStocks).contains(name)) {
@@ -211,7 +212,7 @@ public class Iu {
 
                 //View available stock list
                 case 8:
-                    showStockList(availableStocks);
+                    showStockList();
                     break;
                 //View stock list base data
                 case 9:
@@ -344,7 +345,7 @@ public class Iu {
         System.out.println();
     }
 
-    private static void showStockList(String[] availableStocks) {
+    private static void showStockList() {
         System.out.println("Avilable stocks:");
         Arrays.sort(availableStocks);
         int i;
@@ -475,8 +476,12 @@ public class Iu {
         String username;
 
         sc.nextLine();
+        showUsersList();
         System.out.print("Enter username: ");
         username = sc.nextLine();
+
+        if (username.length() < 3)
+            username = active.getUserName();
 
         for (User user : userList) {
             if (user.getUserName().equals(username)) {
