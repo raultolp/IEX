@@ -82,13 +82,14 @@ public class Iu {
         User active = admin;
         boolean quitProgram = false;
 
-        Scanner sc = new Scanner(System.in);
 
         while(!quitProgram) {
             String name;
             int index;
             int choice;
             int qty;
+            Scanner sc = new Scanner(System.in);
+
 
             printMenu(mainMenu);
             System.out.print("Active:" + ANSI_GREEN + active.getUserName() + ANSI_RESET + "> ");
@@ -104,7 +105,7 @@ public class Iu {
 
                 //Add user
                 case 1:
-                    name = enterUserName();
+                    name = enterUserName(sc);
                     if (name != null && nameInList(name, userList) > -1) {
                         System.out.println(ANSI_RED + "Name already exists!" + ANSI_RESET);
                     } else if (name != null){
@@ -115,7 +116,7 @@ public class Iu {
 
                 //Delete user
                 case 2:
-                    name = enterUserName();
+                    name = enterUserName(sc);
                     index = nameInList(name, userList);
                     if (index > -1) {
                         userList.remove(index);
@@ -132,7 +133,7 @@ public class Iu {
                 //Set active user
                 case 4:
                     showUsersList(userList);
-                    name = enterUserName();
+                    name = enterUserName(sc);
                     index = nameInList(name, userList);
                     if (index > -1) {
                         active = userList.get(index);
@@ -143,10 +144,10 @@ public class Iu {
                 //Buy stock
                 case 5:
                     showStockList(availableStocks);
-                    name = enterStockName();
+                    name = enterStockName(sc);
 
                     if (Arrays.asList(availableStocks).contains(name)) {
-                        qty = enterQty();
+                        qty = enterQty(sc);
                         // kontrolli kas on piisavalt raha koos teenustasudega
                         // kui on, lisa portfelli ja võta raha maha
 //                        active.getPortfolio().lisaAktsia(name, qty, date);
@@ -159,7 +160,7 @@ public class Iu {
                     if (active.getPortfolio() != null)
                         active.getPortfolio().toString();
 
-                    name = enterStockName();
+                    name = enterStockName(sc);
 
                     // sell name(qty)
 
@@ -215,8 +216,9 @@ public class Iu {
 
                 default:
                     System.out.println(ANSI_RED + "Wrong input, choose between 1.." + mainMenu.length + "!" + ANSI_RESET);
-            }
-        }
+            } //switch menu options
+//            sc.close();
+        } //main menu endless loop
     }
 
     private static void printMenu(String[] menu) {
@@ -231,9 +233,9 @@ public class Iu {
         }
     }
 
-    private static String enterUserName() {
-        Scanner sc = new Scanner(System.in);
+    private static String enterUserName(Scanner sc) {
         String name;
+        sc.nextLine();
         do {
             System.out.print("Enter user name: ");
             name = sc.nextLine().trim();
@@ -246,12 +248,12 @@ public class Iu {
         return name;
     }
 
-    private static String enterStockName() {
-        Scanner sc = new Scanner(System.in);
+    private static String enterStockName(Scanner sc) {
         String name;
+        sc.nextLine();
         do {
             System.out.print("Enter stock name: ");
-            name = sc.nextLine().trim();
+            name = sc.next().trim();
             if (name.length() < 1 || name.length() > 5 || !isAlpha(name))
                 System.out.println(ANSI_RED + "Choose right stock name." + ANSI_RESET);
             if (name.length() == 0)
@@ -261,9 +263,10 @@ public class Iu {
         return name.toUpperCase();
     }
 
-    private static int enterQty() {
-        Scanner sc = new Scanner(System.in);
+    private static int enterQty(Scanner sc) {
         int qty = 0;
+        sc.nextLine();
+
         do {
             System.out.print("Enter quantity [1-1000]: ");
             try {
@@ -272,9 +275,6 @@ public class Iu {
                 System.out.println("Wrong input: " + sc.nextLine());
                 continue;
             }
-//            qty = sc.nextInt();
-//            if (!isNumeric(qty) || qty < 1 !! qty > 1000) {
-//                System.out.println(ANSI_RED + "Choose right quantity." + ANSI_RESET);
         } while (qty < 1 || qty > 1000);
 
         return qty;
@@ -296,6 +296,7 @@ public class Iu {
             }
         } else
             System.out.println("None");
+        System.out.println();
     }
 
     private static void showStockList(String[] stockList) {
