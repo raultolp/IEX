@@ -161,10 +161,14 @@ public class Portfolio {
 
     public void sellStock(String symbol, int volume) {
 
-        if (portfolio.containsKey(symbol)) { //stock can be sold only if it is present in portfolio
+        if (!portfolio.containsKey(symbol)){ // LISATUD
+            System.out.println("Stock not included in portfolio!");
+        }
+        else { //stock can be sold only if it is present in portfolio
             int indexOfStock = symbolList.indexOf(symbol);
 
             if (volumes.get(indexOfStock) < volume) { //max number of shares to be sold is their number in portfolio
+                System.out.println("Portfolio only contains "+volume+ "stocks. Now selling them all");  //LISATUD
                 volume = volumes.get(indexOfStock); //if user tries to sell more, only the max number is sold
             }
 
