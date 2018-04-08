@@ -76,7 +76,8 @@ public class Iu {
                 "Sell stock",
                 "View user portfolio",
                 "View available stock list",
-                "View stock data base data",
+                "View stock list base data",
+                "View stock base data",
                 "View stock historical data",
                 "View all portfolios performance",
                 "Refresh data from web",
@@ -199,40 +200,44 @@ public class Iu {
                 //View available stock list
                 case 8:
                     showStockList(availableStocks);
-                    break;
 
-                //View stock data base data
+                //View stock list base data
                 case 9:
                     System.out.println("Tuleb hiljem");
                     break;
 
-                //View stock historical data graph
+                //View stock base data
                 case 10:
                     System.out.println("Tuleb hiljem");
                     break;
 
-                //View all portfolios progress graph"
+                //View stock historical data
                 case 11:
                     System.out.println("Tuleb hiljem");
                     break;
 
-                //Refresh data from web
+                //View all portfolios progress
                 case 12:
                     System.out.println("Tuleb hiljem");
                     break;
 
-                //Load data file
+                //Refresh data from web
                 case 13:
+                    System.out.println("Tuleb hiljem");
+                    break;
+
+                //Load data file
+                case 14:
                     loadData(sc);
                     break;
 
                 //Save data file
-                case 14:
+                case 15:
                     saveData(sc);
                     break;
 
                 //Quit
-                case 15:
+                case 16:
                     saveData(sc);
                     quitProgram = true;
                     System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
@@ -351,7 +356,6 @@ public class Iu {
         writer.close();
 
     }
-
 
     public static void loadData(Scanner sc) throws IOException {
 
