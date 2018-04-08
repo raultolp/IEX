@@ -321,5 +321,24 @@ public class Stock {
         this.currentPrice = currentPrice;
     }
 
-
+    @Override
+    public String toString() {
+        return "Stock symbol: " + symbol + '\n' +
+                "CompanyName: " + companyName + '\n' +
+                "Sector: " + sector + '\n' +
+                "Industry: " + industry + '\n' +
+                "Description: " + description + '\n' +
+                "CEO: " + CEO + '\n' +
+                "Website: " + website + '\n' +
+                "Dividend yield: " + dividendYield + '\n' +
+                "EPS: " + eps + '\n' +
+                "Market cap: " + marketCap +'\n'+
+                "PeRatio: " + peRatio +'\n'+
+                "Previous close: " + previousClose +'\n'+
+                "Change in the previous month: " + change1Month +'\n'+
+                "Change in 3 months: " + change3Month +'\n'+
+                "Change in 1 yr: " + change1Year +'\n'+
+                "Short ratio: " + shortRatio +'\n'+
+                "Current price: " + currentPrice +'\n';
+    }
 }

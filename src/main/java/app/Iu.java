@@ -11,6 +11,7 @@ public class Iu {
     public static final String ANSI_RESET = "\u001B[0m";
     private static List<User> userList = new ArrayList<>();
     private static List<Portfolio> portfolioList = new ArrayList<>();
+    private static List<Stock> stockList = new ArrayList<>();
 
 
     public static void main(String[] args) throws IOException {
@@ -45,6 +46,7 @@ public class Iu {
         //TESTING PORTFOLIO:
         Portfolio portfell = new Portfolio();
         User pets = new User("Peeter", portfell, 1000000); //testing Pets
+        userList.add(pets); //et saaks midagi kirjutada
         portfell.buyStock("CAT", 200);
         portfell.buyStock("AAPL", 1);
         System.out.println("Total profit: " + portfell.getTotalProfitOrLoss());
@@ -64,6 +66,11 @@ public class Iu {
             System.out.println("püütud!");
         }*/
 
+
+        //------------------------------------
+
+        //TESTING STOCKLIST:
+        stockList.add(new Stock("AAPL"));
 
         //------------------------------------
 
@@ -97,8 +104,6 @@ public class Iu {
         User admin = new User("admin", new Portfolio(), 0);
         User active = admin;
         boolean quitProgram = false;
-
-        userList.add(pets); //et saaks midagi kirjutada
 
 
         while (!quitProgram) {
@@ -188,7 +193,7 @@ public class Iu {
                         qty = enterQty(sc);
                         portfolio.sellStock(name, qty);
                     } else {
-                        System.out.println("Stock not included on portfolio!");
+                        System.out.println("Stock not included in portfolio!");
                     }
                     break;
 
@@ -200,7 +205,7 @@ public class Iu {
                 //View available stock list
                 case 8:
                     showStockList(availableStocks);
-
+                    break;
                 //View stock list base data
                 case 9:
                     System.out.println("Tuleb hiljem");
@@ -208,7 +213,7 @@ public class Iu {
 
                 //View stock base data
                 case 10:
-                    System.out.println("Tuleb hiljem");
+                    showStockBaseData(sc);
                     break;
 
                 //View stock historical data
@@ -456,6 +461,21 @@ public class Iu {
                 Portfolio portfolio = user.getPortfolio();
                 System.out.println(portfolio.toString());
             }
+        }
+
+
+    }
+
+    private static void showStockBaseData(Scanner sc) {
+
+        sc.nextLine();
+        System.out.println("Enter stock symbol: ");
+        String stockSym = sc.nextLine();
+
+        try {
+            System.out.println(new Stock(stockSym));
+        } catch (Exception e) {
+            System.out.println("Stock information not available.");
         }
 
 
