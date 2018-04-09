@@ -200,7 +200,8 @@ public class Iu {
 
                 //Quit
                 case 16:
-                    saveData(sc);
+                    if (activeGame != null)
+                        saveData(sc);
                     quitProgram = true;
                     System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
                     sc.close();
