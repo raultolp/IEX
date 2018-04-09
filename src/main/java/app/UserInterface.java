@@ -16,10 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Shape;
@@ -30,6 +27,7 @@ import java.util.*;
 
 public class UserInterface extends Application {
     private Portfolio portfolio;
+    Stock selectedStock;
 
 
     public static void main(String[] args) {
@@ -49,11 +47,12 @@ public class UserInterface extends Application {
         borderPane.setCenter(centerGrid);
         //borderPane.setCenter(addTableView());
         borderPane.setBottom(addBottomHBox());
+        borderPane.setRight(addBuySellHBox());
 
         addTableView();
 
 
-        Scene scene = new Scene(borderPane, 600, 550);
+        Scene scene = new Scene(borderPane, 750, 550);
 
 
         stage.setTitle("Portfolio");
@@ -144,7 +143,31 @@ public class UserInterface extends Application {
         table.getColumns().addAll(stockSymbols, price, volume, positionTotal, unrealised, avgPaid, realised);
 
 
-
         return table;
     }
+
+    public HBox addBuySellHBox() {
+
+        HBox buySellHB = new HBox();
+        buySellHB.setPadding(new Insets(15, 12, 15, 12));
+        buySellHB.setSpacing(0);
+        buySellHB.setStyle("-fx-background-color: #4682B4;");
+
+        final TextField stockSymbol = new TextField();
+        stockSymbol.setPromptText("Enter stock symbol");
+
+        stockSymbol.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!(newValue.equals(""))) { //TODO: check if symbol in available stocks
+                selectedStock = new Stock(newValue);
+            }
+        });
+
+        buySellHB.getChildren().addAll(stockSymbol);
+
+
+
+        return buySellHB;
+    }
 }
+
+
