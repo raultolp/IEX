@@ -1,0 +1,8 @@
+<application>
+  <component name="FileTypeManager" version="17">
+    <extensionMap>
+      <mapping pattern="testid" type="PLAIN_TEXT" />
+      <mapping ext="game" type="PLAIN_TEXT" />
+    </extensionMap>
+  </component>
+</application>
