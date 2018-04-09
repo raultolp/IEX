@@ -36,7 +36,7 @@ public class Iu {
         final String[] mainMenu = {"Add user",
                 "Delete user",
                 "List users",
-                "Set activeUser user",
+                "Set active",
                 "Buy stock",
                 "Sell stock",
                 "View user portfolio",
@@ -113,7 +113,7 @@ public class Iu {
                     index = nameInList(name);
                     if (index > -1) {
                         activeUser = userList.get(index);
-                        System.out.println(ANSI_YELLOW + "User " + name + " is now activeUser." + ANSI_RESET);
+                        System.out.println(ANSI_YELLOW + "User " + name + " is now active." + ANSI_RESET);
                     }
                     break;
 
