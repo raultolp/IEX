@@ -2,6 +2,9 @@ package app;
 
 import java.util.Objects;
 
+//https://stackoverflow.com/questions/38487797/javafx-populate-tableview-with-an-observablemap-that-has-a-custom-class-for-its
+
+
 public final class MapEntry<K, V> {
 
     private final K key;

@@ -322,15 +322,16 @@ public class Stock {
                 "Description: " + description + '\n' +
                 "CEO: " + CEO + '\n' +
                 "Website: " + website + '\n' +
+                "\nFundamentals:\n" +
                 "Dividend yield: " + dividendYield + '\n' +
                 "EPS: " + eps + '\n' +
-                "Market cap: " + marketCap +'\n'+
-                "PeRatio: " + peRatio +'\n'+
-                "Previous close: " + previousClose +'\n'+
-                "Change in the previous month: " + change1Month +'\n'+
-                "Change in 3 months: " + change3Month +'\n'+
-                "Change in 1 yr: " + change1Year +'\n'+
-                "Short ratio: " + shortRatio +'\n'+
-                "Current price: " + currentPrice +'\n';
+                "Market cap: " + marketCap + '\n' +
+                "P/E Ratio: " + peRatio + '\n' +
+                "Previous close: " + previousClose + '\n' +
+                "Change in the previous month: " + change1Month + '\n' +
+                "Change in 3 months: " + change3Month + '\n' +
+                "Change in 1 yr: " + change1Year + '\n' +
+                "Short ratio: " + shortRatio + '\n' +
+                "Current price: " + currentPrice + '\n';
     }
 }
