@@ -30,9 +30,6 @@ public class Iu {
 
     public static void main(String[] args) throws IOException {
 
-        System.out.println("BÖRSIMÄNG");
-        System.out.println("Loading data...");
-
         final String[] mainMenu = {"Add user",
                 "Delete user",
                 "List users",
@@ -58,7 +55,7 @@ public class Iu {
         }
 
         boolean quitProgram = false;
-
+        System.out.println("\n+++ BÖRSIMÄNG +++\n\nLoading stock data from web ...\n");
 
         while (!quitProgram) {
             String name;
@@ -210,7 +207,6 @@ public class Iu {
                 default:
                     System.out.println(ANSI_RED + "Wrong input, choose between 1.." + mainMenu.length + "!" + ANSI_RESET);
             } //switch menu options
-//            sc.close();
         } //main menu endless loop
     }
 
@@ -339,7 +335,7 @@ public class Iu {
         if (file.exists()) {
             try ( BufferedReader br = new BufferedReader(new FileReader(file)) ) {
                 String line;
-                //reads all lines from file and adds users and portfolios to arraylists
+                //reads all lines from file and adds users and portfolios to their respective arraylists
 
                 while ((line = br.readLine()) != null) {
 
@@ -374,7 +370,6 @@ public class Iu {
                     for (String avg : avgPrc) {
                         if (!(avg.equals("[]")))
                             averagePrices.add(Double.parseDouble(avg.replaceAll("[\\W]", "")));
-                        //   else averagePrices.add(0.0);
                     }
 
                     String[] profLoss = elements[6].split(",");
@@ -476,8 +471,6 @@ public class Iu {
         } catch (Exception e) {
             System.out.println("Stock information not available.");
         }
-
-
     }
 
     private static void showStockHistoricalData(Scanner sc) {
