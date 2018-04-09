@@ -36,7 +36,7 @@ public class Iu {
         final String[] mainMenu = {"Add user",
                 "Delete user",
                 "List users",
-                "Set active",
+                "Set active user",
                 "Buy stock",
                 "Sell stock",
                 "View user portfolio",
