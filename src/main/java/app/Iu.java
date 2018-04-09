@@ -13,13 +13,15 @@ public class Iu {
     private static List<Portfolio> portfolioList = new ArrayList<>();
 
     private static final User admin = new User("admin", new Portfolio(), 0);
-    private static User active = admin;
+    private static User activeUser = admin;
+    private static File activeGame = null;
+
 
     private static final String[] availableStocks = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
             "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
             "TSLA", "TWTR", "V", "WMT"};
 
-    //ORIGINAL
+    //ORIGINAL LIST
 //    private static final String[] availableStocks = {"AAPL", "AMZN", "AMD", "BA", "BABA", "BAC", "BBY", "BIDU",
 //            "C", "CAT", "COST", "CRM", "CSCO", "DE", "F", "FSLR", "GE", "GM", "GME", "GOOG", "GS",
 //            "HD", "HLF", "HPE", "HPQ", "HTZ", "IBM", "INTC", "JAZZ", "JCP", "JNJ", "JNPR", "JPM",
@@ -33,7 +35,7 @@ public class Iu {
         final String[] mainMenu = {"Add user",
                 "Delete user",
                 "List users",
-                "Set active user",
+                "Set activeUser user",
                 "Buy stock",
                 "Sell stock",
                 "View user portfolio",
@@ -47,6 +49,8 @@ public class Iu {
                 "Save data file",
                 "Quit"};
 
+        System.out.println("\n+++ BÖRSIMÄNG +++\n\nLoading stock data from web ...\n");
+
         Map<String, Stock> stockMap = new HashMap<>();
 
         for (String symbol : availableStocks) {
@@ -55,7 +59,6 @@ public class Iu {
         }
 
         boolean quitProgram = false;
-        System.out.println("\n+++ BÖRSIMÄNG +++\n\nLoading stock data from web ...\n");
 
         while (!quitProgram) {
             String name;
@@ -64,9 +67,10 @@ public class Iu {
             int qty;
             Scanner sc = new Scanner(System.in);
 
-
             printMenu(mainMenu);
-            System.out.print("Active:" + ANSI_GREEN + active.getUserName() + ANSI_RESET + "> ");
+            System.out.print((activeGame != null ? ANSI_BLUE + activeGame.getName() + ANSI_RESET :
+                    ANSI_RED + "(not saved)" + ANSI_RESET) +
+                    " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
 
             try {
                 choice = sc.nextInt();
@@ -80,9 +84,7 @@ public class Iu {
                 //Add user
                 case 1:
                     name = enterUserName(sc);
-                    if (name != null && nameInList(name) > -1) {
-                        System.out.println(ANSI_RED + "Name already exists!" + ANSI_RESET);
-                    } else if (name != null) {
+                    if (name != null) {
                         userList.add(new User(name, new Portfolio(), 100000));
                         System.out.println(ANSI_YELLOW + "Created user: " + name + ANSI_RESET);
                     }
@@ -96,7 +98,6 @@ public class Iu {
                         userList.remove(index);
                         System.out.println(ANSI_YELLOW + "User " + name + " has been deleted." + ANSI_RESET);
                     }
-
                     break;
 
                 //List users
@@ -104,14 +105,14 @@ public class Iu {
                     showUsersList();
                     break;
 
-                //Set active user
+                //Set activeUser user
                 case 4:
                     showUsersList();
                     name = enterUserName(sc);
                     index = nameInList(name);
                     if (index > -1) {
-                        active = userList.get(index);
-                        System.out.println(ANSI_YELLOW + "User " + name + " is now active." + ANSI_RESET);
+                        activeUser = userList.get(index);
+                        System.out.println(ANSI_YELLOW + "User " + name + " is now activeUser." + ANSI_RESET);
                     }
                     break;
 
@@ -122,7 +123,7 @@ public class Iu {
 
                     if (Arrays.asList(availableStocks).contains(name)) {
                         qty = enterQty(sc);
-                        Portfolio portfolio = active.getPortfolio();
+                        Portfolio portfolio = activeUser.getPortfolio();
 
                         try {
                             portfolio.buyStock(name, qty);
@@ -135,7 +136,7 @@ public class Iu {
 
                 //Sell stock
                 case 6:
-                    Portfolio portfolio = active.getPortfolio();
+                    Portfolio portfolio = activeUser.getPortfolio();
                     if (portfolio != null)
                         portfolio.toString();
                     name = enterStockName(sc);
@@ -230,6 +231,9 @@ public class Iu {
             name = sc.nextLine().trim();
             if (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name))
                 System.out.println(ANSI_RED + "Use name with 3..12 characters and numbers." + ANSI_RESET);
+            else if (nameInList(name) > -1) {
+                System.out.println(ANSI_RED + "Name already exists!" + ANSI_RESET);
+            }
             if (name.length() == 0)
                 return null;
         } while (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name));
@@ -300,12 +304,21 @@ public class Iu {
 
     private static void saveData(Scanner sc) throws IOException {
 
+        File file;
         sc.nextLine();
 
-        System.out.print("Enter filename to save data: ");
-        String filename = sc.nextLine();
+        if (activeGame == null) {
+            System.out.print("Enter filename to save data: ");
+            String filename = sc.nextLine();
 
-        File file = new File(filename);
+            if (!filename.endsWith(".game"))
+                filename += ".game";
+
+            file = new File(filename);
+        } else {
+            file = activeGame;
+        }
+
         file.createNewFile();
 
         Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
@@ -313,7 +326,8 @@ public class Iu {
             writer.write(user.getPortfolio().toStringForFile());
         }
         writer.close();
-
+        activeGame = file;
+        System.out.println(ANSI_YELLOW + activeGame.getName() + " file saved." + ANSI_RESET);
     }
 
     public static void loadData(Scanner sc) throws IOException {
@@ -330,18 +344,21 @@ public class Iu {
         System.out.print("Enter filename: ");
         String filename = sc.nextLine();
 
+        if (!filename.endsWith(".game"))
+            filename += ".game";
+
         File file = new File(filename);
 
         if (file.exists()) {
             try ( BufferedReader br = new BufferedReader(new FileReader(file)) ) {
+                userList.clear();
+                portfolioList.clear();
                 String line;
                 //reads all lines from file and adds users and portfolios to their respective arraylists
 
                 while ((line = br.readLine()) != null) {
 
-
                     String[] elements = line.split(";");
-
 
                     String[] syms = elements[2].split(",");
                     List<String> symbols = new ArrayList<>();
@@ -425,6 +442,9 @@ public class Iu {
                     portfolioList.add(port);
                     userList.add(newUser);
                 }
+            } finally {
+                activeGame = file;
+                System.out.println(ANSI_YELLOW + activeGame.getName() + " file loaded." + ANSI_RESET);
             }
         }
     }
@@ -450,7 +470,7 @@ public class Iu {
         username = sc.nextLine();
 
         if (username.length() < 3)
-            username = active.getUserName();
+            username = activeUser.getUserName();
 
         for (User user : userList) {
             if (user.getUserName().equals(username)) {
