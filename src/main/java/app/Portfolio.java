@@ -90,9 +90,13 @@ public class Portfolio {
                 throw new RuntimeException("Not enough funds!");
             } else {
                 double averagePrice = price + transactionFee;
+                availableFunds -= volume * (price + transactionFee);
+                user.setAvailableFunds(availableFunds);
 
-                System.out.println(volume+ " "+symbol+ " stocks bought @"+price+ " USD (total value "+
-                        volume*(price+transactionFee)+" USD).");
+                System.out.print(volume+ " stocks of "+symbol+ " bought @"+price+ " USD (total value ");
+                System.out.printf("%.2f",volume*(price+transactionFee));
+                System.out.println(" USD).");
+                System.out.println("Cash available: "+availableFunds + " USD.");
 
                 portfolio.put(symbol, stock);
                 symbolList.add(symbol);
@@ -103,8 +107,6 @@ public class Portfolio {
                 profitsOrLosses.add(0.0 - transactionFeeTotal);
                 unrealisedProfitsOrLosses.add(volume * (price - averagePrice));
 
-                availableFunds -= volume * (price + transactionFee);
-                user.setAvailableFunds(availableFunds);
             }
 
         }
@@ -123,8 +125,13 @@ public class Portfolio {
                 double prevAveragePrice = averagePrices.get(indexOfStock);
                 double prevProfitOrLoss = profitsOrLosses.get(indexOfStock);
 
-                System.out.println(volume+ " "+symbol+ " stocks bought @"+price+ " USD (total value "+
-                        volume*(price+transactionFee)+" USD).");
+                availableFunds -= volume * (price + transactionFee);
+                user.setAvailableFunds(availableFunds);
+
+                System.out.print(volume+ " stocks of "+symbol+ " bought @"+price+ " USD (total value ");
+                System.out.printf("%.2f",volume*(price+transactionFee));
+                System.out.println(" USD).");
+                System.out.println("Cash available: "+availableFunds + " USD.");
 
                 volumes.set(indexOfStock, prevVolume + volume);
                 prices.set(indexOfStock, price); //current price
@@ -137,9 +144,6 @@ public class Portfolio {
 
                 //New unrealised proft/loss calculation:
                 unrealisedProfitsOrLosses.set(indexOfStock, (volume + prevVolume) * (price - newAveragePrice));
-
-                availableFunds -= volume * (price + transactionFee);
-                user.setAvailableFunds(availableFunds);
 
             }
 
@@ -167,7 +171,7 @@ public class Portfolio {
         int indexOfStock = symbolList.indexOf(symbol);
 
         if (volumes.get(indexOfStock) < volume) { //max number of shares to be sold is their number in portfolio
-            System.out.println("Portfolio only contains "+volume+ "stocks. Now selling them all");  //LISATUD
+            System.out.println("Portfolio only contains "+volume+ " stocks. Now selling them all...");  //LISATUD
             volume = volumes.get(indexOfStock); //if user tries to sell more, only the max number is sold
         }
 
@@ -179,8 +183,13 @@ public class Portfolio {
         double prevAveragePrice = averagePrices.get(indexOfStock);
         double prevProfitOrLoss = profitsOrLosses.get(indexOfStock);
 
-        System.out.println(volume+ " "+symbol+ " stocks sold @"+price+ " USD (total value "+
-                volume*(price-transactionFee)+" USD).");
+        availableFunds += volume * (price - transactionFee);
+        user.setAvailableFunds(availableFunds);
+
+        System.out.print(volume+ " stocks of "+symbol+ " sold @"+price+ " USD (total value ");
+        System.out.printf("%.2f",volume*(price-transactionFee));
+        System.out.println(" USD).");
+        System.out.println("Cash available: "+availableFunds + " USD.");
 
         volumes.set(indexOfStock, prevVolume - volume);
         prices.set(indexOfStock, price); //current price uuendamine
@@ -202,9 +211,6 @@ public class Portfolio {
 
         //If all stocks are sold from portfolio and profit gained from the stook is zero:
         removeRedundantStock(symbol);
-
-        availableFunds += volume * (price - transactionFee);
-        user.setAvailableFunds(availableFunds);
 
 
         //TODO:
@@ -269,7 +275,6 @@ public class Portfolio {
     //-----------------------------------------------
 
     public boolean checkSufficiencyOfFunds(double price, int volume) {
-        System.out.println(availableFunds);
         if ((price + transactionFee) * volume > availableFunds) {
             return false;
         }
@@ -282,6 +287,11 @@ public class Portfolio {
     //Getting stock from portfolio:
     public Stock getStock(String symbol) {
         return portfolio.get(symbol);
+    }
+
+    //Getting portfolio total value:
+    public double getTotalValue() {
+        return availableFunds+totalCurrentValueOfPositions;
     }
 
     //Other getters:
@@ -344,9 +354,9 @@ public class Portfolio {
     public String toString() {
         return
                 "Stock names: \n" + symbolList.toString() + '\n' +
-                        "Prices; \n" + prices.toString() + '\n' +
+                        "Prices: \n" + prices.toString() + '\n' +
                         "Volumes: \n" + volumes.toString() + '\n' +
-                        "Average prices: \n" + averagePrices + '\n' +
+                        "Average purchase prices: \n" + averagePrices + '\n' +
                         "Profits or losses: \n" + profitsOrLosses + '\n' +
                         "Unrealised profits or losses: \n" + unrealisedProfitsOrLosses + '\n' +
                         "Current values of positions: \n" + currentValuesOfPositions + '\n' +

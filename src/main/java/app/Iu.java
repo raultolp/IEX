@@ -186,6 +186,8 @@ public class Iu {
                         double price = stock.getLatestPrice();
                         stock.setCurrentPrice(price);
                     }
+                    Portfolio portf=activeUser.getPortfolio();
+                    portf.updatePrices();
                     break;
 
                 //Load data file
@@ -464,23 +466,39 @@ public class Iu {
     }
 
     private static void showUserPortfolio(Scanner sc) {
+
         String username;
+        User userToView;
 
-        sc.nextLine();
-        showUsersList();
-        System.out.print("Enter username: ");
-        username = sc.nextLine();
+        if (activeUser.equals("admin")){
+            userToView=activeUser;
+            sc.nextLine();
+            showUsersList();
+            System.out.print("Enter username: ");
+            username = sc.nextLine();
 
-        if (username.length() < 3)
-            username = activeUser.getUserName();
-
-        for (User user : userList) {
-            if (user.getUserName().equals(username)) {
-                Portfolio portfolio = user.getPortfolio();
-                System.out.println(portfolio.toString());
+            if (!userList.contains(username)) {
+                return;
             }
+
+            for(User user : userList) {
+                if (user.getUserName().equals(username)) {
+                    userToView=user;
+                }
+            }
+        } else {
+            userToView=activeUser;
         }
+
+        Portfolio portfolio = userToView.getPortfolio();
+        System.out.print("\nAvailable cash: ");
+        System.out.printf("%.2f", userToView.getAvailableFunds());
+        System.out.println("\n"+portfolio.toString());
+        System.out.print("Portfolio total value: ");
+        System.out.printf("%.2f", portfolio.getTotalValue());
+        System.out.println();
     }
+
 
     private static void showStockBaseData(Scanner sc) {
 
