@@ -186,6 +186,8 @@ public class Iu {
                         double price = stock.getLatestPrice();
                         stock.setCurrentPrice(price);
                     }
+                    Portfolio portf=activeUser.getPortfolio();
+                    portf.updatePrices();
                     break;
 
                 //Load data file
@@ -477,10 +479,17 @@ public class Iu {
         for (User user : userList) {
             if (user.getUserName().equals(username)) {
                 Portfolio portfolio = user.getPortfolio();
-                System.out.println(portfolio.toString());
+                System.out.print("\nAvailable cash: ");
+                System.out.printf("%.2f", user.getAvailableFunds());
+                System.out.println("\n"+portfolio.toString());
+                System.out.print("Portfolio total value: ");
+                System.out.printf("%.2f", portfolio.getTotalValue());
+                System.out.println();
             }
         }
     }
+
+
 
     private static void showStockBaseData(Scanner sc) {
 
