@@ -1,3 +1,22 @@
+2. etapi mõtted
+
+- Graafikaliides ?
+- Klient-server, multithreading - kas mitu serverit jookseb samaaegselt ühes serverprogrammis?
+  kleint graafiline, server jääb kas ainult serveriks v
+- Praegune tekstmenüü peaks jääma vaid serveri poolele?
+- Menüü peaks ehk laiali lõhkuma MenuItem Interface-ks ja sealt hakkama eraldi kõiki asju küsima
+  tekib mmingi 20 lisaklassi .. suht crazy
+- kas tuua sisse Margin = 2x resurss + intress selle kasutamisel?
+- kas tuua sisse Short Selling: samuti intress?
+- peaks lisama ka mõned ETFd siiski, need käivad aktsiate juurde
+- Kasutaja juhend - mingi pisike
+- kasutajate lisamine ka mitme kaupa komadega eraldatud
+- tehingute nimistu koos tehingutasudega, kuupäeva jms
+
+------
+
+1. etapi mõtted
+
 User
     - Name
     - Liquid funds (MONEY)
@@ -48,3 +67,34 @@ Menu
     - view stock base data
     - view stock historical data
     - refresh button
+
+-------------------------------------------
+
+OOP projektiplaan
+Edasijõudnute rühma projektiplaan.
+https://courses.cs.ut.ee/2018/OOP/spring/Main/AdvancedProjects
+
+"Plaanitav funktsionaalsus" alla kirjuta ideed, mis kõigi etappide peale kokku võiks valmis saada.
+Ideid peab olema piisavalt, et kõigil rühma liikmetel jätkuks kõigiks etappideks piisavalt tööd.
+Ideid võiks olla pigem varuga - kõike ei pea valmis jõudma.
+Iga idee pane kirja lühidalt, nt "kasutaja saab valitud kuupäeva kohta ilmateadet küsida".
+
+"Etapp #1 funktsionaalsus" alla kirjuta funktsionaalsus, mis te tahaks etapp#1 lõpuks valmis saada.
+Pikka juttu pole vaja. Eesmärk on tagada, et projektid on mõistlikud, realistlikud ja sobiva mahuga.
+Kahtluse korral aruta oma ideed praksijuhendajaga.
+
+Projekti kokkuvõte (üks lause) *
+
+Teeme börsimängu, kus kasutajad saavad valida oma portfelli aktsiaid ja võidab see,
+kelle portfelli väärtus on kõige rohkem kasvanud.
+Plaanitav funktsionaalsus
+Funktsionaalsusteks on: kasutajate loomine, autentimine, portfellide loomine,
+kuhu kasutajad aktsiaid saavad lisada, aktsiate lisamine, portfelli seisu arvutamine ja vaatamine,
+selle iga aktsia kohta detailse info (sh aktsia graafik, ettevõtte finantsandmed ja lühikirjeldus) vaatamine,
+kõigi erinevate portfellide võrdlemine ja neist edetabeli koostamine ja mängu võitja tuvastamine.
+Aktsiate ja ettevõtete kohta info saamiseks kasutame IEX börsi (USA) API-t.
+
+Etapp #1
+Soovime valmis saada põhifunktsionaalsused. Peamised klassid, andmete hankimine ja töötlemine JSON formaadist.
+Valida sobivad andmed suurest baasist läbi API.
+Põhifunktsioonid: kasutaja-portfelli loomine, andmete lisamine portfelli ja salvestamine.
