@@ -352,7 +352,7 @@ public class Portfolio {
     //-----------------------------------------------
 
 
-    public List<String> roundDouble(List<Double> arrayList) {
+    public List<String> roundDoubleList(List<Double> arrayList) {
         DecimalFormat df = new DecimalFormat("###.##");
         List<String> roundedDoubles = new ArrayList<>();
 
@@ -371,7 +371,7 @@ public class Portfolio {
                         "Volumes: \n" + volumes.toString() + '\n' +
                         "Average purchase prices: \n" + averagePrices + '\n' +
                         "Profits or losses: \n" + profitsOrLosses + '\n' +
-                        "Unrealised profits or losses: \n" + roundDouble(unrealisedProfitsOrLosses) + '\n' +
+                        "Unrealised profits or losses: \n" + roundDoubleList(unrealisedProfitsOrLosses) + '\n' +
                         "Current values of positions: \n" + currentValuesOfPositions + '\n' +
                         "Total current value of positions: \n" + totalCurrentValueOfPositions + '\n' +
                         "Total profit or loss: \n" + totalProfitOrLoss + '\n' +
@@ -387,7 +387,7 @@ public class Portfolio {
                         volumes + ';' +
                         averagePrices + ';' +
                         profitsOrLosses + ';' +
-                        roundDouble(unrealisedProfitsOrLosses) + ';' +
+                        roundDoubleList(unrealisedProfitsOrLosses) + ';' +
                         currentValuesOfPositions + ';' +
                         totalCurrentValueOfPositions + ';' +
                         totalProfitOrLoss + ';' +
