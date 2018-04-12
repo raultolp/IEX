@@ -1,5 +1,6 @@
 package app;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,13 +16,13 @@ public class Portfolio {
     private List<Double> prices;  //current price
     private List<Integer> volumes; //number of stocks
     private List<Double> averagePrices; //average purchase prices (includes transaction fees) -
-                                        //necessary also in order to take into account that
-                                        // stocks can be bought with different prices at different times.
+    //necessary also in order to take into account that
+    // stocks can be bought with different prices at different times.
     private List<Double> profitsOrLosses;  //realised profit/loss from each stock in portfolio
-                            //("realised profit/loss" means profit loss from transactions made)
+    //("realised profit/loss" means profit loss from transactions made)
     private List<Double> unrealisedProfitsOrLosses; //"unrealised proft/loss" means profit/loss that would
-                                                // be gained if stocks were sold at current market price
-                                                //(does not include transaction fee)
+    // be gained if stocks were sold at current market price
+    //(does not include transaction fee)
     private List<Double> currentValuesOfPositions;  // volume*current price, i.e. current value of stock in portfolio
 
     //Totals:
@@ -93,10 +94,10 @@ public class Portfolio {
                 availableFunds -= volume * (price + transactionFee);
                 user.setAvailableFunds(availableFunds);
 
-                System.out.print(volume+ " stocks of "+symbol+ " bought @"+price+ " USD (total value ");
-                System.out.printf("%.2f",volume*(price+transactionFee));
+                System.out.print(volume + " stocks of " + symbol + " bought @" + price + " USD (total value ");
+                System.out.printf("%.2f", volume * (price + transactionFee));
                 System.out.println(" USD).");
-                System.out.println("Cash available: "+availableFunds + " USD.");
+                System.out.println("Cash available: " + availableFunds + " USD.");
 
                 portfolio.put(symbol, stock);
                 symbolList.add(symbol);
@@ -128,10 +129,10 @@ public class Portfolio {
                 availableFunds -= volume * (price + transactionFee);
                 user.setAvailableFunds(availableFunds);
 
-                System.out.print(volume+ " stocks of "+symbol+ " bought @"+price+ " USD (total value ");
-                System.out.printf("%.2f",volume*(price+transactionFee));
+                System.out.print(volume + " stocks of " + symbol + " bought @" + price + " USD (total value ");
+                System.out.printf("%.2f", volume * (price + transactionFee));
                 System.out.println(" USD).");
-                System.out.println("Cash available: "+availableFunds + " USD.");
+                System.out.println("Cash available: " + availableFunds + " USD.");
 
                 volumes.set(indexOfStock, prevVolume + volume);
                 prices.set(indexOfStock, price); //current price
@@ -171,7 +172,7 @@ public class Portfolio {
         int indexOfStock = symbolList.indexOf(symbol);
 
         if (volumes.get(indexOfStock) < volume) { //max number of shares to be sold is their number in portfolio
-            System.out.println("Portfolio only contains "+volume+ " stocks. Now selling them all...");  //LISATUD
+            System.out.println("Portfolio only contains " + volume + " stocks. Now selling them all...");  //LISATUD
             volume = volumes.get(indexOfStock); //if user tries to sell more, only the max number is sold
         }
 
@@ -186,10 +187,10 @@ public class Portfolio {
         availableFunds += volume * (price - transactionFee);
         user.setAvailableFunds(availableFunds);
 
-        System.out.print(volume+ " stocks of "+symbol+ " sold @"+price+ " USD (total value ");
-        System.out.printf("%.2f",volume*(price-transactionFee));
+        System.out.print(volume + " stocks of " + symbol + " sold @" + price + " USD (total value ");
+        System.out.printf("%.2f", volume * (price - transactionFee));
         System.out.println(" USD).");
-        System.out.println("Cash available: "+availableFunds + " USD.");
+        System.out.println("Cash available: " + availableFunds + " USD.");
 
         volumes.set(indexOfStock, prevVolume - volume);
         prices.set(indexOfStock, price); //current price uuendamine
@@ -291,7 +292,7 @@ public class Portfolio {
 
     //Getting portfolio total value:
     public double getTotalValue() {
-        return availableFunds+totalCurrentValueOfPositions;
+        return availableFunds + totalCurrentValueOfPositions;
     }
 
     //Other getters:
@@ -350,6 +351,18 @@ public class Portfolio {
 
     //-----------------------------------------------
 
+
+    public List<String> roundDouble(List<Double> arrayList) {
+        DecimalFormat df = new DecimalFormat("###.##");
+        List<String> roundedDoubles = new ArrayList<>();
+
+        for (Double dbl : arrayList) {
+            roundedDoubles.add(df.format(dbl));
+
+        }
+        return roundedDoubles;
+    }
+
     @Override
     public String toString() {
         return
@@ -358,7 +371,7 @@ public class Portfolio {
                         "Volumes: \n" + volumes.toString() + '\n' +
                         "Average purchase prices: \n" + averagePrices + '\n' +
                         "Profits or losses: \n" + profitsOrLosses + '\n' +
-                        "Unrealised profits or losses: \n" + unrealisedProfitsOrLosses + '\n' +
+                        "Unrealised profits or losses: \n" + roundDouble(unrealisedProfitsOrLosses) + '\n' +
                         "Current values of positions: \n" + currentValuesOfPositions + '\n' +
                         "Total current value of positions: \n" + totalCurrentValueOfPositions + '\n' +
                         "Total profit or loss: \n" + totalProfitOrLoss + '\n' +
@@ -374,7 +387,7 @@ public class Portfolio {
                         volumes + ';' +
                         averagePrices + ';' +
                         profitsOrLosses + ';' +
-                        unrealisedProfitsOrLosses + ';' +
+                        roundDouble(unrealisedProfitsOrLosses) + ';' +
                         currentValuesOfPositions + ';' +
                         totalCurrentValueOfPositions + ';' +
                         totalProfitOrLoss + ';' +

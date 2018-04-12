@@ -33,6 +33,18 @@ public class Iu {
 
     public static void main(String[] args) throws IOException {
 
+        User pedro = new User("Pedro", new Portfolio(), 10000); //String userName, Portfolio portfolio, double availableFunds
+        Portfolio portfell2 = pedro.getPortfolio();
+        userList.add(pedro);
+        portfell2.buyStock("AAPL", 20);
+        portfell2.buyStock("MSFT", 10);
+
+        Portfolio portfell = new Portfolio();
+        User pets = new User("Peeter", portfell, 1000000); //testing Pets
+        userList.add(pets); //et saaks midagi kirjutada
+        portfell.buyStock("CAT", 200);
+        portfell.buyStock("AAPL", 1);
+
         final String[] mainMenu = {"Add user",
                 "Delete user",
                 "List users",
@@ -186,7 +198,7 @@ public class Iu {
                         double price = stock.getLatestPrice();
                         stock.setCurrentPrice(price);
                     }
-                    Portfolio portf=activeUser.getPortfolio();
+                    Portfolio portf = activeUser.getPortfolio();
                     portf.updatePrices();
                     break;
 
@@ -340,7 +352,6 @@ public class Iu {
         double totalUnrealisedProfitOrLoss = 0.0;
         double totalProfitOrLoss = 0.0;
         double totalCurrentValueOfPositions = 0.0;
-        List<Double> unrealisedProfitsLosses = new ArrayList<>();
 
         listFiles();
         sc.nextLine();
@@ -348,8 +359,8 @@ public class Iu {
         System.out.print("Enter filename: ");
         String filename = sc.nextLine();
 
-        if (!filename.endsWith(".game"))
-            filename += ".game";
+       // if (!filename.endsWith(".game"))
+         //   filename += ".game";
 
         File file = new File(filename);
 
@@ -481,14 +492,13 @@ public class Iu {
                 Portfolio portfolio = user.getPortfolio();
                 System.out.print("\nAvailable cash: ");
                 System.out.printf("%.2f", user.getAvailableFunds());
-                System.out.println("\n"+portfolio.toString());
+                System.out.println("\n" + portfolio.toString());
                 System.out.print("Portfolio total value: ");
                 System.out.printf("%.2f", portfolio.getTotalValue());
                 System.out.println();
             }
         }
     }
-
 
 
     private static void showStockBaseData(Scanner sc) {
