@@ -13,7 +13,6 @@ public class User {
         portfolio.setUser(this);
     }
 
-
     public Portfolio getPortfolio() {
         return portfolio;
     }
@@ -29,7 +28,4 @@ public class User {
     public String getUserName() {
         return userName;
     }
-
-
-
 }
