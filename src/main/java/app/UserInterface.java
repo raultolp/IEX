@@ -8,26 +8,24 @@ package app;
 
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ReadOnlyDoubleWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
-
-import java.util.*;
 
 
 public class UserInterface extends Application {
-    private Portfolio portfolio;
     Stock selectedStock;
+    Portfolio portfell = new Portfolio();
+    User user = new User("Pedro", portfell, 10000);
+    
 
 
     public static void main(String[] args) {
@@ -41,13 +39,14 @@ public class UserInterface extends Application {
     public void start(Stage stage) {
 
         GridPane centerGrid = new GridPane();
+        centerGrid.setVgap(8);
+        centerGrid.setHgap(10);
         centerGrid.add(addTableView(), 0, 0);
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(centerGrid);
-        //borderPane.setCenter(addTableView());
         borderPane.setBottom(addBottomHBox());
-        borderPane.setRight(addBuySellHBox());
+        borderPane.setRight(addBuySellVBox());
 
         addTableView();
 
@@ -82,18 +81,20 @@ public class UserInterface extends Application {
 
 
     private TableView<MapEntry<String, Stock>> addTableView() {
+        Portfolio portfell = new Portfolio();
+        User user = new User("Peeter", portfell, 1000000); //testing Pets
+        portfell.buyStock("CAT", 200);
+        portfell.buyStock("AAPL", 1);
 
-        Map<String, Stock> hm = new HashMap<>();
-        //Map<String, Stock> hm = portfolio.getPortfolio();
+        //Map<String, Stock> hm = new HashMap<>();
+        Portfolio hm = user.getPortfolio();
         ObservableMap<String, Stock> map = FXCollections.observableHashMap();
 
         ObservableList<MapEntry<String, Stock>> stocks = FXCollections.observableArrayList();
 
         final TableView<MapEntry<String, Stock>> table = new TableView<>(stocks);
-        Stock stock1 = new Stock("AAPL");
-        hm.put("AAPL", stock1);
-        for (String key : hm.keySet()) {
-            Stock stock = hm.get(key);
+        for (String key : hm.getSymbolList()) {
+            Stock stock = hm.getStock(key);
             map.put(key, stock);
             System.out.println(hm);
         }
@@ -146,28 +147,69 @@ public class UserInterface extends Application {
         return table;
     }
 
-    public HBox addBuySellHBox() {
+    private VBox addBuySellVBox() {
+        String stockSym = "";
 
-        HBox buySellHB = new HBox();
-        buySellHB.setPadding(new Insets(15, 12, 15, 12));
-        buySellHB.setSpacing(0);
-        buySellHB.setStyle("-fx-background-color: #4682B4;");
+        VBox buySellVB = new VBox();
+        buySellVB.setPadding(new Insets(150, 12, 15, 12));
+        buySellVB.setSpacing(20);
+        buySellVB.setStyle("-fx-background-color: #4682B4;");
 
         final TextField stockSymbol = new TextField();
         stockSymbol.setPromptText("Enter stock symbol");
 
+        final TextField stockVolume = new TextField();
+        stockVolume.setPromptText("Enter volume of stocks");
+
+
         stockSymbol.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!(newValue.equals(""))) { //TODO: check if symbol in available stocks
-                selectedStock = new Stock(newValue);
+                System.out.println(newValue);
+                //selectedStock = new Stock(newValue);
+
             }
         });
 
-        buySellHB.getChildren().addAll(stockSymbol);
+        stockVolume.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!(newValue.equals(""))) {
+                System.out.println(newValue);
+            }
+        });
+        Button buy = new Button("Buy");
+        buy.setStyle("-fx-background-color: #FFF5EE");
+        buy.setOnAction((ActionEvent e) -> {
+            try {
+                if (stockSymbol.getText() != null && stockVolume.getText() != null)
+                    user.getPortfolio().buyStock(stockSymbol.getText(), Integer.parseInt(stockVolume.getText()));
+                stockSymbol.clear();
+                stockVolume.clear();
+
+            } catch (Exception e1) {
+                System.out.printf("Fuck");
+            }
+        });
+
+        Button sell = new Button("Sell");
+        sell.setStyle("-fx-background-color: #FFF5EE");
+
+        sell.setOnAction(e -> {
+            try {
+                user.getPortfolio().sellStock(stockSym, Integer.parseInt(stockVolume.getText()));
+                stockSymbol.clear();
+                stockVolume.clear();
+
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
 
 
+        });
 
-        return buySellHB;
+
+        buySellVB.getChildren().addAll(stockSymbol, stockVolume, buy, sell);
+
+
+        return buySellVB;
     }
 }
-
 
