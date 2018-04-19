@@ -52,6 +52,22 @@ public class Portfolio {
         this.user = user;
     }
 
+    public Portfolio(double transactionFee) {
+        this.portfolio = new HashMap<>();
+        this.symbolList = new ArrayList<>();
+        this.prices = new ArrayList<>();
+        this.volumes = new ArrayList<>();
+        this.currentValuesOfPositions = new ArrayList<>();
+        this.averagePrices = new ArrayList<>();
+        this.profitsOrLosses = new ArrayList<>();
+        this.unrealisedProfitsOrLosses = new ArrayList<>();
+        this.totalCurrentValueOfPositions = 0.0;
+        this.totalProfitOrLoss = 0.0;
+        this.totalUnrealisedProfitOrLoss = 0.0;
+        this.transactionFee = transactionFee;
+        this.availableFunds = 0.0;
+    }
+
     public Portfolio(double availableFunds, User user, List<String> symbolList,
                      List<Double> prices, List<Integer> volumes, List<Double> averagePrices,
                      List<Double> profitsOrLosses,

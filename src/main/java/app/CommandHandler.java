@@ -1,6 +1,6 @@
 package app;
 
 public interface CommandHandler {
-    void handle(String command) throws Exception;
+    void handle(Integer command) throws Exception;
 }
 

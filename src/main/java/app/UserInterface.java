@@ -29,9 +29,7 @@ import java.util.Map;
 
 
 public class UserInterface extends Application {
-    private Portfolio portfolio;
-    Stock selectedStock;
-    Stage stage;
+
 
     private User user = new User("Pedro", new Portfolio(0.1), 10000);
     User user1 = new User("Peeter", new Portfolio(0.2), 1000000); //testing Pets
@@ -73,7 +71,6 @@ public class UserInterface extends Application {
 
         Popup popup = new Popup();
         popup.getContent().add(closePopup);
-
 
         closePopup.setOnAction(event -> popup.hide());
 

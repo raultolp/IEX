@@ -1,5 +1,7 @@
 package app;
 
+import app.actions.AddUser;
+
 import java.io.*;
 import java.util.*;
 
@@ -17,6 +19,11 @@ public class Iu {
     private static User activeUser = admin;
     private static File activeGame = null;
 
+    private static Iu handler = new Iu();
+    private Integer command;
+
+    private final List<CommandHandler> commandHandlers;
+
 
     private static final String[] availableStocks = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
             "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
@@ -31,7 +38,12 @@ public class Iu {
 //            "SYMC", "TGT", "TIF", "TRIP", "TSLA", "TWTR", "TXN", "UA", "UAL", "V", "VMW", "VNET",
 //            "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
 
-    public static void main(String[] args) throws IOException {
+
+    public Iu() {
+        this.commandHandlers = loadCommandHandlers();
+    }
+
+    public static void main(String[] args) throws Exception {
 
         User pedro = new User("Pedro", new Portfolio(), 10000); //String userName, Portfolio portfolio, double availableFunds
         Portfolio portfell2 = pedro.getPortfolio();
@@ -76,7 +88,7 @@ public class Iu {
         while (!quitProgram) {
             String name;
             int index;
-            int choice;
+            //int choice;
             int qty;
             Scanner sc = new Scanner(System.in);
 
@@ -85,14 +97,16 @@ public class Iu {
                     ANSI_RED + "(not saved)" + ANSI_RESET) +
                     " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
 
+            //TODO 1
             try {
-                choice = sc.nextInt();
+                handler.runInteractive(sc);
             } catch (InputMismatchException e) {
                 System.out.println("Wrong input: " + sc.nextLine());
-                continue;
             }
 
-            switch (choice) {
+
+
+           /* switch (choice) {
 
                 //Add user
                 case 1:
@@ -222,10 +236,10 @@ public class Iu {
                     break;
 
                 default:
-                    System.out.println(ANSI_RED + "Wrong input, choose between 1.." + mainMenu.length + "!" + ANSI_RESET);
-            } //switch menu options
-        } //main menu endless loop
-    }
+                    System.out.println(ANSI_RED + "Wrong input, choose between 1.." + mainMenu.length + "!" + ANSI_RESET);*/
+        } //switch menu options
+    } //main menu endless loop
+    //}
 
     private static void printMenu(String[] menu) {
         System.out.println();
@@ -239,23 +253,6 @@ public class Iu {
         }
     }
 
-    private static String enterUserName(Scanner sc) {
-        String name;
-        sc.nextLine();
-        do {
-            System.out.print("Enter user name: ");
-            name = sc.nextLine().trim();
-            if (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name))
-                System.out.println(ANSI_RED + "Use name with 3..12 characters and numbers." + ANSI_RESET);
-            else if (nameInList(name) > -1) {
-                System.out.println(ANSI_RED + "Name already exists!" + ANSI_RESET);
-            }
-            if (name.length() == 0)
-                return null;
-        } while (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name));
-
-        return name;
-    }
 
     private static String enterStockName(Scanner sc) {
         String name;
@@ -288,7 +285,7 @@ public class Iu {
         return qty;
     }
 
-    private static int nameInList(String name) {
+    public static int nameInList(String name) {
         for (User user : userList) {
             if (user.getUserName().equals(name))
                 return userList.indexOf(user);
@@ -359,8 +356,8 @@ public class Iu {
         System.out.print("Enter filename: ");
         String filename = sc.nextLine();
 
-       // if (!filename.endsWith(".game"))
-         //   filename += ".game";
+        // if (!filename.endsWith(".game"))
+        //   filename += ".game";
 
         File file = new File(filename);
 
@@ -532,16 +529,45 @@ public class Iu {
         }
     }
 
+    private List<CommandHandler> loadCommandHandlers() {
+        return Arrays.asList(
+                new AddUser()
+                //...
+        );
+    }
 
-    private static boolean isAlphaNumeric(String text) {
+    public void runInteractive(Scanner sc) throws Exception {
+        Integer command = sc.nextInt();
+        while (true) {
+            for (CommandHandler commandHandler : commandHandlers) {
+                commandHandler.handle(command);
+
+            }
+        }
+    }
+
+
+    public static boolean isAlphaNumeric(String text) {
         return text.matches("[a-zA-Z0-9]+");
     }
 
-    private static boolean isAlpha(String text) {
+    public static boolean isAlpha(String text) {
         return text.matches("[a-zA-Z]+");
     }
 
-    private static boolean isNumeric(String text) {
+    public static boolean isNumeric(String text) {
         return text.matches("[0-9]+");
+    }
+
+    public String[] getAvailableStocks() {
+        return availableStocks;
+    }
+
+    public static List<User> getUserList() {
+        return userList;
+    }
+
+    public static void setUserList(List<User> userList) {
+        Iu.userList = userList;
     }
 }

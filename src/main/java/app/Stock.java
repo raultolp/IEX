@@ -27,7 +27,7 @@ public class Stock {
 
 
     private int marketCap; //turukapitalisatsioon miljonites dollarites (näitab ettevõtte suurust)
-                            // (s.o kõigi noteeritud aktsiate hetkehindade summa)
+    // (s.o kõigi noteeritud aktsiate hetkehindade summa)
     private double peRatio;
     private double previousClose; //eelmine sulgemishind
     private double change1Year; //hinnamuutus viimase 1 aasta jooksul (protsendina)
@@ -39,7 +39,6 @@ public class Stock {
     private double currentPrice;  //hetke hind
     //private double iexRealtimePrice;  //https://api.iextrading.com/1.0/stock/aapl/book  - kas erineb currentPrice'ist?
     //kui börs suletud, siis väärtus on "null"
-
 
 
     //-----------------------------------------------------------------------
@@ -62,21 +61,21 @@ public class Stock {
 
         //Reading from URL:
         try {
-            String URLa = "https://api.iextrading.com/1.0/stock/"+symbol+"/book";
+            String URLa = "https://api.iextrading.com/1.0/stock/" + symbol + "/book";
             URL url = new URL(URLa);
             HttpURLConnection request = (HttpURLConnection) url.openConnection();
             request.connect();
 
             // Convert to a JSON object to print data
             JsonParser jp = new JsonParser(); //from gson
-            InputStream is=(InputStream) request.getContent();
+            InputStream is = (InputStream) request.getContent();
             JsonElement root = jp.parse(new InputStreamReader(is));
             JsonObject rootobj = root.getAsJsonObject(); // array or object
-            currentPrice=rootobj.getAsJsonObject("quote").get("latestPrice").getAsDouble(); //168.38
-            long marketCapAsLong=rootobj.getAsJsonObject("quote").get("marketCap").getAsLong();
-            marketCap=(int) (marketCapAsLong/1000000); //miljonites dollarites
-            peRatio=rootobj.getAsJsonObject("quote").get("peRatio").getAsDouble();
-            previousClose=rootobj.getAsJsonObject("quote").get("previousClose").getAsDouble();
+            currentPrice = rootobj.getAsJsonObject("quote").get("latestPrice").getAsDouble(); //168.38
+            long marketCapAsLong = rootobj.getAsJsonObject("quote").get("marketCap").getAsLong();
+            marketCap = (int) (marketCapAsLong / 1000000); //miljonites dollarites
+            peRatio = rootobj.getAsJsonObject("quote").get("peRatio").getAsDouble();
+            previousClose = rootobj.getAsJsonObject("quote").get("previousClose").getAsDouble();
 
             //TODO:
             //Maybe include bid price, bid size, ask price, ask size and respective calculations -
@@ -87,14 +86,14 @@ public class Stock {
             is.close();
 
             //------------------------------------------------
-            String URLb = "https://api.iextrading.com/1.0/stock/"+symbol+"/stats";
+            String URLb = "https://api.iextrading.com/1.0/stock/" + symbol + "/stats";
             URL url2 = new URL(URLb);
             HttpURLConnection request2 = (HttpURLConnection) url2.openConnection();
             request2.connect();
 
             // Convert to a JSON object to print data
             JsonParser jp2 = new JsonParser(); //from gson
-            InputStream is2=(InputStream) request2.getContent();
+            InputStream is2 = (InputStream) request2.getContent();
             JsonElement root2 = jp.parse(new InputStreamReader(is2));
             JsonObject rootobj2 = root2.getAsJsonObject(); // array or object
             dividendYield = rootobj2.get("dividendYield").getAsDouble();
@@ -109,22 +108,22 @@ public class Stock {
             //------------------------------------------------
 
 
-            String URLc = "https://api.iextrading.com/1.0/stock/"+symbol+"/company";
+            String URLc = "https://api.iextrading.com/1.0/stock/" + symbol + "/company";
             URL url3 = new URL(URLc);
             HttpURLConnection request3 = (HttpURLConnection) url3.openConnection();
             request3.connect();
 
             // Convert to a JSON object to print data
             JsonParser jp3 = new JsonParser(); //from gson
-            InputStream is3=(InputStream) request3.getContent();
+            InputStream is3 = (InputStream) request3.getContent();
             JsonElement root3 = jp.parse(new InputStreamReader(is3));
             JsonObject rootobj3 = root3.getAsJsonObject(); // array or object
-            companyName=rootobj3.get("companyName").getAsString(); //AAPL
-            sector=rootobj3.get("sector").getAsString(); //"Technology"
-            industry=rootobj3.get("industry").getAsString(); // "Computer Hardware"
-            description=rootobj3.get("description").getAsString();
-            CEO=rootobj3.get("CEO").getAsString();
-            website=rootobj3.get("website").getAsString();
+            companyName = rootobj3.get("companyName").getAsString(); //AAPL
+            sector = rootobj3.get("sector").getAsString(); //"Technology"
+            industry = rootobj3.get("industry").getAsString(); // "Computer Hardware"
+            description = rootobj3.get("description").getAsString();
+            CEO = rootobj3.get("CEO").getAsString();
+            website = rootobj3.get("website").getAsString();
 
             request3.disconnect();
             is3.close();
@@ -140,10 +139,10 @@ public class Stock {
 
     //-----------------------------------------------
 
-    public double getLatestPrice(){ //kiiresti viimase hinna leidmiseks
+    public double getLatestPrice() { //kiiresti viimase hinna leidmiseks
         //kuna sellel lehel on väga lihtne json objekt, peaks selle
         //kasutamine kiirendama nt portfelli kõigi hindade uuednamist
-        String sURL = "https://api.iextrading.com/1.0/stock/"+symbol+"/price";
+        String sURL = "https://api.iextrading.com/1.0/stock/" + symbol + "/price";
         double latestPrice;
 
         try {
@@ -153,9 +152,9 @@ public class Stock {
 
             // Convert to a JSON object to print data
             JsonParser jp = new JsonParser(); //from gson
-            InputStream is=(InputStream) request.getContent();
+            InputStream is = (InputStream) request.getContent();
             JsonElement root = jp.parse(new InputStreamReader(is));  //from input stream to json
-            latestPrice= root.getAsDouble();
+            latestPrice = root.getAsDouble();
 
             request.disconnect();
             is.close();
@@ -171,12 +170,12 @@ public class Stock {
     //-----------------------------------------------
 
     // DATA FOR DRAWING CHART (includes price and volume data):
-    public Map<String, Double []> getHistoricalPrices(String period){
+    public Map<String, Double[]> getHistoricalPrices(String period) {
         //possible periods:  5y, 2y, 1y, ytd, 6m, 3m, 1m, (1d)
 
-        String sURL = "https://api.iextrading.com/1.0/stock/"+symbol+"/chart/"+period;
+        String sURL = "https://api.iextrading.com/1.0/stock/" + symbol + "/chart/" + period;
 
-        Map<String, Double []> historical=new HashMap<>(); //String - date; Double[]- close price, volume in millions
+        Map<String, Double[]> historical = new HashMap<>(); //String - date; Double[]- close price, volume in millions
 
         try {
             URL url = new URL(sURL);
@@ -185,32 +184,31 @@ public class Stock {
 
             // Convert to a JSON object to print data
             JsonParser jp = new JsonParser(); //from gson
-            InputStream is=(InputStream) request.getContent();
+            InputStream is = (InputStream) request.getContent();
             JsonElement root = jp.parse(new InputStreamReader(is));  //from input stream to json
             JsonArray rootArray = root.getAsJsonArray(); // here, it is JsonArray instead...
 
             for (JsonElement jsonElement : rootArray) {
-                JsonObject timeObject=jsonElement.getAsJsonObject();
+                JsonObject timeObject = jsonElement.getAsJsonObject();
 
                 double price, volume;
                 String timeDataPoint;
 
-                if (period.equals("1d")){
-                    timeDataPoint=timeObject.get("minute").getAsString();
-                    price=timeObject.get("average").getAsDouble();
-                    long volumeAsLong=timeObject.get("volume").getAsLong();
-                    volume= (int)(volumeAsLong/1000); //tuhandetes dollarites - NB!
+                if (period.equals("1d")) {
+                    timeDataPoint = timeObject.get("minute").getAsString();
+                    price = timeObject.get("average").getAsDouble();
+                    long volumeAsLong = timeObject.get("volume").getAsLong();
+                    volume = (int) (volumeAsLong / 1000); //tuhandetes dollarites - NB!
                     //Note: in one day chart, the number of data points is ca 390.
-                }
-                else{
-                    timeDataPoint=timeObject.get("date").getAsString();
-                    price=timeObject.get("close").getAsDouble();
-                    long volumeAsLong=timeObject.get("volume").getAsLong();
-                    volume= (int)(volumeAsLong/1000000); //miljonites dollarites - NB!
+                } else {
+                    timeDataPoint = timeObject.get("date").getAsString();
+                    price = timeObject.get("close").getAsDouble();
+                    long volumeAsLong = timeObject.get("volume").getAsLong();
+                    volume = (int) (volumeAsLong / 1000000); //miljonites dollarites - NB!
                 }
 
 
-                Double [] priceAndVolume= {price, volume};
+                Double[] priceAndVolume = {price, volume};
                 historical.put(timeDataPoint, priceAndVolume);
             }
 
