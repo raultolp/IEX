@@ -24,6 +24,7 @@ public class Iu {
 
     private final List<CommandHandler> commandHandlers;
 
+    private static Scanner sc = new Scanner(System.in);
 
     private static final String[] availableStocks = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
             "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
@@ -44,8 +45,9 @@ public class Iu {
     }
 
     public static void main(String[] args) throws Exception {
+        handler.runInteractive(sc);
 
-        User pedro = new User("Pedro", new Portfolio(), 10000); //String userName, Portfolio portfolio, double availableFunds
+      /*  User pedro = new User("Pedro", new Portfolio(), 10000); //String userName, Portfolio portfolio, double availableFunds
         Portfolio portfell2 = pedro.getPortfolio();
         userList.add(pedro);
         portfell2.buyStock("AAPL", 20);
@@ -55,24 +57,8 @@ public class Iu {
         User pets = new User("Peeter", portfell, 1000000); //testing Pets
         userList.add(pets); //et saaks midagi kirjutada
         portfell.buyStock("CAT", 200);
-        portfell.buyStock("AAPL", 1);
+        portfell.buyStock("AAPL", 1);*/
 
-        final String[] mainMenu = {"Add user",
-                "Delete user",
-                "List users",
-                "Set active user",
-                "Buy stock",
-                "Sell stock",
-                "View user portfolio",
-                "View available stock list",
-                "View stock list base data",
-                "View stock base data",
-                "View stock historical data",
-                "View all portfolios performance",
-                "Refresh data from web",
-                "Load data file",
-                "Save data file",
-                "Quit"};
 
         System.out.println("\n+++ BÖRSIMÄNG +++\n\nLoading stock data from web ...\n");
 
@@ -81,28 +67,7 @@ public class Iu {
         for (String symbol : availableStocks) {
             Stock stock = new Stock(symbol);
             stockMap.put(symbol, stock);
-        }
 
-        boolean quitProgram = false;
-
-        while (!quitProgram) {
-            String name;
-            int index;
-            //int choice;
-            int qty;
-            Scanner sc = new Scanner(System.in);
-
-            printMenu(mainMenu);
-            System.out.print((activeGame != null ? ANSI_BLUE + activeGame.getName() + ANSI_RESET :
-                    ANSI_RED + "(not saved)" + ANSI_RESET) +
-                    " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
-
-            //TODO 1
-            try {
-                handler.runInteractive(sc);
-            } catch (InputMismatchException e) {
-                System.out.println("Wrong input: " + sc.nextLine());
-            }
 
 
 
@@ -537,12 +502,44 @@ public class Iu {
     }
 
     public void runInteractive(Scanner sc) throws Exception {
-        Integer command = sc.nextInt();
-        while (true) {
-            for (CommandHandler commandHandler : commandHandlers) {
-                commandHandler.handle(command);
+        boolean quitProgram = false;
 
+        final String[] mainMenu = {"Add user",
+                "Delete user",
+                "List users",
+                "Set active user",
+                "Buy stock",
+                "Sell stock",
+                "View user portfolio",
+                "View available stock list",
+                "View stock list base data",
+                "View stock base data",
+                "View stock historical data",
+                "View all portfolios performance",
+                "Refresh data from web",
+                "Load data file",
+                "Save data file",
+                "Quit"};
+        printMenu(mainMenu);
+        System.out.print((activeGame != null ? ANSI_BLUE + activeGame.getName() + ANSI_RESET :
+                ANSI_RED + "(not saved)" + ANSI_RESET) +
+                " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
+        //TODO 1
+
+        while (true) {
+            Integer command = sc.nextInt();
+            try {
+                for (CommandHandler commandHandler : commandHandlers) {
+                    commandHandler.handle(command);
+                }
+
+            } catch (InputMismatchException e) {
+                System.out.println("Wrong input: " + sc.nextLine());
             }
+            printMenu(mainMenu);
+            System.out.print((activeGame != null ? ANSI_BLUE + activeGame.getName() + ANSI_RESET :
+                    ANSI_RED + "(not saved)" + ANSI_RESET) +
+                    " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
         }
     }
 
