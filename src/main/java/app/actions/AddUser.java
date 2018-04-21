@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import static app.Iu.*;
+import static app.actions.DeleteUser.nameInList;
 
 public class AddUser implements CommandHandler {
     private Scanner sc = new Scanner(System.in);
@@ -27,12 +28,12 @@ public class AddUser implements CommandHandler {
             }
             setUserList(newUserList);
 
-
         }
+        sc.close();
     }
 
 
-    private static String enterUserName(Scanner sc) {
+    public static String enterUserName(Scanner sc) {
         String name;
         do {
             System.out.print("Enter user name: ");

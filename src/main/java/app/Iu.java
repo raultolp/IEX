@@ -1,9 +1,11 @@
 package app;
 
-import app.actions.AddUser;
+import app.actions.*;
 
 import java.io.*;
 import java.util.*;
+
+import static app.actions.ShowUsersList.showUsersList;
 
 public class Iu {
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -24,7 +26,7 @@ public class Iu {
 
     private final List<CommandHandler> commandHandlers;
 
-    private static Scanner sc = new Scanner(System.in);
+    public static Scanner sc = new Scanner(System.in);
 
     private static final String[] availableStocks = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
             "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
@@ -46,18 +48,7 @@ public class Iu {
 
     public static void main(String[] args) throws Exception {
         handler.runInteractive(sc);
-
-      /*  User pedro = new User("Pedro", new Portfolio(), 10000); //String userName, Portfolio portfolio, double availableFunds
-        Portfolio portfell2 = pedro.getPortfolio();
-        userList.add(pedro);
-        portfell2.buyStock("AAPL", 20);
-        portfell2.buyStock("MSFT", 10);
-
-        Portfolio portfell = new Portfolio();
-        User pets = new User("Peeter", portfell, 1000000); //testing Pets
-        userList.add(pets); //et saaks midagi kirjutada
-        portfell.buyStock("CAT", 200);
-        portfell.buyStock("AAPL", 1);*/
+        sc.close();
 
 
         System.out.println("\n+++ BÖRSIMÄNG +++\n\nLoading stock data from web ...\n");
@@ -219,22 +210,7 @@ public class Iu {
     }
 
 
-    private static String enterStockName(Scanner sc) {
-        String name;
-        sc.nextLine();
-        do {
-            System.out.print("Enter stock name: ");
-            name = sc.next().trim();
-            if (name.length() < 1 || name.length() > 5 || !isAlpha(name))
-                System.out.println(ANSI_RED + "Choose right stock name." + ANSI_RESET);
-            if (name.length() == 0)
-                return null;
-        } while (name.length() > 5 || !isAlpha(name));
-
-        return name.toUpperCase();
-    }
-
-    private static int enterQty(Scanner sc) {
+    public static int enterQty(Scanner sc) {
         int qty = 0;
         sc.nextLine();
 
@@ -250,35 +226,6 @@ public class Iu {
         return qty;
     }
 
-    public static int nameInList(String name) {
-        for (User user : userList) {
-            if (user.getUserName().equals(name))
-                return userList.indexOf(user);
-        }
-        return -1;
-    }
-
-    private static void showUsersList() {
-        System.out.println("Defined users:");
-        if (userList.size() > 0) {
-            for (User item : userList) {
-                System.out.printf("%-12s%s", item.getUserName(), (userList.indexOf(item) + 1) % 6 == 0 ? "\n" : " ");
-            }
-        } else
-            System.out.println("None");
-        System.out.println();
-    }
-
-    private static void showStockList() {
-        System.out.println("Avilable stocks:");
-        Arrays.sort(availableStocks);
-        int i;
-        for (i = 0; i < availableStocks.length; i++) {
-            System.out.printf("%-5s%s", availableStocks[i], (i + 1) % 10 == 0 ? "\n" : " ");
-        }
-        if (i % 10 != 0)
-            System.out.println();
-    }
 
     private static void saveData(Scanner sc) throws IOException {
 
@@ -496,8 +443,9 @@ public class Iu {
 
     private List<CommandHandler> loadCommandHandlers() {
         return Arrays.asList(
-                new AddUser()
-                //...
+                new AddUser(),
+                new SellStock(), new BuyStock(),
+                new DeleteUser(), new ShowUsersList(), new SetActiveUser()
         );
     }
 
@@ -524,7 +472,7 @@ public class Iu {
         System.out.print((activeGame != null ? ANSI_BLUE + activeGame.getName() + ANSI_RESET :
                 ANSI_RED + "(not saved)" + ANSI_RESET) +
                 " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
-        //TODO 1
+        //TODO runInteractive
 
         while (true) {
             Integer command = sc.nextInt();
@@ -556,7 +504,7 @@ public class Iu {
         return text.matches("[0-9]+");
     }
 
-    public String[] getAvailableStocks() {
+    public static String[] getAvailableStocks() {
         return availableStocks;
     }
 
@@ -566,5 +514,25 @@ public class Iu {
 
     public static void setUserList(List<User> userList) {
         Iu.userList = userList;
+    }
+
+    public static User getAdmin() {
+        return admin;
+    }
+
+    public static User getActiveUser() {
+        return activeUser;
+    }
+
+    public static void setActiveUser(User activeUser) {
+        Iu.activeUser = activeUser;
+    }
+
+    public static Scanner getSc() {
+        return sc;
+    }
+
+    public static File getActiveGame() {
+        return activeGame;
     }
 }
