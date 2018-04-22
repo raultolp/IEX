@@ -1,3 +1,4 @@
+/*
 package app;
 
 //LightSlateGray 	#778899
@@ -101,7 +102,8 @@ public class UserInterface extends Application {
         stage.show();
     }
 
-   /* private HBox addBottomHBox() {
+   */
+/* private HBox addBottomHBox() {
         HBox hbox = new HBox();
         hbox.setPadding(new Insets(15, 12, 15, 12));
         hbox.setSpacing(10);
@@ -126,7 +128,8 @@ public class UserInterface extends Application {
 
 
         return hbox;
-    }*/
+    }*//*
+
 
     //https://stackoverflow.com/questions/38487797/javafx-populate-tableview-with-an-observablemap-that-has-a-custom-class-for-its
 
@@ -251,3 +254,4 @@ public class UserInterface extends Application {
     }
 }
 
+*/

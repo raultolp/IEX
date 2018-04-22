@@ -1,6 +1,9 @@
 package app;
 
+import javafx.geometry.Pos;
+
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,173 +12,95 @@ import java.util.Map;
 public class Portfolio {
 
     private double availableFunds;
-    private User user;
-
+    //private User user;
     private Map<String, Stock> portfolio;
-    private List<String> symbolList;
-    private List<Double> prices;  //current price
-    private List<Integer> volumes; //number of stocks
-    private List<Double> averagePrices; //average purchase prices (includes transaction fees) -
-    //necessary also in order to take into account that
-    // stocks can be bought with different prices at different times.
-    private List<Double> profitsOrLosses;  //realised profit/loss from each stock in portfolio
-    //("realised profit/loss" means profit loss from transactions made)
-    private List<Double> unrealisedProfitsOrLosses; //"unrealised proft/loss" means profit/loss that would
-    // be gained if stocks were sold at current market price
-    //(does not include transaction fee)
-    private List<Double> currentValuesOfPositions;  // volume*current price, i.e. current value of stock in portfolio
-
-    //Totals:
-    private double totalCurrentValueOfPositions; //sum of all totals (i.e. sum of all current positions)
-    private double totalProfitOrLoss;
-    private double totalUnrealisedProfitOrLoss;
-
-    //Transaction fee:
-    private double transactionFee = 0.1; // 10 cents per stock
-
+    private Map<String, Position> positions;
+    private Map<LocalDateTime, Transaction> transactions;
+    private double totalValueOfPositions; //sum of all totals (i.e. sum of all current positions)
+    private double profit; //realised profit (from closed positions (sold stocks))
+    private double unrealisedProfit; //gains/losses in value of stocks in portfolio (i.e of stocks not sold yet)
+    //private double totalValueOfPortfolio; //positions + availableFunds
 
     //Constructor - creates an empty portfolio:
-    public Portfolio() {
+    public Portfolio(double initialFunds) {
         this.portfolio = new HashMap<>();
-        this.symbolList = new ArrayList<>();
-        this.prices = new ArrayList<>();
-        this.volumes = new ArrayList<>();
-        this.currentValuesOfPositions = new ArrayList<>();
-        this.averagePrices = new ArrayList<>();
-        this.profitsOrLosses = new ArrayList<>();
-        this.unrealisedProfitsOrLosses = new ArrayList<>();
-        this.totalCurrentValueOfPositions = 0.0;
-        this.totalProfitOrLoss = 0.0;
-        this.totalUnrealisedProfitOrLoss = 0.0;
-        this.transactionFee = transactionFee;
-        this.availableFunds = 0.0;
-        this.user = user;
+        this.positions= new HashMap<>();
+        this.transactions= new HashMap<>();
+        this.totalValueOfPositions = 0.0;
+        //this.totalValueOfPortfolio=0.0;
+        this.profit = 0.0;
+        this.unrealisedProfit = 0.0;
+        //this.availableFunds = 0.0;
+        this.availableFunds =initialFunds;
+        //this.user = user;
     }
 
-    public Portfolio(double transactionFee) {
-        this.portfolio = new HashMap<>();
-        this.symbolList = new ArrayList<>();
-        this.prices = new ArrayList<>();
-        this.volumes = new ArrayList<>();
-        this.currentValuesOfPositions = new ArrayList<>();
-        this.averagePrices = new ArrayList<>();
-        this.profitsOrLosses = new ArrayList<>();
-        this.unrealisedProfitsOrLosses = new ArrayList<>();
-        this.totalCurrentValueOfPositions = 0.0;
-        this.totalProfitOrLoss = 0.0;
-        this.totalUnrealisedProfitOrLoss = 0.0;
-        this.transactionFee = transactionFee;
-        this.availableFunds = 0.0;
-    }
-
-    public Portfolio(double availableFunds, User user, List<String> symbolList,
-                     List<Double> prices, List<Integer> volumes, List<Double> averagePrices,
-                     List<Double> profitsOrLosses,
-                     List<Double> unrealisedProfitsOrLosses, List<Double> currentValuesOfPositions,
-                     double totalCurrentValueOfPositions,
-                     double totalProfitOrLoss, double totalUnrealisedProfitOrLoss, double transactionFee) {
-
-
+    public Portfolio(double availableFunds,  Map<String, Stock> portfolio,
+                     Map<String, Position> positions, Map<LocalDateTime, Transaction> transactions,
+                     double totalValueOfPositions, double profit, double unrealisedProfit
+                    //, User user
+    ) {
         this.availableFunds = availableFunds;
-        this.user = user;
-        this.symbolList = symbolList;
-        this.prices = prices;
-        this.volumes = volumes;
-        this.averagePrices = averagePrices;
-        this.profitsOrLosses = profitsOrLosses;
-        this.unrealisedProfitsOrLosses = unrealisedProfitsOrLosses;
-        this.currentValuesOfPositions = currentValuesOfPositions;
-        this.totalCurrentValueOfPositions = totalCurrentValueOfPositions;
-        this.totalProfitOrLoss = totalProfitOrLoss;
-        this.totalUnrealisedProfitOrLoss = totalUnrealisedProfitOrLoss;
-        this.transactionFee = transactionFee;
+        //this.user = user;
+        this.portfolio = portfolio;
+        this.positions = positions;
+        this.transactions=transactions;
+        this.totalValueOfPositions = totalValueOfPositions;
+        //this.totalValueOfPortfolio=totalValueOfPositions+availableFunds;
+        this.profit = profit;
+        this.unrealisedProfit = unrealisedProfit;
     }
+
+
     //-----------------------------------------------
-    //Buying stock:
+    //BUYING STOCK:
 
     public void buyStock(String symbol, int volume) {
 
-        double transactionFeeTotal = volume * transactionFee;
         double price;
+        String transactionType="buy";
+        boolean newStock=!portfolio.containsKey(symbol);  // if stock already included in portfolio
+        Stock stock;
+        Position position;
+        LocalDateTime transactionTime=java.time.LocalDateTime.now();
 
-        //If stock not yet included in portfolio::
-        if (!portfolio.containsKey(symbol)) {
-            Stock stock = new Stock(symbol);
-            price = stock.getLatestPrice();  //current price
-
-            if (!checkSufficiencyOfFunds(price, volume)) {
-                throw new RuntimeException("Not enough funds!");
-            } else {
-                double averagePrice = price + transactionFee;
-                availableFunds -= volume * (price + transactionFee);
-                user.setAvailableFunds(availableFunds);
-
-                System.out.print(volume + " stocks of " + symbol + " bought @" + price + " USD (total value ");
-                System.out.printf("%.2f", volume * (price + transactionFee));
-                System.out.println(" USD).");
-                System.out.println("Cash available: " + availableFunds + " USD.");
-
-                portfolio.put(symbol, stock);
-                symbolList.add(symbol);
-                volumes.add(volume);
-                prices.add(price); //current price
-                currentValuesOfPositions.add(price * volume); //current value of stock in portfolio
-                averagePrices.add(averagePrice);
-                profitsOrLosses.add(0.0 - transactionFeeTotal);
-                unrealisedProfitsOrLosses.add(volume * (price - averagePrice));
-
-            }
-
+        if (newStock==true) {
+            stock = new Stock(symbol);
+            price = stock.getCurrentPrice();
         }
-
-        //If stock already included in portfolio::
         else {
-            int indexOfStock = symbolList.indexOf(symbol);
-            Stock stock = portfolio.get(symbol);
+            stock = portfolio.get(symbol);
             price = stock.getLatestPrice();
+        }
 
-            if (!checkSufficiencyOfFunds(price, volume)) {
-                throw new RuntimeException("Not enough funds!");
-            } else {
-                int prevVolume = volumes.get(indexOfStock);
-                double prevTotal = currentValuesOfPositions.get(indexOfStock);
-                double prevAveragePrice = averagePrices.get(indexOfStock);
-                double prevProfitOrLoss = profitsOrLosses.get(indexOfStock);
+        Transaction transaction=new Transaction(symbol, price, volume, transactionType, transactionTime);
 
-                availableFunds -= volume * (price + transactionFee);
-                user.setAvailableFunds(availableFunds);
+        if(transaction.getTransactionAmount()>availableFunds){
+            throw new RuntimeException("Not enough funds!");
+        }
+        else {
+            availableFunds-= transaction.getTransactionAmount();
+            //user.setAvailableFunds(availableFunds);
+            transaction.reportTransaction();
+            transactions.put(transactionTime, transaction);
 
-                System.out.print(volume + " stocks of " + symbol + " bought @" + price + " USD (total value ");
-                System.out.printf("%.2f", volume * (price + transactionFee));
-                System.out.println(" USD).");
-                System.out.println("Cash available: " + availableFunds + " USD.");
-
-                volumes.set(indexOfStock, prevVolume + volume);
-                prices.set(indexOfStock, price); //current price
-                currentValuesOfPositions.set(indexOfStock, price * (volume + prevVolume)); //current value of stock in portfolio
-                profitsOrLosses.set(indexOfStock, prevProfitOrLoss - transactionFeeTotal);
-
-                //New average purchase price calculation:
-                double newAveragePrice = (prevVolume * prevAveragePrice + volume * (price + transactionFee)) / (volume + prevVolume);
-                averagePrices.set(indexOfStock, newAveragePrice);  // weighted average
-
-                //New unrealised proft/loss calculation:
-                unrealisedProfitsOrLosses.set(indexOfStock, (volume + prevVolume) * (price - newAveragePrice));
-
+            if (newStock==true) {
+                portfolio.put(symbol, stock);
+                position = new Position(transaction, symbol, price, volume);
+                positions.put(symbol, position);
+            }
+            else {
+                position = positions.get(symbol);
+                position.priceUpdate(price);
+                position.increasePosition(transaction, price, volume);
             }
 
+            calculateTotals();
         }
-
-        if (checkSufficiencyOfFunds(price, volume)) {
-            totalCurrentValueOfPositions = calculateTotal(currentValuesOfPositions);
-            totalProfitOrLoss = calculateTotal(profitsOrLosses);
-            totalUnrealisedProfitOrLoss = calculateTotal(unrealisedProfitsOrLosses);
-        }
-
     }
 
     //-----------------------------------------------
-    //Selling stock:
+    //SELLING STOCK:
 
     //- If user tries to sell more stocks than included in portfolio, only the
     //stocks included in portfolio will be sold (negative number of stocks not allowed)
@@ -184,90 +109,76 @@ public class Portfolio {
     public void sellStock(String symbol, int volume) {
 
         //checking if stock is present in portfolio is already included in main class
+        //TODO: (PRIORITY 1) - SEE IF THIS CHECK STILL WORKS IN IU.
 
-        int indexOfStock = symbolList.indexOf(symbol);
+        String transactionType="sell";
+        Position position = positions.get(symbol);
+        LocalDateTime transactionTime=java.time.LocalDateTime.now();
 
-        if (volumes.get(indexOfStock) < volume) { //max number of shares to be sold is their number in portfolio
+        if (position.getVolume() < volume) { //max number of shares to be sold is their number in portfolio
             System.out.println("Portfolio only contains " + volume + " stocks. Now selling them all...");  //LISATUD
-            volume = volumes.get(indexOfStock); //if user tries to sell more, only the max number is sold
+            volume = position.getVolume(); //if user tries to sell more, only the max number is sold
         }
 
-        double transactionFeeTotal = volume * transactionFee;
+        //double transactionFeeTotal = volume * transactionFee;
         Stock stock = portfolio.get(symbol);
         double price = stock.getLatestPrice();  //current price
-        int prevVolume = volumes.get(indexOfStock);
-        double prevTotal = currentValuesOfPositions.get(indexOfStock);
-        double prevAveragePrice = averagePrices.get(indexOfStock);
-        double prevProfitOrLoss = profitsOrLosses.get(indexOfStock);
+        position.priceUpdate(price);
 
-        availableFunds += volume * (price - transactionFee);
-        user.setAvailableFunds(availableFunds);
+        Transaction transaction = new Transaction(symbol, price, volume, transactionType, transactionTime);
+        availableFunds += transaction.getTransactionAmount();;
+        profit+=volume*(price-position.getAveragePrice())-transaction.getTransactionFees();
+        //user.setAvailableFunds(availableFunds);
+        transaction.reportTransaction();
+        transactions.put(transactionTime, transaction);
 
-        System.out.print(volume + " stocks of " + symbol + " sold @" + price + " USD (total value ");
-        System.out.printf("%.2f", volume * (price - transactionFee));
-        System.out.println(" USD).");
-        System.out.println("Cash available: " + availableFunds + " USD.");
+        //TODO: (PIORITY 1)- CREATE POSSIBILITY TO VIEW ALL TRANSACTIONS OF USER
+        //(MAYBE CREATE A NEW CLASS "TRANSACTIONS REPORT" VMS FOR THIS) TO SEE TRANSACTIONS
+        //SORTED EITHER BY STOCK SYMBOL OR BY DATE (WITH TRANSACTION PRICE, FEE, AMOUNT PAID, PROFIT,
+        // DATE, SYMBOL, AVAILABLE FUNDS AFTER TRANSACTION).
+        // SOME INFO FOR THIS IS IN "TRANSACTION" CLASS AND SOME IN "POSITION" CLASS.
 
-        volumes.set(indexOfStock, prevVolume - volume);
-        prices.set(indexOfStock, price); //current price uuendamine
-        currentValuesOfPositions.set(indexOfStock, price * (prevVolume - volume)); //current value of stock in portfolio
+        position.decreasePosition(transaction, price, volume);
 
-        //Increasing the previous profit from this stock:
-        double profitFromSell = volume * (price - prevAveragePrice) - transactionFeeTotal;
-        profitsOrLosses.set(indexOfStock, prevProfitOrLoss + profitFromSell);
+        calculateTotals();
 
-        totalCurrentValueOfPositions = calculateTotal(currentValuesOfPositions);
-        totalProfitOrLoss = calculateTotal(profitsOrLosses);
-        totalUnrealisedProfitOrLoss = calculateTotal(unrealisedProfitsOrLosses);
-
-        //average purchase price (in averagePrices) remains the same
-
-
-        //New unrealised proft/loss calculation:
-        unrealisedProfitsOrLosses.set(indexOfStock, (prevVolume - volume) * (price - averagePrices.get(indexOfStock)));
-
-        //If all stocks are sold from portfolio and profit gained from the stook is zero:
-        removeRedundantStock(symbol);
-
-
-        //TODO:
-        //Possibility for short selling could be added (allows negative number of stocks)
-
-    }
-
-    //-----------------------------------------------
-    //removing stock from portfolio:
-
-    public void removeRedundantStock(String symbol) {
-        int indexOfStock = symbolList.indexOf(symbol);
-        //Should only be removed if volume in portfolio is zero and no profit/loss has been gained
-        // from this stock:
-        if (volumes.get(indexOfStock) == 0 && profitsOrLosses.get(indexOfStock) == 0.0) {
+        //removing stock from portfolio in case its volume is zero after sell
+        if (positions.get(symbol).getVolume()==0){
             portfolio.remove(symbol);
-            symbolList.remove(indexOfStock);
-            prices.remove(indexOfStock);
-            volumes.remove(indexOfStock);
-            currentValuesOfPositions.remove(indexOfStock);
-            averagePrices.remove(indexOfStock);
-            profitsOrLosses.remove(indexOfStock);
-            unrealisedProfitsOrLosses.remove(indexOfStock);
+            //positions.remove(symbol); //Should NOT be included, because: a) calculateTotals() depends on it,
+            // and b) keeping closed positsions is important for creating the (planned) transactions report.
         }
     }
+
+    //TODO: (PRIORITY 2) Possibility for short selling could be added (allows negative number of stocks)
 
     //-----------------------------------------------
 
     //calculate portfolio total (sum of all current positions in stock):
-    public double calculateTotal(List<Double> listToBeTotalled) {
-        double total = 0.0;
-        for (double t : listToBeTotalled) {
-            total += t;
+    public void calculateTotals() {
+        totalValueOfPositions =0.0;
+        profit=0.0;
+        unrealisedProfit=0.0;
+
+        for (String s : positions.keySet()) {
+            Position position=positions.get(s);
+            totalValueOfPositions+=position.getCurrentValue();
+            profit+=position.getProfit(); //for both open and closed positions
+            unrealisedProfit+=position.getUnrealisedProfit();
         }
-        return total;
+
+        //totalValueOfPortfolio=totalValueOfPositions+availableFunds;
+
+/*        for (String p : portfolio.keySet()) {
+            profit+=position.getProfit();
+        }*/
+
+
     }
 
     //-----------------------------------------------
 
-    //update current prices of all stocks in portfolio:
+/*    //update current prices of all stocks in portfolio:
     public void updatePrices() {
 
         for (String symbol : portfolio.keySet()) {
@@ -282,21 +193,12 @@ public class Portfolio {
             unrealisedProfitsOrLosses.set(indexOfStock, volume * (price - averagePrices.get(indexOfStock)));
             //profitsOrLosses does not change (because it indicates realised profit/loss from transactions)
 
-            totalCurrentValueOfPositions = calculateTotal(currentValuesOfPositions);
-            totalProfitOrLoss = calculateTotal(profitsOrLosses);
-            totalUnrealisedProfitOrLoss = calculateTotal(unrealisedProfitsOrLosses);
+            totalValueOfPositions = calculateTotal(currentValuesOfPositions);
+            profit = calculateTotal(profitsOrLosses);
+            unrealisedProfit = calculateTotal(unrealisedProfitsOrLosses);
 
         }
-    }
-
-    //-----------------------------------------------
-
-    public boolean checkSufficiencyOfFunds(double price, int volume) {
-        if ((price + transactionFee) * volume > availableFunds) {
-            return false;
-        }
-        return true;
-    }
+    }*/
 
     //-----------------------------------------------
     //GETTER & SETTERS:
@@ -307,62 +209,46 @@ public class Portfolio {
     }
 
     //Getting portfolio total value:
-    public double getTotalValue() {
-        return availableFunds + totalCurrentValueOfPositions;
+    public double getTotalValueOfPortfolio() {
+        return availableFunds + totalValueOfPositions;
     }
+
 
     //Other getters:
     public Map<String, Stock> getPortfolio() {
         return portfolio;
     }
 
-    public List<String> getSymbolList() {
-        return symbolList;
+    public double getTotalValueOfPositions() {
+        return totalValueOfPositions;
     }
 
-    public List<Double> getPrices() {
-        return prices;
+    public double getProfit() {
+        return profit;
     }
 
-    public List<Integer> getVolumes() {
-        return volumes;
-    }
-
-    public List<Double> getAveragePrices() {
-        return averagePrices;
-    }
-
-    public List<Double> getProfitsOrLosses() {
-        return profitsOrLosses;
-    }
-
-    public List<Double> getUnrealisedProfitsOrLosses() {
-        return unrealisedProfitsOrLosses;
-    }
-
-    public List<Double> getCurrentValuesOfPositions() {
-        return currentValuesOfPositions;
-    }
-
-    public double getTotalCurrentValueOfPositions() {
-        return totalCurrentValueOfPositions;
-    }
-
-    public double getTotalProfitOrLoss() {
-        return totalProfitOrLoss;
-    }
-
-    public double getTotalUnrealisedProfitOrLoss() {
-        return totalUnrealisedProfitOrLoss;
+    public double getUnrealisedProfit() {
+        return unrealisedProfit;
     }
 
     public void setAvailableFunds(double availableFunds) {
         this.availableFunds = availableFunds;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public double getAvailableFunds() {
+        return availableFunds;
     }
+
+/*    public void setUser(User user) {
+        this.user = user;
+    }*/
+
+
+
+
+
+
+
 
 
     //-----------------------------------------------
@@ -379,7 +265,7 @@ public class Portfolio {
         return roundedDoubles;
     }
 
-    @Override
+/*    @Override
     public String toString() {
         return
                 "Stock names: \n" + symbolList.toString() + '\n' +
@@ -389,9 +275,9 @@ public class Portfolio {
                         "Profits or losses: \n" + profitsOrLosses + '\n' +
                         "Unrealised profits or losses: \n" + roundDoubleList(unrealisedProfitsOrLosses) + '\n' +
                         "Current values of positions: \n" + currentValuesOfPositions + '\n' +
-                        "Total current value of positions: \n" + totalCurrentValueOfPositions + '\n' +
-                        "Total profit or loss: \n" + totalProfitOrLoss + '\n' +
-                        "Total unrealised profit or loss: \n" + totalUnrealisedProfitOrLoss + '\n' +
+                        "Total current value of positions: \n" + totalValueOfPositions + '\n' +
+                        "Total profit or loss: \n" + profit + '\n' +
+                        "Total unrealised profit or loss: \n" + unrealisedProfit + '\n' +
                         "Transaction fee: \n" + transactionFee + '\n';
     }
 
@@ -405,10 +291,10 @@ public class Portfolio {
                         profitsOrLosses + ';' +
                         roundDoubleList(unrealisedProfitsOrLosses) + ';' +
                         currentValuesOfPositions + ';' +
-                        totalCurrentValueOfPositions + ';' +
-                        totalProfitOrLoss + ';' +
-                        totalUnrealisedProfitOrLoss + ';' +
+                        totalValueOfPositions + ';' +
+                        profit + ';' +
+                        unrealisedProfit + ';' +
                         transactionFee + '\n';
-    }
+    }*/
 
 }
