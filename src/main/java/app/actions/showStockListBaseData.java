@@ -1,4 +1,6 @@
-package app;
+package app.actions;
+
+import app.CommandHandler;
 
 import java.util.Scanner;
 

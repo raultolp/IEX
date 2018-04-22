@@ -1,4 +1,3 @@
-/*
 package app;
 
 import app.actions.*;
@@ -172,4 +171,4 @@ public class Iu {
     public static Map<String, Stock> getStockMap() {
         return stockMap;
     }
-}*/
+}

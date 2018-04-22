@@ -1,6 +1,8 @@
-package app;
+package app.actions;
 
 //View all portfolios progress
+
+import app.CommandHandler;
 
 import java.util.Scanner;
 
