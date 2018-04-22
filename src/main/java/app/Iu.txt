@@ -1,3 +1,5 @@
+// Kuna suurem lõhkumin, siis arhiiv 22.04 16:00
+
 package app;
 
 import app.actions.*;
@@ -41,23 +43,6 @@ public class Iu {
 //            "SYMC", "TGT", "TIF", "TRIP", "TSLA", "TWTR", "TXN", "UA", "UAL", "V", "VMW", "VNET",
 //            "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
 
-    private static final String[] mainMenu = {"Add user",
-            "Delete user",
-            "List users",
-            "Set active user",
-            "Buy stock",
-            "Sell stock",
-            "View user portfolio",
-            "View available stock list",
-            "View stock list base data",
-            "View stock base data",
-            "View stock historical data",
-            "View all portfolios performance",
-            "Refresh data from web",
-            "Load data file",
-            "Save data file",
-            "Quit"};
-
 
     public Iu() {
         this.commandHandlers = loadCommandHandlers();
@@ -65,7 +50,8 @@ public class Iu {
 
     public static void main(String[] args) throws Exception {
         handler.runInteractive(sc);
-//        sc.close();
+        sc.close();
+
 
         System.out.println("\n+++ BÖRSIMÄNG +++\n\nLoading stock data from web ...\n");
 
@@ -461,25 +447,38 @@ public class Iu {
         return Arrays.asList(
                 new AddUser(),
                 new SellStock(), new BuyStock(),
-                new DeleteUser(), new ShowUsersList(), new SetActiveUser(),
-                new ErrorHandler()
+                new DeleteUser(), new ShowUsersList(), new SetActiveUser()
         );
     }
 
     public void runInteractive(Scanner sc) throws Exception {
         boolean quitProgram = false;
 
+        final String[] mainMenu = {"Add user",
+                "Delete user",
+                "List users",
+                "Set active user",
+                "Buy stock",
+                "Sell stock",
+                "View user portfolio",
+                "View available stock list",
+                "View stock list base data",
+                "View stock base data",
+                "View stock historical data",
+                "View all portfolios performance",
+                "Refresh data from web",
+                "Load data file",
+                "Save data file",
+                "Quit"};
         printMenu(mainMenu);
-
         System.out.print((activeGame != null ? ANSI_BLUE + activeGame.getName() + ANSI_RESET :
                 ANSI_RED + "(not saved)" + ANSI_RESET) +
                 " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
         //TODO runInteractive
 
         while (true) {
+            Integer command = sc.nextInt();
             try {
-                Integer command = sc.nextInt();
-
                 for (CommandHandler commandHandler : commandHandlers) {
                     commandHandler.handle(command, sc);
                 }
@@ -537,9 +536,5 @@ public class Iu {
 
     public static File getActiveGame() {
         return activeGame;
-    }
-
-    public static int getMainMenuSize() {
-        return mainMenu.length;
     }
 }

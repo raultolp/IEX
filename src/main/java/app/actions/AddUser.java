@@ -13,13 +13,13 @@ import static app.Iu.*;
 import static app.actions.DeleteUser.nameInList;
 
 public class AddUser implements CommandHandler {
-    private Scanner sc = new Scanner(System.in);
 
     @Override
-    public void handle(Integer command) throws Exception {
+    public void handle(Integer command, Scanner sc) throws Exception {
         List<User> newUserList = new ArrayList<>();
 
         if (command == 1) {
+            sc.nextLine();
             String name = enterUserName(sc);
             if (name != null) {
                 newUserList = getUserList();
@@ -27,11 +27,8 @@ public class AddUser implements CommandHandler {
                 System.out.println(ANSI_YELLOW + "Created user: " + name + ANSI_RESET);
             }
             setUserList(newUserList);
-
         }
-        sc.close();
     }
-
 
     public static String enterUserName(Scanner sc) {
         String name;

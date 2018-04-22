@@ -15,6 +15,30 @@
 
 ------
 
+etapp1 tagasiside
+
+* Iu klassis on palju hirmsaid static fielde. static fielde peaks ainult konstantide jaoks kasutama.
+  Lisaks on sinna kuhjatud kõiksugu abimeetodeid, mis omavahel pole seotud. Neid võiks paremini eri
+  klassidesse organiseerida.
+* programm läheb forever käima. võiks startup kiiremaks teha, laadida alles siis andmeid, kui neid
+  vaja on või andmeid failidesse cache’da
+* Iu klassis on mingi mega-switch, mis sisaldab koodi kõigi toimingute jaoks terves programmis.
+  peaks selle juppideks jaotama, nii et iga tegevus oleks vähemalt eraldi meetodis, võibolla
+  keerulisemad toimingud eraldi klassis
+* Portfolio klassis tundub et hoitakse vastavaid andmeid listide vastavatel indeksitel ja neid
+  aetakse indeksite järgi sealt taga. OOP-ilik lahendus oleks see, et kokku kuuluvad andmed on
+  omaette klassi objektide väljades, kus saab neile ligi ilma, et peaks seitsmest listist neid
+
+  ise teadma õigest kohast otsida.
+* Stock klassis on samuti väga palju fielde, millest osa saaks grupeerida nt eraldi Company klassi
+  vms. Suur osa andmetest on üleüldse hetkel kasutamata ja pole selge, kas neid üldse ka hiljem vaja
+  oleks. Niisama kõike salvestada, mis API-st kätte saab pole ka päris mõtet.
+
+  põhifunktsionaalsusega on tööd tehtud ja mitmed asjad toimivad. kõik on tööd teinud.
+  võiks varem alustada asjadega ja mitte viimasele nädalavahetusele jätta, siis on vähem merge conflicte ka
+
+------
+
 1. etapi mõtted
 
 User

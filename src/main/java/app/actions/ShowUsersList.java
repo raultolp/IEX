@@ -4,9 +4,12 @@ import app.CommandHandler;
 import app.Iu;
 import app.User;
 
+import java.util.Scanner;
+
 public class ShowUsersList implements CommandHandler {
+
     @Override
-    public void handle(Integer command) throws Exception {
+    public void handle(Integer command, Scanner sc) throws Exception {
         if (command == 3)
             showUsersList();
     }

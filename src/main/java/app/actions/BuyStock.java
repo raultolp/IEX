@@ -11,13 +11,11 @@ import static app.Iu.*;
 
 public class BuyStock implements CommandHandler {
 
-    //private Scanner sc = new Scanner(System.in);
-    Scanner sc = getSc();
-
     @Override
-    public void handle(Integer command) throws Exception {
+    public void handle(Integer command, Scanner sc) throws Exception {
         if (command == 5) {
             showStockList();
+//            sc.nextLine();
             String name = enterStockName(sc);
 
             if (Arrays.asList(Iu.getAvailableStocks()).contains(name)) {

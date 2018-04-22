@@ -11,11 +11,9 @@ import static app.actions.DeleteUser.nameInList;
 import static app.actions.ShowUsersList.showUsersList;
 
 public class SetActiveUser implements CommandHandler {
-    Scanner sc = getSc();
-    //private Scanner sc = new Scanner(System.in);
 
     @Override
-    public void handle(Integer command) throws Exception {
+    public void handle(Integer command, Scanner sc) throws Exception {
         if (command == 4) {
             showUsersList();
             String name = enterUserName(sc);
