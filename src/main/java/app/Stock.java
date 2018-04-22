@@ -32,7 +32,6 @@ public class Stock extends IEXdata{
     //private double iexRealtimePrice;  //https://api.iextrading.com/1.0/stock/aapl/book  - kas erineb currentPrice'ist?
     //kui börs suletud, siis väärtus on "null"
 
-
     //-----------------------------------------------------------------------
 
     public Stock(String symbol) {
@@ -49,22 +48,29 @@ public class Stock extends IEXdata{
             JsonObject rootobj = root.getAsJsonObject();
 
             currentPrice=rootobj.getAsJsonObject("quote").get("latestPrice").getAsDouble(); //168.38
-            peRatio=rootobj.getAsJsonObject("quote").get("peRatio").getAsDouble();
             previousClose=rootobj.getAsJsonObject("quote").get("previousClose").getAsDouble();
             long marketCapAsLong=rootobj.getAsJsonObject("quote").get("marketCap").getAsLong();
             marketCap=(int) (marketCapAsLong/1000000); //miljonites dollarites
-
             dividendYield = rootobj.getAsJsonObject("stats").get("dividendYield").getAsDouble();
+
             eps = rootobj.getAsJsonObject("stats").get("latestEPS").getAsDouble();
             change1Year = rootobj.getAsJsonObject("stats").get("year1ChangePercent").getAsDouble();
             change1Month = rootobj.getAsJsonObject("stats").get("day30ChangePercent").getAsDouble();
             change3Month = rootobj.getAsJsonObject("stats").get("month3ChangePercent").getAsDouble();
             shortRatio = rootobj.getAsJsonObject("stats").get("shortRatio").getAsDouble();
 
+            //For ETFs, PE ratio is not provided (is null):
+            if (!rootobj.getAsJsonObject("quote").get("peRatio").isJsonNull()) {
+                peRatio=rootobj.getAsJsonObject("quote").get("peRatio").getAsDouble();
+            }
+            else {
+                peRatio=0.0;
+            }
+
+
         } catch(IOException e) {
             System.out.println("Connection to IEX failed. Please try again.");
         }
-
     }
 
 
@@ -129,23 +135,23 @@ public class Stock extends IEXdata{
         return historical;
     }
 
+    //TODO: (PRIORITY 1) - create new stocks (in IU) only if the are not included in the Available Stocks list -
+    //otherwise take them from that list. (Reason: data has to be downloaded from web each time
+    //a new stock is created).
+
     //TODO: (PRIORITY 3) - Maybe include bid price, bid size, ask price, ask size
     // from https://api.iextrading.com/1.0/stock/"+symbol+"/book"
     // and respective calculations - in order to take into account the volume of each buy/sell order
     // (would avoid selling/buying more stocks than included in the respective bid/ask)
 
-    //TODO:
-    //Also possible to request data points with certain interval by using param. chartInterval in url
+    //TODO: (PRIORITY 2)- When drawing up charts, it's possible to request data points with certain interval
+    // by using param. chartInterval in url (could be done if deemed necessary).
 
-    //TODO:
-    //If deemed necessary: add volatility calculation
+    //TODO: (PRIORITY 3) - If deemed necessary: add volatility calculation
 
-    //TODO:
-    //It is possible to add also news:
-    // https://api.iextrading.com/1.0/stock/aapl/news
+    //TODO: (PRIORITY 2) - DONE! - It is possible to add also news: https://api.iextrading.com/1.0/stock/aapl/news
 
-    //TODO:
-    //Possible to do batch requests, e.g:
+    //TODO: (PRIORITY 1) - POOLELI - Possible to do batch requests, e.g:
     //https://api.iextrading.com/1.0/stock/aapl/batch?types=quote,news,chart&range=1m&last=10
 
     //-----------------------------------------------
@@ -154,7 +160,6 @@ public class Stock extends IEXdata{
     public String getSymbol() {
         return symbol;
     }
-
 
     public double getDividendYield() {
         return dividendYield;
@@ -196,44 +201,23 @@ public class Stock extends IEXdata{
         return currentPrice;
     }
 
-    public void setCurrentPrice(double currentPrice) {
-        this.currentPrice = currentPrice;
-    }
-
     @Override
-/*    public String toString() {
-        return "Stock symbol: " + symbol + '\n' +
-                "CompanyName: " + companyName + '\n' +
-                "Sector: " + sector + '\n' +
-                "Industry: " + industry + '\n' +
-                "Description: " + description + '\n' +
-                "CEO: " + CEO + '\n' +
-                "Website: " + website + '\n' +
-                "\nFundamentals:\n" +
-                "Dividend yield: " + dividendYield + '\n' +
-                "EPS: " + eps + '\n' +
-                "Market cap: " + marketCap + '\n' +
-                "P/E Ratio: " + peRatio + '\n' +
-                "Previous close: " + previousClose + '\n' +
-                "Change in the previous month: " + change1Month + '\n' +
-                "Change in 3 months: " + change3Month + '\n' +
-                "Change in 1 yr: " + change1Year + '\n' +
-                "Short ratio: " + shortRatio + '\n' +
-                "Current price: " + currentPrice + '\n';
-    }*/
     public String toString() {
-        return "Stock symbol: " + symbol + '\n' +
-                "Fundamentals:\n" +
-                "Dividend yield: " + dividendYield + '\n' +
+        return "INFORMATION ON " + symbol + " STOCK:\n" +
+                "Market cap: " + marketCap + " million USD\n" +
+                "Dividend yield: " + String.format("%.2f", dividendYield) + '\n' +
                 "EPS: " + eps + '\n' +
-                "Market cap: " + marketCap + '\n' +
                 "P/E Ratio: " + peRatio + '\n' +
                 "Previous close: " + previousClose + '\n' +
-                "Change in the previous month: " + change1Month + '\n' +
-                "Change in 3 months: " + change3Month + '\n' +
-                "Change in 1 yr: " + change1Year + '\n' +
-                "Short ratio: " + shortRatio + '\n' +
+                "Change in the previous month: " + String.format("%.2f", change1Month) + '\n' +
+                "Change in 3 months: " + String.format("%.2f", change3Month) + '\n' +
+                "Change in 1 yr: " + String.format("%.2f", change1Year) + '\n' +
+                "Short ratio: " + String.format("%.2f", shortRatio) + '\n' +
                 "Current price: " + currentPrice + '\n';
     }
+    //TODO: (PRIORITY 1) - STOCK INFO SHOULD NOT BE SAVED TO FILE (IT SHOULD BE ALWAYS
+    //DOWNLOADED FROM WEB EACH TIME THE PROGRAMME IS LAUNCHED. CHECK IF THIS IS SO.
+    //CHECK ALSO IF STOCK INFO IS DOWNLOADED FOR ALL AVAILABLESTOCKS SOMEWHERE IN
+    // THE BEGINNING OF PROGRAMME.
 
 }

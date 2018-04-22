@@ -1,3 +1,4 @@
+/*
 package app;
 
 import java.io.*;
@@ -544,4 +545,4 @@ public class Iu {
     private static boolean isNumeric(String text) {
         return text.matches("[0-9]+");
     }
-}
+}*/

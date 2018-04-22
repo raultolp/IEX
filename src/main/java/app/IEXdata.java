@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.SQLOutput;
 
 public abstract class IEXdata {
 
@@ -42,8 +43,12 @@ public abstract class IEXdata {
                 try {
                     is.close();
                 } catch (IOException e) {
-                    e.printStackTrace();  // should never be reached
+                    System.out.println("Saving company info to file failed.");
+                    //e.printStackTrace();  // should never be reached - but still happened (once)....
+                } catch (NullPointerException e){
+                    System.out.println("Saving company info to file failed.");
                 }
+
         }
          return root;
 

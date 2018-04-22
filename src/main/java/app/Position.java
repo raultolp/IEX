@@ -3,6 +3,7 @@ package app;
 public class Position {
 
     //private String posType;  //"long" or "short"
+    private boolean open; //true if open (still stocks in portfolio), false if closed (all stocks already sold)
     private String symbol;
     private double price; //current price
     private int volume; //number of stocks
@@ -24,6 +25,7 @@ public class Position {
         this.profit=0-transaction.getTransactionFees();
         this.unrealisedProfit=0.0;
         this.currentValue=price*volume;
+        this.open=true;
     }
 
     public void priceUpdate(double newPrice) {
@@ -46,6 +48,10 @@ public class Position {
         volume-=salesVolume;
         priceUpdate(salesPrice);
         profit+=salesVolume*(salesPrice-averagePrice)-transaction.getTransactionFees();
+
+        if (volume==0){
+            open=false; //position is closed
+        }
     }
 
     public int getVolume() {
@@ -62,6 +68,10 @@ public class Position {
 
     public double getCurrentValue() {
         return currentValue;
+    }
+
+    public double getAveragePrice() {
+        return averagePrice;
     }
 
     //TODO: (PRIORITY 2) - ADD SHORT POSITIONS

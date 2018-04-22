@@ -15,7 +15,6 @@ public class Transaction {
 
     //TODO: ADD TOSTRING
 
-
     public Transaction(String symbol, double price, int volume, String type, LocalDateTime transactionTime) {
         this.symbol=symbol;
         this.transactionFee = 0.1;
@@ -39,9 +38,8 @@ public class Transaction {
         return volume*transactionFee;
     }
 
-    public void reportTransaction(){
+    public void reportTransaction(){ //inform how many stocks were bought/sold at what price
         String verb=type.equals("buy")? "bought" : "sold";
-
         System.out.print(volume + " stocks of " + symbol + " " + verb+ " @" + price + " USD (total value ");
         System.out.printf("%.2f", getTransactionAmount());
         System.out.println(" USD).");

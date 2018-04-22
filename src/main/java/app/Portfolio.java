@@ -12,35 +12,41 @@ import java.util.Map;
 public class Portfolio {
 
     private double availableFunds;
-    private User user;
+    //private User user;
     private Map<String, Stock> portfolio;
     private Map<String, Position> positions;
     private Map<LocalDateTime, Transaction> transactions;
     private double totalValueOfPositions; //sum of all totals (i.e. sum of all current positions)
     private double profit; //realised profit (from closed positions (sold stocks))
     private double unrealisedProfit; //gains/losses in value of stocks in portfolio (i.e of stocks not sold yet)
+    //private double totalValueOfPortfolio; //positions + availableFunds
 
     //Constructor - creates an empty portfolio:
-    public Portfolio() {
+    public Portfolio(double initialFunds) {
         this.portfolio = new HashMap<>();
         this.positions= new HashMap<>();
         this.transactions= new HashMap<>();
         this.totalValueOfPositions = 0.0;
+        //this.totalValueOfPortfolio=0.0;
         this.profit = 0.0;
         this.unrealisedProfit = 0.0;
-        this.availableFunds = 0.0;
-        this.user = user;
+        //this.availableFunds = 0.0;
+        this.availableFunds =initialFunds;
+        //this.user = user;
     }
 
-    public Portfolio(double availableFunds, User user, Map<String, Stock> portfolio,
+    public Portfolio(double availableFunds,  Map<String, Stock> portfolio,
                      Map<String, Position> positions, Map<LocalDateTime, Transaction> transactions,
-                     double totalValueOfPositions, double profit, double unrealisedProfit) {
+                     double totalValueOfPositions, double profit, double unrealisedProfit
+                    //, User user
+    ) {
         this.availableFunds = availableFunds;
-        this.user = user;
+        //this.user = user;
         this.portfolio = portfolio;
         this.positions = positions;
         this.transactions=transactions;
         this.totalValueOfPositions = totalValueOfPositions;
+        //this.totalValueOfPortfolio=totalValueOfPositions+availableFunds;
         this.profit = profit;
         this.unrealisedProfit = unrealisedProfit;
     }
@@ -74,7 +80,7 @@ public class Portfolio {
         }
         else {
             availableFunds-= transaction.getTransactionAmount();
-            user.setAvailableFunds(availableFunds);
+            //user.setAvailableFunds(availableFunds);
             transaction.reportTransaction();
             transactions.put(transactionTime, transaction);
 
@@ -88,7 +94,6 @@ public class Portfolio {
                 position.priceUpdate(price);
                 position.increasePosition(transaction, price, volume);
             }
-
 
             calculateTotals();
         }
@@ -122,29 +127,30 @@ public class Portfolio {
 
         Transaction transaction = new Transaction(symbol, price, volume, transactionType, transactionTime);
         availableFunds += transaction.getTransactionAmount();;
-        user.setAvailableFunds(availableFunds);
+        profit+=volume*(price-position.getAveragePrice())-transaction.getTransactionFees();
+        //user.setAvailableFunds(availableFunds);
         transaction.reportTransaction();
         transactions.put(transactionTime, transaction);
+
+        //TODO: (PIORITY 1)- CREATE POSSIBILITY TO VIEW ALL TRANSACTIONS OF USER
+        //(MAYBE CREATE A NEW CLASS "TRANSACTIONS REPORT" VMS FOR THIS) TO SEE TRANSACTIONS
+        //SORTED EITHER BY STOCK SYMBOL OR BY DATE (WITH TRANSACTION PRICE, FEE, AMOUNT PAID, PROFIT,
+        // DATE, SYMBOL, AVAILABLE FUNDS AFTER TRANSACTION).
+        // SOME INFO FOR THIS IS IN "TRANSACTION" CLASS AND SOME IN "POSITION" CLASS.
 
         position.decreasePosition(transaction, price, volume);
 
         calculateTotals();
 
-        //If all stocks are sold from portfolio and profit gained from the stook is zero:
-        removeRedundantStock(symbol);
-
+        //removing stock from portfolio in case its volume is zero after sell
+        if (positions.get(symbol).getVolume()==0){
+            portfolio.remove(symbol);
+            //positions.remove(symbol); //Should NOT be included, because: a) calculateTotals() depends on it,
+            // and b) keeping closed positsions is important for creating the (planned) transactions report.
+        }
     }
 
     //TODO: (PRIORITY 2) Possibility for short selling could be added (allows negative number of stocks)
-
-    //-----------------------------------------------
-    //removing stock from portfolio in case its volume is zero after sell
-    public void removeRedundantStock(String symbol) {
-        if (positions.get(symbol).getVolume()==0){
-            portfolio.remove(symbol);
-            //positions.remove(symbol); //Should not be included, unless calculateTotals() is changed!
-        }
-    }
 
     //-----------------------------------------------
 
@@ -157,8 +163,11 @@ public class Portfolio {
         for (String s : positions.keySet()) {
             Position position=positions.get(s);
             totalValueOfPositions+=position.getCurrentValue();
+            profit+=position.getProfit(); //for both open and closed positions
             unrealisedProfit+=position.getUnrealisedProfit();
         }
+
+        //totalValueOfPortfolio=totalValueOfPositions+availableFunds;
 
 /*        for (String p : portfolio.keySet()) {
             profit+=position.getProfit();
@@ -200,24 +209,25 @@ public class Portfolio {
     }
 
     //Getting portfolio total value:
-    public double getTotalValue() {
+    public double getTotalValueOfPortfolio() {
         return availableFunds + totalValueOfPositions;
     }
+
 
     //Other getters:
     public Map<String, Stock> getPortfolio() {
         return portfolio;
     }
 
-    public double getTotalCurrentValueOfPositions() {
+    public double getTotalValueOfPositions() {
         return totalValueOfPositions;
     }
 
-    public double getTotalProfitOrLoss() {
+    public double getProfit() {
         return profit;
     }
 
-    public double getTotalUnrealisedProfitOrLoss() {
+    public double getUnrealisedProfit() {
         return unrealisedProfit;
     }
 
@@ -225,9 +235,20 @@ public class Portfolio {
         this.availableFunds = availableFunds;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public double getAvailableFunds() {
+        return availableFunds;
     }
+
+/*    public void setUser(User user) {
+        this.user = user;
+    }*/
+
+
+
+
+
+
+
 
 
     //-----------------------------------------------

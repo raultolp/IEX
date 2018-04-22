@@ -19,6 +19,8 @@ public class Company extends IEXdata {
     private String description; //ettevõtte tegevusalade kirjeldus
     private String CEO;
     private String website;
+    //ETF-ide puhul: sector "", industry "", CEO "", description vb olla mitmel real
+    //FAZ, SPY, DIA,  IWM, XLB, XLE XLF XLK XLP XLU XLV, TLT, UVXY, OIL, FAS
 
 
     //-----------------------------------------
@@ -68,9 +70,13 @@ public class Company extends IEXdata {
             companyName = rootobj.get("companyName").getAsString(); //Apple Inc.
             sector = rootobj.get("sector").getAsString(); //"Technology"
             industry = rootobj.get("industry").getAsString(); // "Computer Hardware"
-            description = rootobj.get("description").getAsString();
             CEO = rootobj.get("CEO").getAsString();  //Timothy D. Cook
             website = rootobj.get("website").getAsString();
+
+            //For ETFs, description can be on several lines; for saving to file, the info
+            // should be only on one line. Therefore, the line breaks should be deleted:
+            String description_temp = rootobj.get("description").getAsString();
+            description= description_temp.replaceAll("\n", "");
 
             System.out.println("Company info of " + symbol + " downloaded from IEX.");
 
@@ -129,7 +135,7 @@ public class Company extends IEXdata {
                 "Sector: " + sector + "(" + industry + "),\n" +
                 "Descriprion: " + description + "\n";
     }
-
+    //TODO:  (PRIORITY 1) ADD ALL STOCKS IN THE AvailableStocks LIST TO THE TXT FILE (TO DECREASE DOWLNOADS).
     //TODO: (PRIORITY 1) CHECK IF VIEWING INFO FOR ONE COMPANY (USING COMPANY'S TOSTRING) IS AVAILABLE IN MAIN MENU.
     //TODO: (PRIORITY 3) IT WOULD BE POSSIBLE TO ALSO DOWNLOAD COMPANY LOGO:
     // https://iextrading.com/developer/docs/#logo
