@@ -15,7 +15,7 @@ public class Iu {
     private static Map<String, Stock> stockMap = new HashMap<>();
 
     //Base user and game
-    private static final User admin = new User("admin", new Portfolio(), 0);
+    private static final User admin = new User("admin", 100000);
     private static User activeUser = admin;
     private static File activeGame = null;
 

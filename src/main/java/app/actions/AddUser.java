@@ -27,7 +27,7 @@ public class AddUser implements CommandHandler {
             String name = enterUserName(sc);
             if (name != null) {
                 newUserList = getUserList();
-                newUserList.add(new User(name, new Portfolio(), 100000));
+                newUserList.add(new User(name, 100000));
                 System.out.println(ANSI_YELLOW + "Created user: " + name + ANSI_RESET);
             }
             setUserList(newUserList);

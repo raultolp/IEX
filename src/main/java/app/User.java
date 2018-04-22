@@ -8,7 +8,7 @@ public class User {
     private Portfolio portfolio;
     private double initialFunds;
 
-    public User(String userName, Portfolio portfolio, double availableFunds) {
+    public User(String userName, double availableFunds) {
         this.userName = userName;
         this.portfolio=new Portfolio(availableFunds);
         this.initialFunds=availableFunds;

@@ -39,7 +39,7 @@ public class showUserPortfolio implements CommandHandler {
                 System.out.printf("%.2f", user.getAvailableFunds());
                 System.out.println("\n" + portfolio.toString());
                 System.out.print("Portfolio total value: ");
-                System.out.printf("%.2f", portfolio.getTotalValue());
+                System.out.printf("%.2f", portfolio.getTotalValueOfPortfolio());
                 System.out.println();
             }
         }
