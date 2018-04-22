@@ -16,6 +16,7 @@ public class SetActiveUser implements CommandHandler {
     public void handle(Integer command, Scanner sc) throws Exception {
         if (command == 4) {
             showUsersList();
+            sc.nextLine();
             String name = enterUserName(sc);
             Integer index = nameInList(name);
             if (index > -1) {

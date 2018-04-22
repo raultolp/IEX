@@ -5,6 +5,7 @@ import app.Iu;
 import app.Portfolio;
 
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import static app.Iu.*;
@@ -57,5 +58,21 @@ public class BuyStock implements CommandHandler {
         }
         if (i % 10 != 0)
             System.out.println();
+    }
+
+    public static int enterQty(Scanner sc) {
+        int qty = 0;
+        sc.nextLine();
+
+        do {
+            System.out.print("Enter quantity [1-1000]: ");
+            try {
+                qty = sc.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Wrong input: " + sc.nextLine());
+            }
+        } while (qty < 1 || qty > 1000);
+
+        return qty;
     }
 }

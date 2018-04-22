@@ -6,7 +6,7 @@ import app.Portfolio;
 
 import java.util.Scanner;
 
-import static app.Iu.enterQty;
+import static app.actions.BuyStock.enterQty;
 import static app.actions.BuyStock.enterStockName;
 
 public class SellStock implements CommandHandler {
@@ -24,7 +24,6 @@ public class SellStock implements CommandHandler {
                 portfolio.sellStock(name, qty);
             } else {
                 System.out.println("Stock not included in portfolio!");
-
             }
         }
     }

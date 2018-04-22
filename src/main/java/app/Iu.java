@@ -5,6 +5,7 @@ import app.actions.*;
 import java.io.*;
 import java.util.*;
 
+import static app.actions.SaveData.saveData;
 import static app.actions.ShowUsersList.showUsersList;
 
 public class Iu {
@@ -64,11 +65,20 @@ public class Iu {
     }
 
     public static void main(String[] args) throws Exception {
-        handler.runInteractive(sc);
-//        sc.close();
-
+        //START PROGRAM
         System.out.println("\n+++ BÖRSIMÄNG +++\n\nLoading stock data from web ...\n");
 
+        //HANDLE COMMANDS
+        handler.runInteractive(sc);
+
+        // QUIT PROGRAM
+        if (getActiveGame() != null)
+            saveData(sc);
+        sc.close();
+
+        System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
+
+        //Peaks kuskil ees olema
         Map<String, Stock> stockMap = new HashMap<>();
 
         for (String symbol : availableStocks) {
@@ -223,182 +233,13 @@ public class Iu {
             else
                 System.out.println();
         }
+        commandPrompt();
     }
 
-
-    public static int enterQty(Scanner sc) {
-        int qty = 0;
-        sc.nextLine();
-
-        do {
-            System.out.print("Enter quantity [1-1000]: ");
-            try {
-                qty = sc.nextInt();
-            } catch (InputMismatchException e) {
-                System.out.println("Wrong input: " + sc.nextLine());
-            }
-        } while (qty < 1 || qty > 1000);
-
-        return qty;
-    }
-
-
-    private static void saveData(Scanner sc) throws IOException {
-
-        File file;
-        sc.nextLine();
-
-        if (activeGame == null) {
-            System.out.print("Enter filename to save data: ");
-            String filename = sc.nextLine();
-
-            if (!filename.endsWith(".game"))
-                filename += ".game";
-
-            file = new File(filename);
-        } else {
-            file = activeGame;
-        }
-
-        file.createNewFile();
-
-        Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-        for (User user : userList) {
-            writer.write(user.getPortfolio().toStringForFile());
-        }
-        writer.close();
-        activeGame = file;
-        System.out.println(ANSI_YELLOW + activeGame.getName() + " file saved." + ANSI_RESET);
-    }
-
-    public static void loadData(Scanner sc) throws IOException {
-        double availableFunds = 0.0;
-        double transactionFee = 0.1;
-        double totalUnrealisedProfitOrLoss = 0.0;
-        double totalProfitOrLoss = 0.0;
-        double totalCurrentValueOfPositions = 0.0;
-
-        listFiles();
-        sc.nextLine();
-
-        System.out.print("Enter filename: ");
-        String filename = sc.nextLine();
-
-        // if (!filename.endsWith(".game"))
-        //   filename += ".game";
-
-        File file = new File(filename);
-
-        if (file.exists()) {
-            try ( BufferedReader br = new BufferedReader(new FileReader(file)) ) {
-                userList.clear();
-                portfolioList.clear();
-                String line;
-                //reads all lines from file and adds users and portfolios to their respective arraylists
-
-                while ((line = br.readLine()) != null) {
-
-                    String[] elements = line.split(";");
-
-                    String[] syms = elements[2].split(",");
-                    List<String> symbols = new ArrayList<>();
-                    for (String sym : syms) {
-                        if (!(sym.equals("[]")))
-                            symbols.add(sym.replaceAll("[\\W]", ""));
-                        else symbols.add("");
-                    }
-
-                    String[] price = elements[3].split(",");
-                    List<Double> prices = new ArrayList<>();
-                    for (String pri : price) {
-                        if (!(pri.equals("[]")))
-                            prices.add(Double.parseDouble(pri.replaceAll("[\\W]", "")));
-                    }
-
-                    String[] vols = elements[4].split(",");
-                    List<Integer> volumes = new ArrayList<>();
-                    for (String number : vols) {
-                        if (!(number.equals("[]")))
-                            volumes.add(Integer.parseInt(number.replaceAll("[\\W]", "")));
-                    }
-
-                    String[] avgPrc = elements[5].split(",");
-                    List<Double> averagePrices = new ArrayList<>();
-                    for (String avg : avgPrc) {
-                        if (!(avg.equals("[]")))
-                            averagePrices.add(Double.parseDouble(avg.replaceAll("[\\W]", "")));
-                    }
-
-                    String[] profLoss = elements[6].split(",");
-                    List<Double> profitsOrLosses = new ArrayList<>();
-                    for (String profL : profLoss) {
-                        if (!(profL.equals("[]")))
-                            profitsOrLosses.add(Double.parseDouble(profL.replaceAll("[\\W]", "")));
-                    }
-
-                    String[] unreals = elements[7].split(",");
-                    List<Double> unrealisedProfitsOrLosses = new ArrayList<>();
-                    for (String pl : unreals) {
-                        if (!(pl.equals("[]")))
-                            unrealisedProfitsOrLosses.add(Double.parseDouble(pl.replaceAll("[\\W]", "")));
-                    }
-
-                    String[] currs = elements[8].split(",");
-                    List<Double> currentValuesOfPositions = new ArrayList<>();
-                    for (String cr : currs) {
-                        if (!(cr.equals("[]")))
-                            currentValuesOfPositions.add(Double.parseDouble(cr.replaceAll("[\\W]", "")));
-                        else
-                            currentValuesOfPositions.add(0.0);
-
-                    }
-
-                    if (!(elements[1].equals("[]")))
-                        availableFunds = Double.parseDouble(elements[1]);
-
-                    if (!(elements[9].equals("[]")))
-                        totalCurrentValueOfPositions = Double.parseDouble(elements[9]);
-
-                    if (!(elements[10].equals("[]")))
-                        totalProfitOrLoss = Double.parseDouble(elements[10]);
-
-                    if (!(elements[11].equals("[]")))
-                        totalUnrealisedProfitOrLoss = Double.parseDouble(elements[11]);
-
-                    if (!(elements[12].equals("[]")))
-                        transactionFee = Double.parseDouble(elements[12]);
-
-
-                    User user = new User(elements[0], new Portfolio(), Double.parseDouble(elements[1]));
-
-
-                    Portfolio port = new Portfolio(availableFunds, user,
-                            symbols, prices, volumes, averagePrices, profitsOrLosses, unrealisedProfitsOrLosses,
-                            currentValuesOfPositions, totalCurrentValueOfPositions, totalProfitOrLoss,
-                            totalUnrealisedProfitOrLoss, transactionFee);
-
-                    User newUser = new User(elements[0], port, Double.parseDouble(elements[1]));
-
-                    portfolioList.add(port);
-                    userList.add(newUser);
-                }
-            } finally {
-                activeGame = file;
-                System.out.println(ANSI_YELLOW + activeGame.getName() + " file loaded." + ANSI_RESET);
-            }
-        }
-    }
-
-    private static void listFiles() {
-        File folder = new File(".");
-        File[] files = folder.listFiles();
-        int i = 1;
-        for (File file : files) {
-            if (file.getName().endsWith(".game"))
-                System.out.printf("%15s%s", file.getName(), i++ % 4 == 0 ? "\n" : " ");
-        }
-        if ((i - 1) % 4 != 0)
-            System.out.println();
+    public static void commandPrompt() {
+        System.out.print((activeGame != null ? ANSI_BLUE + activeGame.getName() + ANSI_RESET :
+                ANSI_RED + "(not saved)" + ANSI_RESET) +
+                " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
     }
 
     private static void showUserPortfolio(Scanner sc) {
@@ -425,9 +266,7 @@ public class Iu {
         }
     }
 
-
     private static void showStockBaseData(Scanner sc) {
-
         sc.nextLine();
         System.out.println("Enter stock symbol: ");
         String stockSym = sc.nextLine();
@@ -459,9 +298,11 @@ public class Iu {
 
     private List<CommandHandler> loadCommandHandlers() {
         return Arrays.asList(
-                new AddUser(),
+                new AddUser(), new DeleteUser(),
+                new ShowUsersList(), new SetActiveUser(),
                 new SellStock(), new BuyStock(),
-                new DeleteUser(), new ShowUsersList(), new SetActiveUser(),
+                new LoadData(), new SaveData(),
+                new Quit(),
                 new ErrorHandler()
         );
     }
@@ -469,14 +310,13 @@ public class Iu {
     public void runInteractive(Scanner sc) throws Exception {
         boolean quitProgram = false;
 
-        printMenu(mainMenu);
+//        printMenu(mainMenu);
 
-        System.out.print((activeGame != null ? ANSI_BLUE + activeGame.getName() + ANSI_RESET :
-                ANSI_RED + "(not saved)" + ANSI_RESET) +
-                " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
         //TODO runInteractive
 
         while (true) {
+            printMenu(mainMenu);
+
             try {
                 Integer command = sc.nextInt();
 
@@ -484,16 +324,15 @@ public class Iu {
                     commandHandler.handle(command, sc);
                 }
 
+                //Quit
+                if (command == getMainMenuSize())
+                    break;
+
             } catch (InputMismatchException e) {
                 System.out.println("Wrong input: " + sc.nextLine());
             }
-            printMenu(mainMenu);
-            System.out.print((activeGame != null ? ANSI_BLUE + activeGame.getName() + ANSI_RESET :
-                    ANSI_RED + "(not saved)" + ANSI_RESET) +
-                    " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
         }
     }
-
 
     public static boolean isAlphaNumeric(String text) {
         return text.matches("[a-zA-Z0-9]+");
@@ -519,6 +358,10 @@ public class Iu {
         Iu.userList = userList;
     }
 
+    public static List<Portfolio> getPortfolioList() {
+        return portfolioList;
+    }
+
     public static User getAdmin() {
         return admin;
     }
@@ -537,6 +380,10 @@ public class Iu {
 
     public static File getActiveGame() {
         return activeGame;
+    }
+
+    public static void setActiveGame(File activeGame) {
+        Iu.activeGame = activeGame;
     }
 
     public static int getMainMenuSize() {
