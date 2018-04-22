@@ -12,6 +12,8 @@ import static app.actions.ShowUsersList.showUsersList;
 import static app.staticData.ANSI_RESET;
 import static app.staticData.ANSI_YELLOW;
 
+//Set activeUser user
+
 public class SetActiveUser implements CommandHandler {
 
     @Override

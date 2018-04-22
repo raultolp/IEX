@@ -13,6 +13,8 @@ import static app.staticData.ANSI_RED;
 import static app.staticData.ANSI_RESET;
 import static app.actions.showStockList.showStockList;
 
+//Buy stock - BuyStock, enterStockName, enterQty
+
 public class BuyStock implements CommandHandler {
 
     @Override

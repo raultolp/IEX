@@ -6,6 +6,8 @@ import app.User;
 
 import java.util.Scanner;
 
+//List users
+
 public class ShowUsersList implements CommandHandler {
 
     @Override

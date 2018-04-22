@@ -4,6 +4,8 @@ import app.CommandHandler;
 
 import java.util.Scanner;
 
+//Quit
+
 public class Quit implements CommandHandler {
 
     @Override

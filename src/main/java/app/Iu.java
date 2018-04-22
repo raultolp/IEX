@@ -9,18 +9,20 @@ import static app.actions.SaveData.saveData;
 import static app.staticData.*;
 
 public class Iu {
-
+    //User, Portfolio, Stocks
     private static List<User> userList = new ArrayList<>();
     private static List<Portfolio> portfolioList = new ArrayList<>();
+    private static Map<String, Stock> stockMap = new HashMap<>();
 
+    //Base user and game
     private static final User admin = new User("admin", new Portfolio(), 0);
     private static User activeUser = admin;
     private static File activeGame = null;
 
+    //Command handler
     private static Iu handler = new Iu();
-//    private Integer command;
-
     private final List<CommandHandler> commandHandlers;
+    //    private Integer command;
     private static Scanner sc = new Scanner(System.in);
 
     public Iu() {
@@ -42,56 +44,12 @@ public class Iu {
         System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
 
         //Peaks kuskil ees olema .. praegu siin
-        Map<String, Stock> stockMap = new HashMap<>();
-
         for (String symbol : availableStocks) {
             Stock stock = new Stock(symbol);
             stockMap.put(symbol, stock);
 
-/* VANA JA KOLE SWITCH
-
-            switch (choice) {
-
-                //View available stock list
-                case 8:
-                    showStockList();
-                    break;
-                //View stock list base data
-                case 9:
-                    System.out.println("Tuleb hiljem");
-                    break;
-
-                //View stock base data
-                case 10:
-                    showStockBaseData(sc);
-                    break;
-
-                //View stock historical data
-                case 11:
-                    showStockHistoricalData(sc);
-                    break;
-
-                //View all portfolios progress
-                case 12:
-                    System.out.println("Tuleb hiljem");
-                    break;
-
-                //Refresh data from web (refreshes stock prices in stockMap)
-                case 13:
-                    for (String symbol : stockMap.keySet()) {
-                        Stock stock = stockMap.get(symbol);
-                        double price = stock.getLatestPrice();
-                        stock.setCurrentPrice(price);
-                    }
-                    Portfolio portf = activeUser.getPortfolio();
-                    portf.updatePrices();
-                    break;
-
-
-*/
-        } //switch menu options
-    } //main menu endless loop
-    //}
+        }
+    }
 
     private static void printMenu(String[] menu) {
         System.out.println();
@@ -112,45 +70,23 @@ public class Iu {
                 " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
     }
 
-
-    private static void showStockBaseData(Scanner sc) {
-        sc.nextLine();
-        System.out.println("Enter stock symbol: ");
-        String stockSym = sc.nextLine();
-
-        try {
-            System.out.println(new Stock(stockSym));
-        } catch (Exception e) {
-            System.out.println("Stock information not available.");
-        }
-    }
-
-    private static void showStockHistoricalData(Scanner sc) {
-
-        //TODO: add option to choose time period
-
-        sc.nextLine();
-        System.out.println("Enter stock symbol: ");
-        String stockSym = sc.nextLine();
-
-        try {
-            Stock stock = new Stock(stockSym);
-            System.out.println("One month: " + stock.getChange1Month() + '\n' +
-                    "Three months: " + stock.getChange3Month() + '\n' +
-                    "Year: " + stock.getChange1Year());
-        } catch (Exception e) {
-            System.out.println("Stock info not available.");
-        }
-    }
-
     private List<CommandHandler> loadCommandHandlers() {
         return Arrays.asList(
-                new AddUser(), new DeleteUser(),
-                new ShowUsersList(), new SetActiveUser(),
-                new SellStock(), new BuyStock(),
+                new AddUser(),
+                new DeleteUser(),
+                new ShowUsersList(),
+                new SetActiveUser(),
+                new SellStock(),
+                new BuyStock(),
                 new showUserPortfolio(),
                 new showStockList(),
-                new LoadData(), new SaveData(),
+                new showStockListBaseData(),
+                new showStockBaseData(),
+                new showStockHistoricalData(),
+                new showPortfoliosProgress(),
+                new RefreshDataFromWeb(),
+                new LoadData(),
+                new SaveData(),
                 new Quit(),
                 new ErrorHandler()
         );
@@ -232,4 +168,7 @@ public class Iu {
         Iu.activeGame = activeGame;
     }
 
+    public static Map<String, Stock> getStockMap() {
+        return stockMap;
+    }
 }

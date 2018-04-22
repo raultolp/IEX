@@ -10,6 +10,8 @@ import static app.Iu.getActiveUser;
 import static app.Iu.getUserList;
 import static app.actions.ShowUsersList.showUsersList;
 
+//View user portfolio - showUserPortfolio
+
 public class showUserPortfolio implements CommandHandler {
 
     @Override

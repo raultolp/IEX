@@ -9,6 +9,8 @@ import java.util.Scanner;
 import static app.actions.BuyStock.enterQty;
 import static app.actions.BuyStock.enterStockName;
 
+//Sell stock
+
 public class SellStock implements CommandHandler {
 
     @Override

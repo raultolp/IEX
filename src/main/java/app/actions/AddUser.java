@@ -14,6 +14,8 @@ import static app.staticData.ANSI_RED;
 import static app.staticData.ANSI_RESET;
 import static app.staticData.ANSI_YELLOW;
 
+//Add user - AddUser, enterUserName
+
 public class AddUser implements CommandHandler {
 
     @Override

@@ -10,6 +10,8 @@ import static app.actions.AddUser.enterUserName;
 import static app.staticData.ANSI_RESET;
 import static app.staticData.ANSI_YELLOW;
 
+//Delete user - DeleteUser, nameInList
+
 public class DeleteUser implements CommandHandler {
 
     @Override

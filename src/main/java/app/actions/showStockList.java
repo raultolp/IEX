@@ -7,6 +7,8 @@ import java.util.Scanner;
 
 import static app.Iu.getAvailableStocks;
 
+//View available stock list - showStockList
+
 public class showStockList implements CommandHandler {
 
     @Override
