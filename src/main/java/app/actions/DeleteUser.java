@@ -7,6 +7,8 @@ import java.util.Scanner;
 
 import static app.Iu.*;
 import static app.actions.AddUser.enterUserName;
+import static app.staticData.ANSI_RESET;
+import static app.staticData.ANSI_YELLOW;
 
 public class DeleteUser implements CommandHandler {
 

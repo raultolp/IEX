@@ -4,16 +4,12 @@ import app.CommandHandler;
 
 import java.util.Scanner;
 
-import static app.Iu.ANSI_RESET;
-import static app.Iu.ANSI_YELLOW;
-import static app.Iu.getActiveGame;
-import static app.actions.SaveData.saveData;
-
 public class Quit implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Scanner sc) throws Exception {
+    public void handle(Integer command, Scanner sc) {
         if (command == 16) {
+            System.out.println("Quiting...");
             // Praegu ei tee midagi, kuid huljem võib olla vaja asjade sulgemiseks või mida iganes
             // QUIT toimub Iu-s hetkel
 

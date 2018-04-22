@@ -10,6 +10,9 @@ import java.util.Scanner;
 
 import static app.Iu.*;
 import static app.actions.DeleteUser.nameInList;
+import static app.staticData.ANSI_RED;
+import static app.staticData.ANSI_RESET;
+import static app.staticData.ANSI_YELLOW;
 
 public class AddUser implements CommandHandler {
 

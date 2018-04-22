@@ -6,14 +6,9 @@ import java.io.*;
 import java.util.*;
 
 import static app.actions.SaveData.saveData;
-import static app.actions.ShowUsersList.showUsersList;
+import static app.staticData.*;
 
 public class Iu {
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_RESET = "\u001B[0m";
 
     private static List<User> userList = new ArrayList<>();
     private static List<Portfolio> portfolioList = new ArrayList<>();
@@ -23,42 +18,10 @@ public class Iu {
     private static File activeGame = null;
 
     private static Iu handler = new Iu();
-    private Integer command;
+//    private Integer command;
 
     private final List<CommandHandler> commandHandlers;
-
-    public static Scanner sc = new Scanner(System.in);
-
-    private static final String[] availableStocks = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
-            "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
-            "TSLA", "TWTR", "V", "WMT"};
-
-    //ORIGINAL LIST
-//    private static final String[] availableStocks = {"AAPL", "AMZN", "AMD", "BA", "BABA", "BAC", "BBY", "BIDU",
-//            "C", "CAT", "COST", "CRM", "CSCO", "DE", "F", "FSLR", "GE", "GM", "GME", "GOOG", "GS",
-//            "HD", "HLF", "HPE", "HPQ", "HTZ", "IBM", "INTC", "JAZZ", "JCP", "JNJ", "JNPR", "JPM",
-//            "K", "KO", "LMT", "LOGI", "MA", "MCD", "MMM", "MS", "MSFT", "NFLX", "NKE", "NTAP",
-//            "NTNX", "NVDA", "ORCL", "P", "PEP", "PG", "QCOM", "RHT", "SBUX", "SINA", "SSYS", "STX",
-//            "SYMC", "TGT", "TIF", "TRIP", "TSLA", "TWTR", "TXN", "UA", "UAL", "V", "VMW", "VNET",
-//            "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
-
-    private static final String[] mainMenu = {"Add user",
-            "Delete user",
-            "List users",
-            "Set active user",
-            "Buy stock",
-            "Sell stock",
-            "View user portfolio",
-            "View available stock list",
-            "View stock list base data",
-            "View stock base data",
-            "View stock historical data",
-            "View all portfolios performance",
-            "Refresh data from web",
-            "Load data file",
-            "Save data file",
-            "Quit"};
-
+    private static Scanner sc = new Scanner(System.in);
 
     public Iu() {
         this.commandHandlers = loadCommandHandlers();
@@ -66,7 +29,7 @@ public class Iu {
 
     public static void main(String[] args) throws Exception {
         //START PROGRAM
-        System.out.println("\n+++ BÖRSIMÄNG +++\n\nLoading stock data from web ...\n");
+        System.out.println(mainTitle);
 
         //HANDLE COMMANDS
         handler.runInteractive(sc);
@@ -78,52 +41,17 @@ public class Iu {
 
         System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
 
-        //Peaks kuskil ees olema
+        //Peaks kuskil ees olema .. praegu siin
         Map<String, Stock> stockMap = new HashMap<>();
 
         for (String symbol : availableStocks) {
             Stock stock = new Stock(symbol);
             stockMap.put(symbol, stock);
 
+/* VANA JA KOLE SWITCH
 
+            switch (choice) {
 
-
-           /* switch (choice) {
-
-                //Add user
-                case 1:
-                    name = enterUserName(sc);
-                    if (name != null) {
-                        userList.add(new User(name, new Portfolio(), 100000));
-                        System.out.println(ANSI_YELLOW + "Created user: " + name + ANSI_RESET);
-                    }
-                    break;
-
-                //Delete user
-                case 2:
-                    name = enterUserName(sc);
-                    index = nameInList(name);
-                    if (index > -1) {
-                        userList.remove(index);
-                        System.out.println(ANSI_YELLOW + "User " + name + " has been deleted." + ANSI_RESET);
-                    }
-                    break;
-
-                //List users
-                case 3:
-                    showUsersList();
-                    break;
-
-                //Set activeUser user
-                case 4:
-                    showUsersList();
-                    name = enterUserName(sc);
-                    index = nameInList(name);
-                    if (index > -1) {
-                        activeUser = userList.get(index);
-                        System.out.println(ANSI_YELLOW + "User " + name + " is now active." + ANSI_RESET);
-                    }
-                    break;
 
                 //Buy stock
                 case 5:
@@ -158,10 +86,6 @@ public class Iu {
                     }
                     break;
 
-                //View user portfolio
-                case 7:
-                    showUserPortfolio(sc);
-                    break;
 
                 //View available stock list
                 case 8:
@@ -198,27 +122,8 @@ public class Iu {
                     portf.updatePrices();
                     break;
 
-                //Load data file
-                case 14:
-                    loadData(sc);
-                    break;
 
-                //Save data file
-                case 15:
-                    saveData(sc);
-                    break;
-
-                //Quit
-                case 16:
-                    if (activeGame != null)
-                        saveData(sc);
-                    quitProgram = true;
-                    System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
-                    sc.close();
-                    break;
-
-                default:
-                    System.out.println(ANSI_RED + "Wrong input, choose between 1.." + mainMenu.length + "!" + ANSI_RESET);*/
+*/
         } //switch menu options
     } //main menu endless loop
     //}
@@ -242,29 +147,6 @@ public class Iu {
                 " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
     }
 
-    private static void showUserPortfolio(Scanner sc) {
-        String username;
-
-        sc.nextLine();
-        showUsersList();
-        System.out.print("Enter username: ");
-        username = sc.nextLine();
-
-        if (username.length() < 3)
-            username = activeUser.getUserName();
-
-        for (User user : userList) {
-            if (user.getUserName().equals(username)) {
-                Portfolio portfolio = user.getPortfolio();
-                System.out.print("\nAvailable cash: ");
-                System.out.printf("%.2f", user.getAvailableFunds());
-                System.out.println("\n" + portfolio.toString());
-                System.out.print("Portfolio total value: ");
-                System.out.printf("%.2f", portfolio.getTotalValue());
-                System.out.println();
-            }
-        }
-    }
 
     private static void showStockBaseData(Scanner sc) {
         sc.nextLine();
@@ -301,6 +183,7 @@ public class Iu {
                 new AddUser(), new DeleteUser(),
                 new ShowUsersList(), new SetActiveUser(),
                 new SellStock(), new BuyStock(),
+                new showUserPortfolio(),
                 new LoadData(), new SaveData(),
                 new Quit(),
                 new ErrorHandler()
@@ -308,9 +191,6 @@ public class Iu {
     }
 
     public void runInteractive(Scanner sc) throws Exception {
-        boolean quitProgram = false;
-
-//        printMenu(mainMenu);
 
         //TODO runInteractive
 
@@ -386,7 +266,4 @@ public class Iu {
         Iu.activeGame = activeGame;
     }
 
-    public static int getMainMenuSize() {
-        return mainMenu.length;
-    }
 }

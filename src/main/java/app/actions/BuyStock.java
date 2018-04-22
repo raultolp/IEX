@@ -9,6 +9,8 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import static app.Iu.*;
+import static app.staticData.ANSI_RED;
+import static app.staticData.ANSI_RESET;
 
 public class BuyStock implements CommandHandler {
 
