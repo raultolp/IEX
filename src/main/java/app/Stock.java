@@ -13,156 +13,74 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Stock {
+public class Stock extends IEXdata{
 
     private final String symbol; //aktsia sümbol
-    private String companyName;
-    private String sector;
-    private String industry; // täpsustab sektorit
-    private String description; //ettevõtte tegevusalade kirjeldus
-    private String CEO;
-    private String website;
+
     private double dividendYield; // (protsendina) dividendi tootlus (s.o dividend aktsia kohta/aktsia hind)
     private double eps; //Earnings-per-share (kasum aktsia kohta viimase majandusaasta aruande kohaselt)
-
-
+    private double peRatio;
     private int marketCap; //turukapitalisatsioon miljonites dollarites (näitab ettevõtte suurust)
                             // (s.o kõigi noteeritud aktsiate hetkehindade summa)
-    private double peRatio;
     private double previousClose; //eelmine sulgemishind
     private double change1Year; //hinnamuutus viimase 1 aasta jooksul (protsendina)
     private double change1Month; //hinnamuutus viimase 1 kuu jooksul (protsendina)
     private double change3Month; //hinnamuutus viimase 3 kuu jooksul (protsendina)
     private double shortRatio; //kui palju aktsiaid on lühikeseks müüdud (protsendina)
 
-
     private double currentPrice;  //hetke hind
     //private double iexRealtimePrice;  //https://api.iextrading.com/1.0/stock/aapl/book  - kas erineb currentPrice'ist?
     //kui börs suletud, siis väärtus on "null"
 
 
-
     //-----------------------------------------------------------------------
 
     public Stock(String symbol) {
-        this.symbol = symbol;
+        this.symbol = symbol.toUpperCase();
         loadDataFromIEX();
     }
 
 
-    //-----------------------------------------------------------------------
-
     public void loadDataFromIEX() {
 
-        //-----------------------------------------------------------------------
-        //Source for reading from url and conversion to JSON:
-        //https://stackoverflow.com/questions/4308554/simplest-way-to-read-json-from-a-url-in-java
-        // user: user2654569 (Feb 23 '14 at 4:02)
-        //-----------------------------------------------------------------------
-
-        //Reading from URL:
         try {
-            String URLa = "https://api.iextrading.com/1.0/stock/"+symbol+"/book";
-            URL url = new URL(URLa);
-            HttpURLConnection request = (HttpURLConnection) url.openConnection();
-            request.connect();
+            String URL="https://api.iextrading.com/1.0/stock/"+symbol+"/batch?types=quote,stats"; //,news,chart&range=1m&last=10";
+            JsonElement root = IEXdata.downloadData(URL);  // array or object
+            JsonObject rootobj = root.getAsJsonObject();
 
-            // Convert to a JSON object to print data
-            JsonParser jp = new JsonParser(); //from gson
-            InputStream is=(InputStream) request.getContent();
-            JsonElement root = jp.parse(new InputStreamReader(is));
-            JsonObject rootobj = root.getAsJsonObject(); // array or object
             currentPrice=rootobj.getAsJsonObject("quote").get("latestPrice").getAsDouble(); //168.38
-            long marketCapAsLong=rootobj.getAsJsonObject("quote").get("marketCap").getAsLong();
-            marketCap=(int) (marketCapAsLong/1000000); //miljonites dollarites
             peRatio=rootobj.getAsJsonObject("quote").get("peRatio").getAsDouble();
             previousClose=rootobj.getAsJsonObject("quote").get("previousClose").getAsDouble();
+            long marketCapAsLong=rootobj.getAsJsonObject("quote").get("marketCap").getAsLong();
+            marketCap=(int) (marketCapAsLong/1000000); //miljonites dollarites
 
-            //TODO:
-            //Maybe include bid price, bid size, ask price, ask size and respective calculations -
-            // in order to take into account the volume of each buy/sell order
-            // (would avoid selling/buying more stocks than included in the respective bid/ask)
+            dividendYield = rootobj.getAsJsonObject("stats").get("dividendYield").getAsDouble();
+            eps = rootobj.getAsJsonObject("stats").get("latestEPS").getAsDouble();
+            change1Year = rootobj.getAsJsonObject("stats").get("year1ChangePercent").getAsDouble();
+            change1Month = rootobj.getAsJsonObject("stats").get("day30ChangePercent").getAsDouble();
+            change3Month = rootobj.getAsJsonObject("stats").get("month3ChangePercent").getAsDouble();
+            shortRatio = rootobj.getAsJsonObject("stats").get("shortRatio").getAsDouble();
 
-            request.disconnect();
-            is.close();
-
-            //------------------------------------------------
-            String URLb = "https://api.iextrading.com/1.0/stock/"+symbol+"/stats";
-            URL url2 = new URL(URLb);
-            HttpURLConnection request2 = (HttpURLConnection) url2.openConnection();
-            request2.connect();
-
-            // Convert to a JSON object to print data
-            JsonParser jp2 = new JsonParser(); //from gson
-            InputStream is2=(InputStream) request2.getContent();
-            JsonElement root2 = jp.parse(new InputStreamReader(is2));
-            JsonObject rootobj2 = root2.getAsJsonObject(); // array or object
-            dividendYield = rootobj2.get("dividendYield").getAsDouble();
-            eps = rootobj2.get("latestEPS").getAsDouble();
-            change1Year = rootobj2.get("year1ChangePercent").getAsDouble();
-            change1Month = rootobj2.get("day30ChangePercent").getAsDouble();
-            change3Month = rootobj2.get("month3ChangePercent").getAsDouble();
-            shortRatio = rootobj2.get("shortRatio").getAsDouble();
-
-            request2.disconnect();
-            is2.close();
-            //------------------------------------------------
-
-
-            String URLc = "https://api.iextrading.com/1.0/stock/"+symbol+"/company";
-            URL url3 = new URL(URLc);
-            HttpURLConnection request3 = (HttpURLConnection) url3.openConnection();
-            request3.connect();
-
-            // Convert to a JSON object to print data
-            JsonParser jp3 = new JsonParser(); //from gson
-            InputStream is3=(InputStream) request3.getContent();
-            JsonElement root3 = jp.parse(new InputStreamReader(is3));
-            JsonObject rootobj3 = root3.getAsJsonObject(); // array or object
-            companyName=rootobj3.get("companyName").getAsString(); //AAPL
-            sector=rootobj3.get("sector").getAsString(); //"Technology"
-            industry=rootobj3.get("industry").getAsString(); // "Computer Hardware"
-            description=rootobj3.get("description").getAsString();
-            CEO=rootobj3.get("CEO").getAsString();
-            website=rootobj3.get("website").getAsString();
-
-            request3.disconnect();
-            is3.close();
-            //------------------------------------------------
-
-        } catch (IOException e) {
-            System.out.println("Connection to IEX failed.");
-            throw new RuntimeException(e);
+        } catch(IOException e) {
+            System.out.println("Connection to IEX failed. Please try again.");
         }
 
     }
 
 
     //-----------------------------------------------
-
-    public double getLatestPrice(){ //kiiresti viimase hinna leidmiseks
-        //kuna sellel lehel on väga lihtne json objekt, peaks selle
-        //kasutamine kiirendama nt portfelli kõigi hindade uuednamist
+    //Meetod kiiresti viimase hinna leidmiseks:
+    public double getLatestPrice(){
         String sURL = "https://api.iextrading.com/1.0/stock/"+symbol+"/price";
         double latestPrice;
 
         try {
-            URL url = new URL(sURL);
-            HttpURLConnection request = (HttpURLConnection) url.openConnection();
-            request.connect();
-
-            // Convert to a JSON object to print data
-            JsonParser jp = new JsonParser(); //from gson
-            InputStream is=(InputStream) request.getContent();
-            JsonElement root = jp.parse(new InputStreamReader(is));  //from input stream to json
+            JsonElement root = IEXdata.downloadData(sURL);  // array or object
             latestPrice= root.getAsDouble();
-
-            request.disconnect();
-            is.close();
 
         } catch (IOException e) {
             System.out.println("Connection to IEX failed.");
-            throw new RuntimeException(e);
+            return currentPrice; //tagastab varasema hinna
         }
         return latestPrice;
     }
@@ -175,23 +93,14 @@ public class Stock {
         //possible periods:  5y, 2y, 1y, ytd, 6m, 3m, 1m, (1d)
 
         String sURL = "https://api.iextrading.com/1.0/stock/"+symbol+"/chart/"+period;
-
         Map<String, Double []> historical=new HashMap<>(); //String - date; Double[]- close price, volume in millions
 
         try {
-            URL url = new URL(sURL);
-            HttpURLConnection request = (HttpURLConnection) url.openConnection();
-            request.connect();
-
-            // Convert to a JSON object to print data
-            JsonParser jp = new JsonParser(); //from gson
-            InputStream is=(InputStream) request.getContent();
-            JsonElement root = jp.parse(new InputStreamReader(is));  //from input stream to json
+            JsonElement root = IEXdata.downloadData(sURL);  // array or object
             JsonArray rootArray = root.getAsJsonArray(); // here, it is JsonArray instead...
 
             for (JsonElement jsonElement : rootArray) {
                 JsonObject timeObject=jsonElement.getAsJsonObject();
-
                 double price, volume;
                 String timeDataPoint;
 
@@ -209,13 +118,9 @@ public class Stock {
                     volume= (int)(volumeAsLong/1000000); //miljonites dollarites - NB!
                 }
 
-
                 Double [] priceAndVolume= {price, volume};
                 historical.put(timeDataPoint, priceAndVolume);
             }
-
-            request.disconnect();
-            is.close();
 
         } catch (IOException e) {
             System.out.println("Connection to IEX failed.");
@@ -223,6 +128,11 @@ public class Stock {
         }
         return historical;
     }
+
+    //TODO: (PRIORITY 3) - Maybe include bid price, bid size, ask price, ask size
+    // from https://api.iextrading.com/1.0/stock/"+symbol+"/book"
+    // and respective calculations - in order to take into account the volume of each buy/sell order
+    // (would avoid selling/buying more stocks than included in the respective bid/ask)
 
     //TODO:
     //Also possible to request data points with certain interval by using param. chartInterval in url
@@ -245,29 +155,6 @@ public class Stock {
         return symbol;
     }
 
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public String getSector() {
-        return sector;
-    }
-
-    public String getIndustry() {
-        return industry;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getCEO() {
-        return CEO;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
 
     public double getDividendYield() {
         return dividendYield;
@@ -314,7 +201,7 @@ public class Stock {
     }
 
     @Override
-    public String toString() {
+/*    public String toString() {
         return "Stock symbol: " + symbol + '\n' +
                 "CompanyName: " + companyName + '\n' +
                 "Sector: " + sector + '\n' +
@@ -333,5 +220,20 @@ public class Stock {
                 "Change in 1 yr: " + change1Year + '\n' +
                 "Short ratio: " + shortRatio + '\n' +
                 "Current price: " + currentPrice + '\n';
+    }*/
+    public String toString() {
+        return "Stock symbol: " + symbol + '\n' +
+                "Fundamentals:\n" +
+                "Dividend yield: " + dividendYield + '\n' +
+                "EPS: " + eps + '\n' +
+                "Market cap: " + marketCap + '\n' +
+                "P/E Ratio: " + peRatio + '\n' +
+                "Previous close: " + previousClose + '\n' +
+                "Change in the previous month: " + change1Month + '\n' +
+                "Change in 3 months: " + change3Month + '\n' +
+                "Change in 1 yr: " + change1Year + '\n' +
+                "Short ratio: " + shortRatio + '\n' +
+                "Current price: " + currentPrice + '\n';
     }
+
 }

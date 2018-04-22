@@ -1,9 +1,13 @@
 package app;
 
+import java.util.List;
+
 public class User {
     private String userName;
     private Portfolio portfolio;
     private double availableFunds;
+/*    private List<Transaction> transactions;
+    private List<Position> positions;*/
 
     public User(String userName, Portfolio portfolio, double availableFunds) {
         this.userName = userName;
