@@ -99,7 +99,8 @@ public class Stock extends IEXdata{
         //possible periods:  5y, 2y, 1y, ytd, 6m, 3m, 1m, (1d)
 
         String sURL = "https://api.iextrading.com/1.0/stock/"+symbol+"/chart/"+period;
-        Map<String, Double []> historical=new HashMap<>(); //String - date; Double[]- close price, volume in millions
+        Map<String, Double []> historical=new HashMap<>();
+        //String - date; Double[]- close price, volume in millions
 
         try {
             JsonElement root = IEXdata.downloadData(sURL);  // array or object
