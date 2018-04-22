@@ -11,13 +11,15 @@ import java.util.Scanner;
 import static app.Iu.*;
 import static app.staticData.ANSI_RED;
 import static app.staticData.ANSI_RESET;
+import static app.actions.showStockList.showStockList;
 
 public class BuyStock implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Scanner sc) throws Exception {
+    public void handle(Integer command, Scanner sc) {
         if (command == 5) {
             showStockList();
+
 //            sc.nextLine();
             String name = enterStockName(sc);
 
@@ -49,17 +51,6 @@ public class BuyStock implements CommandHandler {
         } while (name.length() > 5 || !isAlpha(name));
 
         return name.toUpperCase();
-    }
-
-    public static void showStockList() {
-        System.out.println("Avilable stocks:");
-        Arrays.sort(getAvailableStocks());
-        int i;
-        for (i = 0; i < getAvailableStocks().length; i++) {
-            System.out.printf("%-5s%s", getAvailableStocks()[i], (i + 1) % 10 == 0 ? "\n" : " ");
-        }
-        if (i % 10 != 0)
-            System.out.println();
     }
 
     public static int enterQty(Scanner sc) {

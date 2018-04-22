@@ -52,41 +52,6 @@ public class Iu {
 
             switch (choice) {
 
-
-                //Buy stock
-                case 5:
-                    showStockList();
-                    name = enterStockName(sc);
-
-                    if (Arrays.asList(availableStocks).contains(name)) {
-                        qty = enterQty(sc);
-                        Portfolio portfolio = activeUser.getPortfolio();
-
-                        try {
-                            portfolio.buyStock(name, qty);
-                        } catch (RuntimeException e) { //if not enough funds
-                            System.out.println("Not enough funds!");
-                        }
-                    } else
-                        System.out.println(ANSI_RED + "This stock is not available." + ANSI_RESET);
-                    break;
-
-                //Sell stock
-                case 6:
-                    Portfolio portfolio = activeUser.getPortfolio();
-                    if (portfolio != null)
-                        portfolio.toString();
-                    name = enterStockName(sc);
-
-                    if (portfolio.getSymbolList().contains(name)) {
-                        qty = enterQty(sc);
-                        portfolio.sellStock(name, qty);
-                    } else {
-                        System.out.println("Stock not included in portfolio!");
-                    }
-                    break;
-
-
                 //View available stock list
                 case 8:
                     showStockList();
@@ -184,6 +149,7 @@ public class Iu {
                 new ShowUsersList(), new SetActiveUser(),
                 new SellStock(), new BuyStock(),
                 new showUserPortfolio(),
+                new showStockList(),
                 new LoadData(), new SaveData(),
                 new Quit(),
                 new ErrorHandler()
