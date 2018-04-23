@@ -21,14 +21,14 @@ public class Portfolio {
     //Constructor - creates an empty portfolio:
     public Portfolio(double initialFunds) {
         this.portfolio = new HashMap<>();
-        this.positions= new HashMap<>();
+        this.positions = new HashMap<>();
         this.totalValueOfPositions = 0.0;
         this.profit = 0.0;
         this.unrealisedProfit = 0.0;
-        this.availableFunds =initialFunds;
+        this.availableFunds = initialFunds;
     }
 
-    public Portfolio(double availableFunds,  Map<String, Stock> portfolio,
+    public Portfolio(double availableFunds, Map<String, Stock> portfolio,
                      Map<String, Position> positions,
                      double totalValueOfPositions, double profit, double unrealisedProfit
     ) {
@@ -46,35 +46,32 @@ public class Portfolio {
 
     public void buyStock(String symbol, int volume) {
         double price;
-        String transactionType="buy";
-        boolean newStock=!portfolio.containsKey(symbol);  // if stock already included in portfolio
+        String transactionType = "buy";
+        boolean newStock = !portfolio.containsKey(symbol);  // if stock already included in portfolio
         Stock stock;
         Position position;
-        LocalDateTime transactionTime=java.time.LocalDateTime.now();
+        LocalDateTime transactionTime = java.time.LocalDateTime.now();
 
-        if (newStock==true) {
+        if (newStock) {
             stock = new Stock(symbol);
             price = stock.getCurrentPrice();
-        }
-        else {
+        } else {
             stock = portfolio.get(symbol);
             price = stock.getLatestPrice();
         }
-        Transaction transaction=new Transaction(symbol, price, volume, transactionType, transactionTime);
+        Transaction transaction = new Transaction(symbol, price, volume, transactionType, transactionTime);
 
-        if(transaction.getTransactionAmount()>availableFunds){
+        if (transaction.getTransactionAmount() > availableFunds) {
             throw new RuntimeException("Not enough funds!");
-        }
-        else {
-            availableFunds-= transaction.getTransactionAmount();
+        } else {
+            availableFunds -= transaction.getTransactionAmount();
             transaction.reportTransaction();
 
-            if (newStock==true) {
+            if (newStock) {
                 portfolio.put(symbol, stock);
                 position = new Position(transaction, symbol, price, volume);
                 positions.put(symbol, position);
-            }
-            else {
+            } else {
                 position = positions.get(symbol);
                 position.priceUpdate(price);
                 position.increasePosition(transaction, price, volume);
@@ -91,9 +88,9 @@ public class Portfolio {
         //checking if stock is present in portfolio is already included in main class
         //TODO: (PRIORITY 1) - SEE IF THIS CHECK STILL WORKS IN IU.
 
-        String transactionType="sell";
+        String transactionType = "sell";
         Position position = positions.get(symbol);
-        LocalDateTime transactionTime=java.time.LocalDateTime.now();
+        LocalDateTime transactionTime = java.time.LocalDateTime.now();
 
         //If user tries to sell more stocks than included in portfolio, only the
         //stocks included in portfolio will be sold (negative number of stocks not allowed):
@@ -107,8 +104,9 @@ public class Portfolio {
         position.priceUpdate(price);
 
         Transaction transaction = new Transaction(symbol, price, volume, transactionType, transactionTime);
-        availableFunds += transaction.getTransactionAmount();;
-        profit+=volume*(price-position.getAveragePrice())-transaction.getTransactionFees();
+        availableFunds += transaction.getTransactionAmount();
+
+        profit += volume * (price - position.getAveragePrice()) - transaction.getTransactionFees();
         transaction.reportTransaction();
 
         //TODO: (PIORITY 1)- CREATE POSSIBILITY TO VIEW ALL TRANSACTIONS OF USER
@@ -122,7 +120,7 @@ public class Portfolio {
         calculateTotals();
 
         //removing stock from portfolio in case its volume is zero after sell
-        if (positions.get(symbol).getVolume()==0){
+        if (positions.get(symbol).getVolume() == 0) {
             portfolio.remove(symbol);
             //positions.remove(symbol); //Should NOT be included, because: a) calculateTotals() depends on it,
             // and b) keeping closed positsions is important for creating the (planned) transactions report.
@@ -134,40 +132,40 @@ public class Portfolio {
     //-----------------------------------------------
     //calculate portfolio total (sum of all current positions in stock):
     public void calculateTotals() {
-        totalValueOfPositions =0.0;
-        profit=0.0;
-        unrealisedProfit=0.0;
+        totalValueOfPositions = 0.0;
+        profit = 0.0;
+        unrealisedProfit = 0.0;
 
         for (String s : positions.keySet()) {
-            Position position=positions.get(s);
-            totalValueOfPositions+=position.getCurrentValue();
-            profit+=position.getProfit(); //for both open and closed positions
-            unrealisedProfit+=position.getUnrealisedProfit();
+            Position position = positions.get(s);
+            totalValueOfPositions += position.getCurrentValue();
+            profit += position.getProfit(); //for both open and closed positions
+            unrealisedProfit += position.getUnrealisedProfit();
         }
     }
     //-----------------------------------------------
 
     //GET/PRINT TRANSACTIONS REPORT:
-    public String getTransactionsReport(){
-        String report="\n--------------------------------------------------" +
-                       "\nTRANSACTIONS REPORT" +
-                       "\n--------------------------------------------------\n";
-        double totalProfit=0.0;
+    public String getTransactionsReport() {
+        String report = "\n--------------------------------------------------" +
+                "\nTRANSACTIONS REPORT" +
+                "\n--------------------------------------------------\n";
+        double totalProfit = 0.0;
         for (String symb : positions.keySet()) {
-            double positionProfit=0.0;
-            report+=symb;
-            report+="\nTYPE\tDATE\t\tTIME\tVOLUME\tPRICE\tFEES\tPAID/RECEIVED\tPROFIT\n";
-            Position position=positions.get(symb);
-            List<Transaction> transactions=position.getTransactions();
+            double positionProfit = 0.0;
+            report += symb;
+            report += "\nTYPE\tDATE\t\tTIME\tVOLUME\tPRICE\tFEES\tPAID/RECEIVED\tPROFIT\n";
+            Position position = positions.get(symb);
+            List<Transaction> transactions = position.getTransactions();
             for (Transaction t : transactions) {
-                report+=t.toStringForReport()+"\n";
-                positionProfit+=t.getProfitFromSell();
+                report += t.toStringForReport() + "\n";
+                positionProfit += t.getProfitFromSell();
             }
-            report+="POSITION PROFIT("+symb+"): "+positionProfit;
-            totalProfit+=positionProfit;
-            report+="\n\n";
+            report += "POSITION PROFIT(" + symb + "): " + positionProfit;
+            totalProfit += positionProfit;
+            report += "\n\n";
         }
-        report+="TOTAL PROFIT: "+totalProfit;
+        report += "TOTAL PROFIT: " + totalProfit;
         //System.out.println(report);
         return report;
     }
@@ -233,7 +231,6 @@ public class Portfolio {
     }
 
 
-
     //-----------------------------------------------
 
     public List<String> roundDoubleList(List<Double> arrayList) {
@@ -247,7 +244,15 @@ public class Portfolio {
         return roundedDoubles;
     }
 
-/*    @Override
+    @Override
+    public String toString() {
+        return "Portfolio{" +
+                "availableFunds=" + availableFunds +
+                ", portfolio=" + portfolio +
+                '}';
+    }
+
+    /*    @Override
     public String toString() {
         return
                 "Stock names: \n" + symbolList.toString() + '\n' +

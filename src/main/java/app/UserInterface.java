@@ -1,4 +1,4 @@
-/*
+
 package app;
 
 //LightSlateGray 	#778899
@@ -14,7 +14,6 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -23,21 +22,11 @@ import javafx.scene.layout.*;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
-import javax.sound.sampled.Port;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 
 public class UserInterface extends Application {
-
-
-    private User user = new User("Pedro", new Portfolio(0.1), 10000);
-    User user1 = new User("Peeter", new Portfolio(0.2), 1000000); //testing Pets
-
+    Portfolio portfolio = new Portfolio(10000);
 
     public static void main(String[] args) {
-
         {
             launch(args);
         }
@@ -87,12 +76,9 @@ public class UserInterface extends Application {
         borderPane.setBottom(hbox);
         borderPane.setRight(addBuySellVBox());
 
-
         hbox.getChildren().addAll(stockInfo, refresh, clickMe);
 
-
         addTableView();
-
 
         Scene scene = new Scene(borderPane, 750, 550);
 
@@ -102,8 +88,8 @@ public class UserInterface extends Application {
         stage.show();
     }
 
-   */
-/* private HBox addBottomHBox() {
+
+    private HBox addBottomHBox() {
         HBox hbox = new HBox();
         hbox.setPadding(new Insets(15, 12, 15, 12));
         hbox.setSpacing(10);
@@ -117,18 +103,11 @@ public class UserInterface extends Application {
         stockInfo.setStyle("-fx-background-color: #FFF5EE");
         stockInfo.setPrefSize(100, 20);
 
-        Button clickMe = new Button("Click me for a popup");
-        clickMe.setStyle("-fx-background-color: #FFF5EE");
-        stockInfo.setPrefSize(200, 20);
-        Popup popup = new Popup();
-
-        clickMe.setOnAction(event -> popup.show(stage));
-
-        hbox.getChildren().addAll(stockInfo, refresh, clickMe);
+        hbox.getChildren().addAll(stockInfo, refresh);
 
 
         return hbox;
-    }*//*
+    }
 
 
     //https://stackoverflow.com/questions/38487797/javafx-populate-tableview-with-an-observablemap-that-has-a-custom-class-for-its
@@ -221,12 +200,12 @@ public class UserInterface extends Application {
         buy.setOnAction((ActionEvent e) -> {
             try {
                 if (stockSymbol.getText() != null && stockVolume.getText() != null)
-                    user.getPortfolio().buyStock(stockSymbol.getText(), Integer.parseInt(stockVolume.getText()));
+                    portfolio.buyStock(stockSymbol.getText(), Integer.parseInt(stockVolume.getText()));
                 stockSymbol.clear();
                 stockVolume.clear();
 
             } catch (Exception e1) {
-                System.out.printf("Fuck");
+                System.out.println("Nope");
             }
         });
 
@@ -235,12 +214,14 @@ public class UserInterface extends Application {
 
         sell.setOnAction(e -> {
             try {
-                user.getPortfolio().sellStock(stockSym, Integer.parseInt(stockVolume.getText()));
+                if (stockSymbol.getText() != null && stockVolume.getText() != null)
+                    portfolio.sellStock(stockSymbol.getText(), Integer.parseInt(stockVolume.getText()));
+
                 stockSymbol.clear();
                 stockVolume.clear();
 
             } catch (Exception e1) {
-                e1.printStackTrace();
+                System.out.println("Nope");
             }
 
 
@@ -254,4 +235,3 @@ public class UserInterface extends Application {
     }
 }
 
-*/

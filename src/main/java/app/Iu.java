@@ -158,9 +158,6 @@ public class Iu {
         Iu.activeUser = activeUser;
     }
 
-//    public static Scanner getSc() {
-//        return sc;
-//    }
 
     public static File getActiveGame() {
         return activeGame;
