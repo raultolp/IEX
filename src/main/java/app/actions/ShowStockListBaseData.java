@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 //View stock list base data
 
-public class showStockListBaseData implements CommandHandler {
+public class ShowStockListBaseData implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) {

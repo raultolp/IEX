@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 //View stock historical data
 
-public class showStockHistoricalData implements CommandHandler {
+public class ShowStockHistoricalData implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) {

@@ -11,13 +11,13 @@ import java.util.Scanner;
 
 import static app.Iu.getActiveUser;
 import static app.actions.BuyStock.enterStockName;
-import static app.actions.showStockList.showStockList;
+import static app.actions.ShowStockList.showStockList;
 import static app.staticData.ANSI_RED;
 import static app.staticData.ANSI_RESET;
 
 // News on the company (last 10 news items)
 
-public class showStockNews implements CommandHandler {
+public class ShowStockNews implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) throws Exception {

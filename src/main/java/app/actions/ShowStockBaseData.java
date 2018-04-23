@@ -3,12 +3,11 @@ package app.actions;
 import app.CommandHandler;
 import app.Company;
 import app.Stock;
-
 import java.util.Scanner;
 
 //View stock base data
 
-public class showStockBaseData implements CommandHandler {
+public class ShowStockBaseData implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) {
@@ -29,6 +28,7 @@ public class showStockBaseData implements CommandHandler {
 
             //stock fundamentals:
             System.out.println(new Stock(stockSym)); //uusi stocke poleks vaja teha! (tähendab veebist info laadimist)
+
         } catch (Exception e) {
             System.out.println("Stock information not available.");
         }

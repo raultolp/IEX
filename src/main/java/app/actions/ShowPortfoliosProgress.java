@@ -6,7 +6,7 @@ import app.CommandHandler;
 
 import java.util.Scanner;
 
-public class showPortfoliosProgress implements CommandHandler {
+public class ShowPortfoliosProgress implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) {

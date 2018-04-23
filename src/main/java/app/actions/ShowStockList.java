@@ -9,7 +9,7 @@ import static app.Iu.getAvailableStocks;
 
 //View available stock list - showStockList
 
-public class showStockList implements CommandHandler {
+public class ShowStockList implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) {

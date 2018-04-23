@@ -12,7 +12,7 @@ import static app.actions.ShowUsersList.showUsersList;
 
 //View user portfolio - showUserPortfolio
 
-public class showUserPortfolio implements CommandHandler {
+public class ShowUserPortfolio implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) {

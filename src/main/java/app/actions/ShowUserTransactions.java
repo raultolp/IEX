@@ -11,7 +11,7 @@ import static app.actions.BuyStock.enterStockName;
 
 //Transactions Report
 
-public class showUserTransactions implements CommandHandler {
+public class ShowUserTransactions implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) throws Exception {
