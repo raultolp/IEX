@@ -5,7 +5,7 @@ import app.actions.*;
 import java.io.*;
 import java.util.*;
 
-import static app.actions.SaveData.saveData;
+//import static app.actions.SaveData.saveData; //HETKEL EI TÖÖTA
 import static app.staticData.*;
 
 public class Iu {
@@ -38,7 +38,7 @@ public class Iu {
 
         // QUIT PROGRAM
         if (getActiveGame() != null)
-            saveData(sc);
+            //saveData(sc); //HETKEL EI TÖÖTA
         sc.close();
 
         System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
@@ -79,14 +79,16 @@ public class Iu {
                 new SellStock(),
                 new BuyStock(),
                 new showUserPortfolio(),
+                new showUserTransactions(),
                 new showStockList(),
                 new showStockListBaseData(),
                 new showStockBaseData(),
                 new showStockHistoricalData(),
+                new showStockNews(),
                 new showPortfoliosProgress(),
-                new RefreshDataFromWeb(),
+/*                new RefreshDataFromWeb(),  //HETKEL EI TÖÖTA  NEED KOLM
                 new LoadData(),
-                new SaveData(),
+                new SaveData(),*/
                 new Quit(),
                 new ErrorHandler()
         );

@@ -129,10 +129,10 @@ public class Company extends IEXdata {
 
     @Override
     public String toString() {
-        return "COMPANY INFORMATION FOR " + symbol + ": \n" +
+        return "\nCOMPANY INFORMATION FOR " + symbol + ": \n" +
                 "Company name: " + companyName + "(" + website + ")\n" +
                 "CEO: " + CEO + "\n" +
-                "Sector: " + sector + "(" + industry + "),\n" +
+                "Sector: " + sector + " (" + industry + "),\n" +
                 "Descriprion: " + description + "\n";
     }
     //TODO:  (PRIORITY 1) ADD ALL STOCKS IN THE AvailableStocks LIST TO THE TXT FILE (TO DECREASE DOWLNOADS).

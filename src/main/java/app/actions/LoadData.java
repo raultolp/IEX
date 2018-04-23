@@ -1,3 +1,4 @@
+/*
 package app.actions;
 
 import app.CommandHandler;
@@ -22,7 +23,7 @@ public class LoadData implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) throws Exception {
-        if (command == 14) {
+        if (command == 16) {
             loadData(sc);
         }
     }
@@ -158,3 +159,4 @@ public class LoadData implements CommandHandler {
             System.out.println();
     }
 }
+*/

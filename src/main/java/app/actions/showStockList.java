@@ -13,7 +13,7 @@ public class showStockList implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) {
-        if (command == 8) {
+        if (command == 9) {
             showStockList();
         }
     }

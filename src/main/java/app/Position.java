@@ -1,5 +1,11 @@
 package app;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Position {
 
     //private String posType;  //"long" or "short"
@@ -14,18 +20,25 @@ public class Position {
     private double unrealisedProfit; // profit/loss that would be gained if stocks held were sold
                                          // at current market price (does not include transaction fee)
     private double currentValue;  // volume*current price, i.e. current value of stock in portfolio
-
+    private List<Transaction> transactions = new ArrayList<>();;
 
 
     public Position(Transaction transaction, String symbol, double price, int volume) {
         this.symbol = symbol;
         this.price = price;
         this.volume = volume;
-        this.averagePrice=transaction.getTransactionAmount()/volume;
+        this.averagePrice=price+transaction.getTransactionFee();  //transaction.getTransactionAmount()/volume;
         this.profit=0-transaction.getTransactionFees();
         this.unrealisedProfit=0.0;
         this.currentValue=price*volume;
         this.open=true;
+        //this.transactions= new HashMap<>();
+        addTransaction(transaction);
+    }
+
+    public void addTransaction(Transaction transaction){
+        transaction.setAveragePurchasePrice(averagePrice);
+        transactions.add(transaction);
     }
 
     public void priceUpdate(double newPrice) {
@@ -72,6 +85,10 @@ public class Position {
 
     public double getAveragePrice() {
         return averagePrice;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
     //TODO: (PRIORITY 2) - ADD SHORT POSITIONS

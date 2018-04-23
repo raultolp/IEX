@@ -1,3 +1,4 @@
+/*
 package app.actions;
 
 import app.CommandHandler;
@@ -16,7 +17,7 @@ public class SaveData implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) throws Exception {
-        if (command == 15) {
+        if (command == 17) {
             saveData(sc);
         }
     }
@@ -48,3 +49,4 @@ public class SaveData implements CommandHandler {
         System.out.println(ANSI_YELLOW + getActiveGame().getName() + " file saved." + ANSI_RESET);
     }
 }
+*/

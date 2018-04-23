@@ -1,3 +1,4 @@
+/*
 package app.actions;
 
 import app.CommandHandler;
@@ -15,7 +16,7 @@ public class RefreshDataFromWeb implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) {
-        if (command == 13) {
+        if (command == 15) {
             for (String symbol : getStockMap().keySet()) {
                 Stock stock = getStockMap().get(symbol);
                 double price = stock.getLatestPrice();
@@ -26,3 +27,4 @@ public class RefreshDataFromWeb implements CommandHandler {
         }
     }
 }
+*/

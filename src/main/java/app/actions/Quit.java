@@ -10,7 +10,7 @@ public class Quit implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) {
-        if (command == 16) {
+        if (command == 18) {
             System.out.println("Quiting...");
             // Praegu ei tee midagi, kuid huljem võib olla vaja asjade sulgemiseks või mida iganes
             // QUIT toimub Iu-s hetkel

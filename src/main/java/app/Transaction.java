@@ -1,6 +1,7 @@
 package app;
 
 import javax.print.DocFlavor;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -11,7 +12,12 @@ public class Transaction {
     private double transactionFee;; // 10 cents per stock
     private double price; //current price
     private int volume; //number of stocks
-    private LocalDateTime transactionTime;
+    //private LocalDateTime transactionTime;
+    private String date;
+    private String time;
+    private double profitFromSell;
+    private double averagePurchasePrice;
+
 
     //TODO: ADD TOSTRING
 
@@ -20,8 +26,30 @@ public class Transaction {
         this.transactionFee = 0.1;
         this.price = price;
         this.volume = volume;
-        this.type=type;
-        this.transactionTime=transactionTime;
+        this.type=type; //buy or sell
+        //this.transactionTime=transactionTime;
+        this.date = transactionTime.getDayOfMonth()+"-"+transactionTime.getMonthValue()+ "-"+transactionTime.getYear(); //String.valueOf(...)
+        this.time=transactionTime.getHour()+":"+transactionTime.getMinute()+":"+ transactionTime.getSecond();
+        if (type.equals("buy")){
+            this.profitFromSell=0.0;
+        }
+        else{
+            this.profitFromSell=volume*(price-averagePurchasePrice-2*transactionFee);
+        }
+    }
+
+    public String toStringForReport(){
+        String sep ="\t";
+        String report=type+sep+sep+date+sep+time+sep+volume+sep+sep+price+sep+
+                String.format("%.2f", getTransactionFees())+sep+
+                String.format("%.2f", getTransactionAmount())+sep+sep;
+        if (type.equals("buy")){
+            report+="-";
+        } else {
+            report+=String.format("%.2f", profitFromSell);
+        }
+
+        return report;
 
     }
 
@@ -45,7 +73,16 @@ public class Transaction {
         System.out.println(" USD).");
     }
 
-    public LocalDateTime getTransactionTime() {
-        return transactionTime;
+
+    public double getTransactionFee() {
+        return transactionFee;
+    }
+
+    public void setAveragePurchasePrice(double avgPurchasePrice){
+        averagePurchasePrice=avgPurchasePrice;
+    }
+
+    public double getProfitFromSell() {
+        return profitFromSell;
     }
 }

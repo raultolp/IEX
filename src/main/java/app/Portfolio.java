@@ -12,41 +12,30 @@ import java.util.Map;
 public class Portfolio {
 
     private double availableFunds;
-    //private User user;
     private Map<String, Stock> portfolio;
     private Map<String, Position> positions;
-    private Map<LocalDateTime, Transaction> transactions;
     private double totalValueOfPositions; //sum of all totals (i.e. sum of all current positions)
     private double profit; //realised profit (from closed positions (sold stocks))
     private double unrealisedProfit; //gains/losses in value of stocks in portfolio (i.e of stocks not sold yet)
-    //private double totalValueOfPortfolio; //positions + availableFunds
 
     //Constructor - creates an empty portfolio:
     public Portfolio(double initialFunds) {
         this.portfolio = new HashMap<>();
         this.positions= new HashMap<>();
-        this.transactions= new HashMap<>();
         this.totalValueOfPositions = 0.0;
-        //this.totalValueOfPortfolio=0.0;
         this.profit = 0.0;
         this.unrealisedProfit = 0.0;
-        //this.availableFunds = 0.0;
         this.availableFunds =initialFunds;
-        //this.user = user;
     }
 
     public Portfolio(double availableFunds,  Map<String, Stock> portfolio,
-                     Map<String, Position> positions, Map<LocalDateTime, Transaction> transactions,
+                     Map<String, Position> positions,
                      double totalValueOfPositions, double profit, double unrealisedProfit
-                    //, User user
     ) {
         this.availableFunds = availableFunds;
-        //this.user = user;
         this.portfolio = portfolio;
         this.positions = positions;
-        this.transactions=transactions;
         this.totalValueOfPositions = totalValueOfPositions;
-        //this.totalValueOfPortfolio=totalValueOfPositions+availableFunds;
         this.profit = profit;
         this.unrealisedProfit = unrealisedProfit;
     }
@@ -56,7 +45,6 @@ public class Portfolio {
     //BUYING STOCK:
 
     public void buyStock(String symbol, int volume) {
-
         double price;
         String transactionType="buy";
         boolean newStock=!portfolio.containsKey(symbol);  // if stock already included in portfolio
@@ -72,7 +60,6 @@ public class Portfolio {
             stock = portfolio.get(symbol);
             price = stock.getLatestPrice();
         }
-
         Transaction transaction=new Transaction(symbol, price, volume, transactionType, transactionTime);
 
         if(transaction.getTransactionAmount()>availableFunds){
@@ -80,9 +67,7 @@ public class Portfolio {
         }
         else {
             availableFunds-= transaction.getTransactionAmount();
-            //user.setAvailableFunds(availableFunds);
             transaction.reportTransaction();
-            transactions.put(transactionTime, transaction);
 
             if (newStock==true) {
                 portfolio.put(symbol, stock);
@@ -94,17 +79,12 @@ public class Portfolio {
                 position.priceUpdate(price);
                 position.increasePosition(transaction, price, volume);
             }
-
             calculateTotals();
         }
     }
 
     //-----------------------------------------------
     //SELLING STOCK:
-
-    //- If user tries to sell more stocks than included in portfolio, only the
-    //stocks included in portfolio will be sold (negative number of stocks not allowed)
-    //- If user tries to sell stock not included in portfolio, nothing happens.
 
     public void sellStock(String symbol, int volume) {
 
@@ -115,12 +95,13 @@ public class Portfolio {
         Position position = positions.get(symbol);
         LocalDateTime transactionTime=java.time.LocalDateTime.now();
 
+        //If user tries to sell more stocks than included in portfolio, only the
+        //stocks included in portfolio will be sold (negative number of stocks not allowed):
         if (position.getVolume() < volume) { //max number of shares to be sold is their number in portfolio
             System.out.println("Portfolio only contains " + volume + " stocks. Now selling them all...");  //LISATUD
             volume = position.getVolume(); //if user tries to sell more, only the max number is sold
         }
 
-        //double transactionFeeTotal = volume * transactionFee;
         Stock stock = portfolio.get(symbol);
         double price = stock.getLatestPrice();  //current price
         position.priceUpdate(price);
@@ -128,9 +109,7 @@ public class Portfolio {
         Transaction transaction = new Transaction(symbol, price, volume, transactionType, transactionTime);
         availableFunds += transaction.getTransactionAmount();;
         profit+=volume*(price-position.getAveragePrice())-transaction.getTransactionFees();
-        //user.setAvailableFunds(availableFunds);
         transaction.reportTransaction();
-        transactions.put(transactionTime, transaction);
 
         //TODO: (PIORITY 1)- CREATE POSSIBILITY TO VIEW ALL TRANSACTIONS OF USER
         //(MAYBE CREATE A NEW CLASS "TRANSACTIONS REPORT" VMS FOR THIS) TO SEE TRANSACTIONS
@@ -153,7 +132,6 @@ public class Portfolio {
     //TODO: (PRIORITY 2) Possibility for short selling could be added (allows negative number of stocks)
 
     //-----------------------------------------------
-
     //calculate portfolio total (sum of all current positions in stock):
     public void calculateTotals() {
         totalValueOfPositions =0.0;
@@ -166,15 +144,34 @@ public class Portfolio {
             profit+=position.getProfit(); //for both open and closed positions
             unrealisedProfit+=position.getUnrealisedProfit();
         }
-
-        //totalValueOfPortfolio=totalValueOfPositions+availableFunds;
-
-/*        for (String p : portfolio.keySet()) {
-            profit+=position.getProfit();
-        }*/
-
-
     }
+    //-----------------------------------------------
+
+    //GET/PRINT TRANSACTIONS REPORT:
+    public String getTransactionsReport(){
+        String report="\n--------------------------------------------------" +
+                       "\nTRANSACTIONS REPORT" +
+                       "\n--------------------------------------------------\n";
+        double totalProfit=0.0;
+        for (String symb : positions.keySet()) {
+            double positionProfit=0.0;
+            report+=symb;
+            report+="\nTYPE\tDATE\t\tTIME\tVOLUME\tPRICE\tFEES\tPAID/RECEIVED\tPROFIT\n";
+            Position position=positions.get(symb);
+            List<Transaction> transactions=position.getTransactions();
+            for (Transaction t : transactions) {
+                report+=t.toStringForReport()+"\n";
+                positionProfit+=t.getProfitFromSell();
+            }
+            report+="POSITION PROFIT("+symb+"): "+positionProfit;
+            totalProfit+=positionProfit;
+            report+="\n\n";
+        }
+        report+="TOTAL PROFIT: "+totalProfit;
+        //System.out.println(report);
+        return report;
+    }
+
 
     //-----------------------------------------------
 
@@ -203,18 +200,14 @@ public class Portfolio {
     //-----------------------------------------------
     //GETTER & SETTERS:
 
-    //Getting stock from portfolio:
     public Stock getStock(String symbol) {
         return portfolio.get(symbol);
     }
 
-    //Getting portfolio total value:
     public double getTotalValueOfPortfolio() {
         return availableFunds + totalValueOfPositions;
     }
 
-
-    //Other getters:
     public Map<String, Stock> getPortfolio() {
         return portfolio;
     }
@@ -239,20 +232,9 @@ public class Portfolio {
         return availableFunds;
     }
 
-/*    public void setUser(User user) {
-        this.user = user;
-    }*/
-
-
-
-
-
-
-
 
 
     //-----------------------------------------------
-
 
     public List<String> roundDoubleList(List<Double> arrayList) {
         DecimalFormat df = new DecimalFormat("###.##");

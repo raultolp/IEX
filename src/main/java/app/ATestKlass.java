@@ -7,7 +7,7 @@ public class ATestKlass implements Comparator<String> {
 
     public static void main(String[] args) throws Exception {
 
-        //-------------------------------------------------
+ /*       //-------------------------------------------------
         //PRINTING OUT COMPANY BASE DATA:
         Company comp = new Company("AAPL");  //XLU
         System.out.println(comp);
@@ -47,8 +47,22 @@ public class ATestKlass implements Comparator<String> {
             Double [] priceData=historicalPrices.get(dates.get(i));
             System.out.println(dates.get(i)+ " - price: "+ priceData[0]+ ", volume (in millions): " +priceData[1]);
         }
-
+*/
         //-------------------------------------------------
+        //TESTING PORTFOLIO:
+        User pets= new User("Pets", 100000);
+        Portfolio port = pets.getPortfolio();
+
+        //TRANSACTIONS REPORT:
+        port.buyStock("AAPL", 200);
+/*        port.sellStock("AAPL", 100);
+        port.buyStock("FB", 100);
+        port.buyStock("GE", 100);
+        port.sellStock("GE", 10);*/
+        String transactionsReport=port.getTransactionsReport();
+        System.out.println(transactionsReport);
+
+
 
     }
 
