@@ -11,6 +11,10 @@ public class staticData {
             "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
             "TSLA", "TWTR", "V", "WMT"};
 
+    //TAGASISIDE Märdilt:
+    //need võiks kuskilt failist lugeda
+    //TODO: (PRIORITY 2)-> LOE STOCKID FAILIST
+
     //ETF-dega list
 //    public static final String[] availableStocks = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
 //            "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",

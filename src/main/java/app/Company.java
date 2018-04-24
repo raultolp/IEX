@@ -27,7 +27,6 @@ public class Company extends IEXdata {
     //Company information is loaded from IEX only if it is not yet stored in file:
     public Company(String symbol) throws Exception {
         this.symbol = symbol.toUpperCase();
-        //loadFromFile();  // pole vajalik
         if (loadFromFile() == false) {
             loadDataFromWeb();
         }
@@ -60,7 +59,7 @@ public class Company extends IEXdata {
 
     //-----------------------------------------
     //Loading Company info from web:
-    public void loadDataFromWeb() {
+    public void loadDataFromWeb() {  //äkki peaks tegema booleaniks - kui õnnestub, on true
         String URL = "https://api.iextrading.com/1.0/stock/" + symbol + "/company";
 
         try {
@@ -76,7 +75,7 @@ public class Company extends IEXdata {
             //For ETFs, description can be on several lines; for saving to file, the info
             // should be only on one line. Therefore, the line breaks should be deleted:
             String description_temp = rootobj.get("description").getAsString();
-            description= description_temp.replaceAll("\n", "");
+            description = description_temp.replaceAll("\n", "");
 
             System.out.println("Company info of " + symbol + " downloaded from IEX.");
 
@@ -98,26 +97,26 @@ public class Company extends IEXdata {
     }
 
     //Getting latest news on the company:
-    public ArrayList<String> getCompanyNews(){
+    public ArrayList<String> getCompanyNews() {
 
-        ArrayList<String> newsItems=new ArrayList<>();
-        String URL = "https://api.iextrading.com/1.0/stock/"+symbol+"/news";
+        ArrayList<String> newsItems = new ArrayList<>();
+        String URL = "https://api.iextrading.com/1.0/stock/" + symbol + "/news";
 
         try {
             JsonElement root = IEXdata.downloadData(URL);  // array or object
             JsonArray rootArray = root.getAsJsonArray();
 
             for (JsonElement jsonElement : rootArray) {
-                JsonObject jsonNewsItem=jsonElement.getAsJsonObject();
-                String timeTemp=jsonNewsItem.get("datetime").getAsString();
-                String time=timeTemp.substring(0,17);
-                String headline=jsonNewsItem.get("headline").getAsString();
-                String source=jsonNewsItem.get("source").getAsString();
-                String website=jsonNewsItem.get("url").getAsString();
-                String summary=jsonNewsItem.get("summary").getAsString();
-                String related=jsonNewsItem.get("related").getAsString();
+                JsonObject jsonNewsItem = jsonElement.getAsJsonObject();
+                String timeTemp = jsonNewsItem.get("datetime").getAsString();
+                String time = timeTemp.substring(0, 17);
+                String headline = jsonNewsItem.get("headline").getAsString();
+                String source = jsonNewsItem.get("source").getAsString();
+                String website = jsonNewsItem.get("url").getAsString();
+                String summary = jsonNewsItem.get("summary").getAsString();
+                String related = jsonNewsItem.get("related").getAsString();
 
-                NewsItem newsItem=new NewsItem(symbol, time, headline, source, website, summary,  related);
+                NewsItem newsItem = new NewsItem(symbol, time, headline, source, website, summary, related);
                 newsItems.add(newsItem.toString());
             }
 

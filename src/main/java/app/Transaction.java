@@ -9,7 +9,8 @@ public class Transaction {
 
     private String symbol;
     private String type;
-    private double transactionFee;; // 10 cents per stock
+    private double transactionFee;
+    ; // 10 cents per stock
     private double price; //current price
     private int volume; //number of stocks
     //private LocalDateTime transactionTime;
@@ -22,31 +23,30 @@ public class Transaction {
     //TODO: ADD TOSTRING
 
     public Transaction(String symbol, double price, int volume, String type, LocalDateTime transactionTime) {
-        this.symbol=symbol;
+        this.symbol = symbol;
         this.transactionFee = 0.1;
         this.price = price;
         this.volume = volume;
-        this.type=type; //buy or sell
+        this.type = type; //buy or sell
         //this.transactionTime=transactionTime;
-        this.date = transactionTime.getDayOfMonth()+"-"+transactionTime.getMonthValue()+ "-"+transactionTime.getYear(); //String.valueOf(...)
-        this.time=transactionTime.getHour()+":"+transactionTime.getMinute()+":"+ transactionTime.getSecond();
-        if (type.equals("buy")){
-            this.profitFromSell=0.0;
-        }
-        else{
-            this.profitFromSell=volume*(price-averagePurchasePrice-2*transactionFee);
+        this.date = transactionTime.getDayOfMonth() + "-" + transactionTime.getMonthValue() + "-" + transactionTime.getYear(); //String.valueOf(...)
+        this.time = transactionTime.getHour() + ":" + transactionTime.getMinute() + ":" + transactionTime.getSecond();
+        if (type.equals("buy")) {
+            this.profitFromSell = 0.0;
+        } else {
+            this.profitFromSell = volume * (price - averagePurchasePrice - 2 * transactionFee);
         }
     }
 
-    public String toStringForReport(){
-        String sep ="\t";
-        String report=type+sep+sep+date+sep+time+sep+volume+sep+sep+price+sep+
-                String.format("%.2f", getTransactionFees())+sep+
-                String.format("%.2f", getTransactionAmount())+sep+sep;
-        if (type.equals("buy")){
-            report+="-";
+    public String toStringForReport() {
+        String sep = "\t";
+        String report = type + sep + sep + date + sep + time + sep + volume + sep + sep + price + sep +
+                String.format("%.2f", getTransactionFees()) + sep +
+                String.format("%.2f", getTransactionAmount()) + sep + sep;
+        if (type.equals("buy")) {
+            report += "-";
         } else {
-            report+=String.format("%.2f", profitFromSell);
+            report += String.format("%.2f", profitFromSell);
         }
 
         return report;
@@ -54,21 +54,20 @@ public class Transaction {
     }
 
     public double getTransactionAmount() {
-        if (type.equals("buy")){
-            return (price+transactionFee)*volume; //total price paid when buying stocks
-        }
-        else {
-            return (price-transactionFee)*volume; //total amount received for selling stocks
+        if (type.equals("buy")) {
+            return (price + transactionFee) * volume; //total price paid when buying stocks
+        } else {
+            return (price - transactionFee) * volume; //total amount received for selling stocks
         }
     }
 
-    public double getTransactionFees(){
-        return volume*transactionFee;
+    public double getTransactionFees() {
+        return volume * transactionFee;
     }
 
-    public void reportTransaction(){ //inform how many stocks were bought/sold at what price
-        String verb=type.equals("buy")? "bought" : "sold";
-        System.out.print(volume + " stocks of " + symbol + " " + verb+ " @" + price + " USD (total value ");
+    public void reportTransaction() { //inform how many stocks were bought/sold at what price
+        String verb = type.equals("buy") ? "bought" : "sold";
+        System.out.print(volume + " stocks of " + symbol + " " + verb + " @" + price + " USD (total value ");
         System.out.printf("%.2f", getTransactionAmount());
         System.out.println(" USD).");
     }
@@ -78,8 +77,8 @@ public class Transaction {
         return transactionFee;
     }
 
-    public void setAveragePurchasePrice(double avgPurchasePrice){
-        averagePurchasePrice=avgPurchasePrice;
+    public void setAveragePurchasePrice(double avgPurchasePrice) {
+        averagePurchasePrice = avgPurchasePrice;
     }
 
     public double getProfitFromSell() {

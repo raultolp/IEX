@@ -39,7 +39,7 @@ public class Iu {
         // QUIT PROGRAM
         if (getActiveGame() != null)
             //saveData(sc); //HETKEL EI TÖÖTA
-        sc.close();
+            sc.close();
 
         System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
 

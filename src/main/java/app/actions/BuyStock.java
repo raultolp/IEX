@@ -11,7 +11,7 @@ import java.util.Scanner;
 import static app.Iu.*;
 import static app.staticData.ANSI_RED;
 import static app.staticData.ANSI_RESET;
-import static app.actions.showStockList.showStockList;
+import static app.actions.ShowStockList.showStockList;
 
 //Buy stock - BuyStock, enterStockName, enterQty
 

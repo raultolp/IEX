@@ -40,9 +40,9 @@ public class Stock extends IEXdata{
     }
 
     //for creating stocks based on batch download (for portfolios loaded from file):
-    public Stock (String symbol, double dividendYield, double eps, double peRatio, int marketCap,
-                  double previousClose, double change1Year, double change1Month, double change3Month,
-                  double shortRatio, double currentPrice){
+    public Stock(String symbol, double dividendYield, double eps, double peRatio, int marketCap,
+                 double previousClose, double change1Year, double change1Month, double change3Month,
+                 double shortRatio, double currentPrice){
         this.symbol=symbol;
         this.dividendYield=dividendYield;
         this.eps=eps;
@@ -120,7 +120,7 @@ public class Stock extends IEXdata{
 
         String sURL = "https://api.iextrading.com/1.0/stock/"+symbol+"/chart/"+period;
         Map<String, Double []> historical=new HashMap<>();
-        //String - date; Double[]- close price, volume in millions
+        //String - date; Double[]- close price, volume in millions (or thousands for one-day chart)
 
         try {
             JsonElement root = IEXdata.downloadData(sURL);  // array or object

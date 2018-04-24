@@ -1,6 +1,6 @@
 package app;
 
-public class NewsItem extends IEXdata{
+public class NewsItem extends IEXdata {
     String symbol;
     String time;
     String headline;
@@ -22,6 +22,6 @@ public class NewsItem extends IEXdata{
 
     @Override
     public String toString() {
-        return time+": "+headline+"("+source+")\n"+summary+"\n("+website+")\nRelated: "+related+"\n";
+        return time + ": " + headline + "(" + source + ")\n" + summary + "\n(" + website + ")\nRelated: " + related + "\n";
     }
 }

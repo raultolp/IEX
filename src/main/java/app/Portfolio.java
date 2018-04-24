@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Portfolio extends IEXdata{
+public class Portfolio extends IEXdata {
 
     private double availableFunds;
     private Map<String, Stock> portfolioStocks;
@@ -32,10 +32,8 @@ public class Portfolio extends IEXdata{
     }
 
     //Constructor - creates a dummy portfolio with no funds but with all availableStocks for admin:
-    public Portfolio(String[] availableStocks){
+    public Portfolio(String[] availableStocks) {
         this(0.0); //uses another constructor
-
-
 
 
         //Stock stock= new Stock(String symbol, double dividendYield, double eps, double peRatio, int marketCap,
@@ -69,12 +67,8 @@ public class Portfolio extends IEXdata{
     }*/
 
 
-
-
-
-
     //Constructor - for loading user portfolio from file::
-    public Portfolio(double availableFunds,  Map<String, Stock> portfolio,
+    public Portfolio(double availableFunds, Map<String, Stock> portfolio,
                      Map<String, Position> positions,
                      double totalValueOfPositions, double profit, double unrealisedProfit
     ) {
@@ -101,8 +95,7 @@ public class Portfolio extends IEXdata{
         if (newStock) {
             stock = new Stock(symbol);
             price = stock.getCurrentPrice();
-        }
-        else {
+        } else {
             stock = portfolioStocks.get(symbol);
             price = stock.getLatestPrice();
         }
@@ -221,31 +214,30 @@ public class Portfolio extends IEXdata{
     //-----------------------------------------------
 
 
-
     //UPDATE CURRENT PRICES FOR ALL STOCKS IN PORTFOLIO:
     public void updatePrices() {
 
         //Constructing URL:
-        String stockSymbols=stockList();
-        String url="https://api.iextrading.com/1.0/stock/market/batch?symbols="+stockSymbols+"+&types=price";
+        String stockSymbols = stockList();
+        String url = "https://api.iextrading.com/1.0/stock/market/batch?symbols=" + stockSymbols + "+&types=price";
 
         try {
             JsonElement root = IEXdata.downloadData(url);  // array or object
             JsonObject rootobj = root.getAsJsonObject();
 
             for (String stockSymb : portfolioStocks.keySet()) {
-                Stock stock=portfolioStocks.get(stockSymb);
-                Position position=positions.get(stockSymb);
+                Stock stock = portfolioStocks.get(stockSymb);
+                Position position = positions.get(stockSymb);
 
-                double newPrice=rootobj.getAsJsonObject(stockSymb).get("price").getAsDouble();
-                System.out.println(stockSymb+": "+newPrice);
+                double newPrice = rootobj.getAsJsonObject(stockSymb).get("price").getAsDouble();
+                System.out.println(stockSymb + ": " + newPrice);
                 stock.setCurrentPrice(newPrice);
                 position.priceUpdate(newPrice);
             }
 
             calculateTotals();
 
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.out.println("Connection to IEX failed. Prices were not updated.");
         }
     }
@@ -253,14 +245,14 @@ public class Portfolio extends IEXdata{
 
     //-------------------------
 
-    public String stockList(){  //used in constructing URL for batch downloads
-        String stockSymbols="";
-        int i=0;
+    public String stockList() {  //used in constructing URL for batch downloads
+        String stockSymbols = "";
+        int i = 0;
 
         for (String symb : portfolioStocks.keySet()) {
-            stockSymbols+=symb;
-            if (i!=portfolioStocks.keySet().size()){
-                stockSymbols+=",";
+            stockSymbols += symb;
+            if (i != portfolioStocks.keySet().size()) {
+                stockSymbols += ",";
             }
         }
         return stockSymbols;
