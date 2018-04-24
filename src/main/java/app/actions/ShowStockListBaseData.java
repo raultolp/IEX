@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 //View stock list base data
 
+//TODO Priority 1
+
 public class ShowStockListBaseData implements CommandHandler {
 
     @Override

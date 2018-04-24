@@ -6,6 +6,8 @@ import app.CommandHandler;
 
 import java.util.Scanner;
 
+//TODO Priority 1
+
 public class ShowPortfoliosProgress implements CommandHandler {
 
     @Override
