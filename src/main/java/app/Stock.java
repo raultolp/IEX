@@ -154,10 +154,6 @@ public class Stock extends IEXdata{
         return historical;
     }
 
-    //TODO: (PRIORITY 1) - create new stocks (in IU) only if the are not included in the Available Stocks list -
-    //otherwise take them from that list. (Reason: data has to be downloaded from web each time
-    //a new stock is created).
-
     //TODO: (PRIORITY 3) - Maybe include bid price, bid size, ask price, ask size
     // from https://api.iextrading.com/1.0/stock/"+symbol+"/book"
     // and respective calculations - in order to take into account the volume of each buy/sell order
@@ -168,10 +164,6 @@ public class Stock extends IEXdata{
 
     //TODO: (PRIORITY 3) - If deemed necessary: add volatility calculation
 
-    //TODO: (PRIORITY 2) - DONE! - It is possible to add also news: https://api.iextrading.com/1.0/stock/aapl/news
-
-    //TODO: (PRIORITY 1) - POOLELI - Possible to do batch requests, e.g:
-    //https://api.iextrading.com/1.0/stock/aapl/batch?types=quote,news,chart&range=1m&last=10
 
     //-----------------------------------------------
 

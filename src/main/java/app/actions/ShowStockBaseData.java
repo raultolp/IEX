@@ -1,13 +1,14 @@
 package app.actions;
 
-import app.CommandHandler;
-import app.Company;
-import app.Stock;
+import app.*;
+
 import java.util.Scanner;
 
 //View stock base data
 
 public class ShowStockBaseData implements CommandHandler {
+
+    Portfolio masterPortfolio= Iu.getMasterPortfolio();
 
     @Override
     public void handle(Integer command, Scanner sc) {
@@ -27,7 +28,8 @@ public class ShowStockBaseData implements CommandHandler {
             System.out.println(comp);
 
             //stock fundamentals:
-            System.out.println(new Stock(stockSym)); //uusi stocke poleks vaja teha! (tähendab veebist info laadimist)
+            System.out.println(masterPortfolio.getStock(stockSym));
+
 
         } catch (Exception e) {
             System.out.println("Stock information not available.");

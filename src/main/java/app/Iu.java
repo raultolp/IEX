@@ -15,8 +15,10 @@ public class Iu {
     private static Map<String, Stock> stockMap = new HashMap<>();
 
     //Base user and game
-    private static final User admin = new User("admin", 100000);
-    private static User activeUser = admin;
+    //private static final User admin = new User("admin", 100000);
+    private static User admin;
+    private static User activeUser=admin;
+    private static Portfolio masterPortfolio;
     private static File activeGame = null;
 
     //Command handler
@@ -27,6 +29,37 @@ public class Iu {
 
     public Iu() {
         this.commandHandlers = loadCommandHandlers();
+        boolean createMaster= createMasterPortfolio();
+        if (createMaster==false){
+            return; //peaks väljuma programmist (?)
+        }
+    }
+
+    //CREATE ADMIN AND MASTERPORTFOLIO:
+    public boolean createMasterPortfolio(){
+        System.out.println("Downloading stock data from web...");
+        try {
+            admin = new User("admin", 1000000);
+            activeUser=admin;
+            masterPortfolio=admin.getPortfolio();
+        } catch (IOException e) {
+            System.out.println("Connection to IEX failed. Try again (Y/N)?");
+            String answer=sc.nextLine().trim().toUpperCase();
+            while(true) {
+                if (!answer.equals("N") && !answer.equals("Y")) {
+                    System.out.println("Wrong input. Try again (Y/N)?");
+                } else {
+                    break;
+                }
+            }
+            if (answer.equals("N")){
+                return false;
+            } else {
+                createMasterPortfolio();  //tries again to download data
+            }
+        }
+        return true;
+
     }
 
     public static void main(String[] args) throws Exception {
@@ -43,12 +76,12 @@ public class Iu {
 
         System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
 
-        //Peaks kuskil ees olema .. praegu siin
+/*        //Peaks kuskil ees olema .. praegu siin
         for (String symbol : availableStocks) {
             Stock stock = new Stock(symbol);
             stockMap.put(symbol, stock);
 
-        }
+        }*/
     }
 
     private static void printMenu(String[] menu) {
@@ -167,7 +200,13 @@ public class Iu {
         Iu.activeGame = activeGame;
     }
 
-    public static Map<String, Stock> getStockMap() {
+/*    public static Map<String, Stock> getStockMap() {
         return stockMap;
+    }*/
+
+    public static Portfolio getMasterPortfolio(){
+        return masterPortfolio;
     }
+
+
 }

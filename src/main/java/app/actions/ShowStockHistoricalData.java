@@ -1,6 +1,8 @@
 package app.actions;
 
 import app.CommandHandler;
+import app.Iu;
+import app.Portfolio;
 import app.Stock;
 
 import java.util.Scanner;
@@ -8,6 +10,8 @@ import java.util.Scanner;
 //View stock historical data
 
 public class ShowStockHistoricalData implements CommandHandler {
+
+    Portfolio masterPortfolio= Iu.getMasterPortfolio();
 
     @Override
     public void handle(Integer command, Scanner sc) {
@@ -25,7 +29,7 @@ public class ShowStockHistoricalData implements CommandHandler {
         String stockSym = sc.nextLine();
 
         try {
-            Stock stock = new Stock(stockSym);
+            Stock stock = masterPortfolio.getStock(stockSym);
             System.out.println("One month: " + stock.getChange1Month() + '\n' +
                     "Three months: " + stock.getChange3Month() + '\n' +
                     "Year: " + stock.getChange1Year());

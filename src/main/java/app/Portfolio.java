@@ -17,6 +17,7 @@ public class Portfolio extends IEXdata {
     private double totalValueOfPositions; //sum of all totals (i.e. sum of all current positions)
     private double profit; //realised profit (from closed positions (sold stocks))
     private double unrealisedProfit; //gains/losses in value of stocks in portfolio (i.e of stocks not sold yet)
+    Portfolio masterPortfolio=Iu.getMasterPortfolio();
 
     //Constructor - creates an empty portfolio for new user:
     public Portfolio(double initialFunds) {
@@ -28,13 +29,13 @@ public class Portfolio extends IEXdata {
         this.availableFunds = initialFunds;
     }
 
-    //Constructor - creates a dummy portfolio with no funds but with all availableStocks for admin:
+    //Constructor - creates a MasterPortfolio with all availableStocks for admin:
 
     //TODO: (PRIORITY 3): IT WOULD ALSO BE POSSIBLE TO DOWNLOAD CHART DATA IN ONE GO, IF NEEDED:
     //https://api.iextrading.com/1.0/stock/market/batch?symbols=aapl,fb&types=quote,news,chart&range=1m&last=5
 
-    public Portfolio(String[] availableStocks) {
-        this(0.0); //uses another constructor for generating empty portfolio
+    public Portfolio(String[] availableStocks, double availableFunds) throws IOException{
+        this(availableFunds); //uses another constructor for generating empty portfolio
 
         HashSet<String> symbolSet=new HashSet<>();  //for using method stockList for coverting to String
         for (String s : availableStocks) {
@@ -44,7 +45,7 @@ public class Portfolio extends IEXdata {
         String symbols=stockList(symbolSet);
         String url="https://api.iextrading.com/1.0/stock/market/batch?symbols="+symbols+"&types=quote,stats"; //,news,chart&range=1m&last=10";
 
-        try {
+/*        try {*/
             JsonElement root = IEXdata.downloadData(url);  // array or object
             JsonObject rootobj = root.getAsJsonObject();
 
@@ -77,19 +78,19 @@ public class Portfolio extends IEXdata {
                 portfolioStocks.put(stockSymb, stock);
             }
 
-        } catch (IOException e) {
-            System.out.println("Connection to IEX failed. Prices were not updated.");
-        }
+/*        } catch (IOException e) {
+            System.out.println("Connection to IEX failed. Try again?");
+        }*/
     }
 
 
     //Constructor - for loading user portfolio from file::
-    public Portfolio(double availableFunds, Map<String, Stock> portfolio,
+    public Portfolio(double availableFunds, Map<String, Stock> portfolioStocks,
                      Map<String, Position> positions,
                      double totalValueOfPositions, double profit, double unrealisedProfit
     ) {
         this.availableFunds = availableFunds;
-        this.portfolioStocks = portfolio;
+        this.portfolioStocks = portfolioStocks;
         this.positions = positions;
         this.totalValueOfPositions = totalValueOfPositions;
         this.profit = profit;
@@ -109,7 +110,7 @@ public class Portfolio extends IEXdata {
         LocalDateTime transactionTime = java.time.LocalDateTime.now();
 
         if (newStock) {
-            stock = new Stock(symbol);
+            stock = masterPortfolio.getStock(symbol);
             price = stock.getCurrentPrice();
         } else {
             stock = portfolioStocks.get(symbol);

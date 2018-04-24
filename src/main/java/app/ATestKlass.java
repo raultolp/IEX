@@ -2,10 +2,22 @@ package app;
 
 import java.io.IOException;
 import java.util.*;
+//import static app.Iu.masterPortfolio;
 
 public class ATestKlass implements Comparator<String> {
 
     public static void main(String[] args) throws Exception {
+
+        Portfolio masterPortfolio=Iu.getMasterPortfolio();
+
+/*        //TESTING BATCH CREATION OF POTRFOLIO FOR ADMIN (WITH BATCH DOWNLOAD DATA FOR ALL STOCKS):
+        String [] availableSt = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
+                "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
+                "TSLA", "TWTR", "V", "WMT", "SPY"};
+        Portfolio masterPortfolio=new Portfolio(availableSt, 100000);
+        Map<String, Stock> portfolioStocks=masterPortfolio.getPortfolioStocks();
+        //System.out.println(portfolioStocks.get("WMT"));  //IT REALLY WORKS!!! :)
+        //System.out.println(portfolioStocks.get("SPY"));*/
 
         //-------------------------------------------------
 /*        //PRINTING OUT COMPANY BASE DATA:
@@ -29,14 +41,14 @@ public class ATestKlass implements Comparator<String> {
         //-------------------------------------------------
 
         //GETTING STOCK FUNDAMENTAL DATA:
-/*        Stock stock = new Stock("XLP");
-        System.out.println(stock);*/
+        Stock stock =masterPortfolio.getStock("AAPL");
+        System.out.println(stock);
 
         //-------------------------------------------------
 
 /*        //GETTING STOCK CHART DATA:
         //possible periods:  5y, 2y, 1y, ytd, 6m, 3m, 1m, (1d)
-        Stock stock = new Stock("FB");
+        Stock stock = masterPortfolio.getStock("FB");
         String period = "1d";  // "1m"
         Map<String, Double[]> historicalPrices = stock.getHistoricalPrices(period);
         //String - date; Double[]- close price, volume in millions
@@ -75,15 +87,10 @@ public class ATestKlass implements Comparator<String> {
         */
 
         //-------------------------------------------------
-        //TESTING BATCH CREATION OF POTRFOLIO FOR ADMIN (WITH BATCH DOWNLOAD DATA FOR ALL STOCKS):
-        String [] availableSt = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
-                "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
-                "TSLA", "TWTR", "V", "WMT", "SPY"};
-        Portfolio masterPortfolio=new Portfolio(availableSt);
-        Map<String, Stock> portfolioStocks=masterPortfolio.getPortfolioStocks();
-        //System.out.println(portfolioStocks.get("WMT"));  //IT REALLY WORKS!!! :)
-        //System.out.println(portfolioStocks.get("SPY"));
 
+
+
+/*        //TESTING BATCH UPDATE OF PRICES AT REGULAR TIME INTERVALS:
         for (int i = 0; i < 4; i++) {
 
             if (i>0) {
@@ -105,11 +112,9 @@ public class ATestKlass implements Comparator<String> {
             Thread.sleep(timeToSleep);  // in seconds
             System.out.println("Woke up!");
 
-        }
+        }*/
 
-/*        System.out.println("Now sleeping...");
-        Thread.sleep(15000);  // 15 sek.
-        System.out.println("Now woke up!");*/
+
 
 
 

@@ -1,31 +1,29 @@
 package app;
 
 
+import java.io.IOException;
 import java.util.List;
+import static app.StaticData.availableStocks;
 
 public class User {
     private String userName;
     private Portfolio portfolio;
     private double initialFunds;
 
-    public User(String userName, double availableFunds) {
+    public User(String userName, double availableFunds) throws IOException {
         this.userName = userName;
-        this.portfolio = new Portfolio(availableFunds);
         this.initialFunds = availableFunds;
-        //this.portfolio = portfolio;
-        //this.availableFunds = availableFunds;
-        //portfolio.setAvailableFunds(availableFunds);
-        //portfolio.setUser(this);
+
+        if (userName.equals("admin")){
+            this.portfolio=new Portfolio(availableStocks, availableFunds); // MasterPorfolio for admin
+        } else {
+            this.portfolio = new Portfolio(availableFunds);
+        }
     }
 
     public Portfolio getPortfolio() {
         return portfolio;
     }
-
-/*    public void setAvailableFunds(double availableFunds) {  //kas vajalik?
-        //this.availableFunds = availableFunds;
-        portfolio.setAvailableFunds(availableFunds);
-    }*/
 
     public double getAvailableFunds() {  //kas vajalik?
         return portfolio.getAvailableFunds();
