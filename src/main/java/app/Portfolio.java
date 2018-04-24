@@ -242,7 +242,6 @@ public class Portfolio extends IEXdata {
             for (String stockSymb : portfolioStocks.keySet()) {
                 Stock stock = portfolioStocks.get(stockSymb);
                 double newPrice = rootobj.getAsJsonObject(stockSymb).get("price").getAsDouble();
-                //System.out.println(stockSymb + ": " + newPrice);
                 stock.setCurrentPrice(newPrice);
 
                 if (positions.size()!=0){  //if not admin's portfolio (or other empty portfolio)
