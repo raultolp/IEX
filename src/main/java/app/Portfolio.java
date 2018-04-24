@@ -7,10 +7,7 @@ import javafx.geometry.Pos;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Portfolio extends IEXdata {
 
@@ -32,39 +29,58 @@ public class Portfolio extends IEXdata {
     }
 
     //Constructor - creates a dummy portfolio with no funds but with all availableStocks for admin:
+
+    //TODO: (PRIORITY 3): IT WOULD ALSO BE POSSIBLE TO DOWNLOAD CHART DATA IN ONE GO, IF NEEDED:
+    //https://api.iextrading.com/1.0/stock/market/batch?symbols=aapl,fb&types=quote,news,chart&range=1m&last=5
+
     public Portfolio(String[] availableStocks) {
-        this(0.0); //uses another constructor
+        this(0.0); //uses another constructor for generating empty portfolio
 
-
-        //Stock stock= new Stock(String symbol, double dividendYield, double eps, double peRatio, int marketCap,
-        //double previousClose, double change1Year, double change1Month, double change3Month,
-        //double shortRatio, double currentPrice);
-
-
-    }
-/*    //Constructing URL:
-    String stockSymbols=stockList();
-    String url="https://api.iextrading.com/1.0/stock/market/batch?symbols="+stockSymbols+"+&types=price";
-
-        try {
-        JsonElement root = IEXdata.downloadData(url);  // array or object
-        JsonObject rootobj = root.getAsJsonObject();
-
-        for (String stockSymb : portfolioStocks.keySet()) {
-            Stock stock=portfolioStocks.get(stockSymb);
-            Position position=positions.get(stockSymb);
-
-            double newPrice=rootobj.getAsJsonObject(stockSymb).get("price").getAsDouble();
-            System.out.println(stockSymb+": "+newPrice);
-            stock.setCurrentPrice(newPrice);
-            position.priceUpdate(newPrice);
+        HashSet<String> symbolSet=new HashSet<>();  //for using method stockList for coverting to String
+        for (String s : availableStocks) {
+            symbolSet.add(s);
         }
 
-        calculateTotals();
+        String symbols=stockList(symbolSet);
+        String url="https://api.iextrading.com/1.0/stock/market/batch?symbols="+symbols+"&types=quote,stats"; //,news,chart&range=1m&last=10";
 
-    } catch(IOException e) {
-        System.out.println("Connection to IEX failed. Prices were not updated.");
-    }*/
+        try {
+            JsonElement root = IEXdata.downloadData(url);  // array or object
+            JsonObject rootobj = root.getAsJsonObject();
+
+            for (String stockSymb : availableStocks) {
+                JsonObject stockObject= rootobj.getAsJsonObject(stockSymb);
+
+                double currentPrice=stockObject.getAsJsonObject("quote").get("latestPrice").getAsDouble(); //168.38
+                double previousClose=stockObject.getAsJsonObject("quote").get("previousClose").getAsDouble();
+                long marketCapAsLong=stockObject.getAsJsonObject("quote").get("marketCap").getAsLong();
+                int marketCap=(int) (marketCapAsLong/1000000); //miljonites dollarites
+                double dividendYield = stockObject.getAsJsonObject("stats").get("dividendYield").getAsDouble();
+
+                double eps = stockObject.getAsJsonObject("stats").get("latestEPS").getAsDouble();
+                double change1Year = stockObject.getAsJsonObject("stats").get("year1ChangePercent").getAsDouble();
+                double change1Month = stockObject.getAsJsonObject("stats").get("day30ChangePercent").getAsDouble();
+                double change3Month = stockObject.getAsJsonObject("stats").get("month3ChangePercent").getAsDouble();
+                double shortRatio = stockObject.getAsJsonObject("stats").get("shortRatio").getAsDouble();
+
+                //For ETFs, PE ratio is not provided (is null):
+                double peRatio;
+                if (!stockObject.getAsJsonObject("quote").get("peRatio").isJsonNull()) {
+                    peRatio=stockObject.getAsJsonObject("quote").get("peRatio").getAsDouble();
+                }
+                else {
+                    peRatio=0.0;
+                }
+
+                Stock stock = new Stock(stockSymb, dividendYield, eps, peRatio, marketCap,
+                previousClose, change1Year, change1Month, change3Month, shortRatio, currentPrice);
+                portfolioStocks.put(stockSymb, stock);
+            }
+
+        } catch (IOException e) {
+            System.out.println("Connection to IEX failed. Prices were not updated.");
+        }
+    }
 
 
     //Constructor - for loading user portfolio from file::
@@ -123,10 +139,9 @@ public class Portfolio extends IEXdata {
     //-----------------------------------------------
     //SELLING STOCK:
 
-    public void sellStock(String symbol, int volume) {
+    //checking if stock is present in portfolio is already included in main class
 
-        //checking if stock is present in portfolio is already included in main class
-        //TODO: (PRIORITY 1) - SEE IF THIS CHECK STILL WORKS IN IU.
+    public void sellStock(String symbol, int volume) {
 
         String transactionType = "sell";
         Position position = positions.get(symbol);
@@ -148,15 +163,7 @@ public class Portfolio extends IEXdata {
 
         profit += volume * (price - position.getAveragePrice()) - transaction.getTransactionFees();
         transaction.reportTransaction();
-
-        //TODO: (PIORITY 1)- CREATE POSSIBILITY TO VIEW ALL TRANSACTIONS OF USER
-        //(MAYBE CREATE A NEW CLASS "TRANSACTIONS REPORT" VMS FOR THIS) TO SEE TRANSACTIONS
-        //SORTED EITHER BY STOCK SYMBOL OR BY DATE (WITH TRANSACTION PRICE, FEE, AMOUNT PAID, PROFIT,
-        // DATE, SYMBOL, AVAILABLE FUNDS AFTER TRANSACTION).
-        // SOME INFO FOR THIS IS IN "TRANSACTION" CLASS AND SOME IN "POSITION" CLASS.
-
         position.decreasePosition(transaction, price, volume);
-
         calculateTotals();
 
         //removing stock from portfolio in case its volume is zero after sell
@@ -167,7 +174,7 @@ public class Portfolio extends IEXdata {
         }
     }
 
-    //TODO: (PRIORITY 2) Possibility for short selling could be added (allows negative number of stocks)
+    //TODO: (PRIORITY 3) Possibility for short selling could be added (allows negative number of stocks)
 
     //-----------------------------------------------
     //calculate portfolio total (sum of all current positions in stock):
@@ -218,7 +225,13 @@ public class Portfolio extends IEXdata {
     public void updatePrices() {
 
         //Constructing URL:
-        String stockSymbols = stockList();
+        HashSet<String> symbolSet=new HashSet<>();  //for using method stockList for coverting to String
+        for (String s : portfolioStocks.keySet()) {
+            symbolSet.add(s);
+        }
+
+        //HashSet<String>symbols= (HashSet<String>) portfolioStocks.keySet();
+        String stockSymbols = stockList(symbolSet);
         String url = "https://api.iextrading.com/1.0/stock/market/batch?symbols=" + stockSymbols + "+&types=price";
 
         try {
@@ -227,12 +240,14 @@ public class Portfolio extends IEXdata {
 
             for (String stockSymb : portfolioStocks.keySet()) {
                 Stock stock = portfolioStocks.get(stockSymb);
-                Position position = positions.get(stockSymb);
-
                 double newPrice = rootobj.getAsJsonObject(stockSymb).get("price").getAsDouble();
-                System.out.println(stockSymb + ": " + newPrice);
+                //System.out.println(stockSymb + ": " + newPrice);
                 stock.setCurrentPrice(newPrice);
-                position.priceUpdate(newPrice);
+
+                if (positions.size()!=0){  //if not admin's portfolio (or other empty portfolio)
+                    Position position = positions.get(stockSymb);
+                    position.priceUpdate(newPrice);
+                }
             }
 
             calculateTotals();
@@ -245,36 +260,18 @@ public class Portfolio extends IEXdata {
 
     //-------------------------
 
-    public String stockList() {  //used in constructing URL for batch downloads
+    public String stockList(HashSet<String> symbols) {  //used in constructing URL for batch downloads
         String stockSymbols = "";
         int i = 0;
 
-        for (String symb : portfolioStocks.keySet()) {
+        for (String symb : symbols) {
             stockSymbols += symb;
-            if (i != portfolioStocks.keySet().size()) {
+            if (i != symbols.size()) {
                 stockSymbols += ",";
             }
         }
         return stockSymbols;
     }
-
-/*        for (String symbol : portfolio.keySet()) {
-            int indexOfStock = symbolList.indexOf(symbol);
-            Stock stock = portfolio.get(symbol);
-            int volume = volumes.get(indexOfStock);
-            double price = stock.getLatestPrice();
-
-            stock.setCurrentPrice(price);
-            prices.set(indexOfStock, price);
-            currentValuesOfPositions.set(indexOfStock, volume * price);  //current value of position in this stock
-            unrealisedProfitsOrLosses.set(indexOfStock, volume * (price - averagePrices.get(indexOfStock)));
-            //profitsOrLosses does not change (because it indicates realised profit/loss from transactions)
-
-            totalValueOfPositions = calculateTotal(currentValuesOfPositions);
-            profit = calculateTotal(profitsOrLosses);
-            unrealisedProfit = calculateTotal(unrealisedProfitsOrLosses);
-
-        }*/
 
 
     //-----------------------------------------------
@@ -288,7 +285,7 @@ public class Portfolio extends IEXdata {
         return availableFunds + totalValueOfPositions;
     }
 
-    public Map<String, Stock> getPortfolio() {
+    public Map<String, Stock> getPortfolioStocks() {
         return portfolioStocks;
     }
 

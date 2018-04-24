@@ -58,8 +58,6 @@ public class Stock extends IEXdata{
     }
 
 
-
-
     public void loadDataFromIEX() {
 
         try {

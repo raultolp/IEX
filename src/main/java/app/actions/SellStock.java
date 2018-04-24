@@ -21,7 +21,7 @@ public class SellStock implements CommandHandler {
                 portfolio.toString();
             String name = enterStockName(sc);
 
-            if (portfolio.getPortfolio().keySet().contains(name)) {
+            if (portfolio.getPortfolioStocks().keySet().contains(name)) {
                 Integer qty = enterQty(sc);
                 portfolio.sellStock(name, qty);
             } else {

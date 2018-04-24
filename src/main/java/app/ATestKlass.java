@@ -9,16 +9,15 @@ public class ATestKlass implements Comparator<String> {
 
         //-------------------------------------------------
 /*        //PRINTING OUT COMPANY BASE DATA:
-        Company comp = new Company("AAPL");  //XLU
-        Company comp2 = new Company("v");  //XLU
-        Company comp3 = new Company("TLT");  //XLU
-        Company comp4 = new Company("FB");
+        Company comp = new Company("XLV");  //XLU
+        Company comp2 = new Company("T");  //XLU
+        Company comp3 = new Company("AT");  //XLU
+        //Company comp4 = new Company("FB");
 
-        System.out.println(comp4);
+        System.out.println(comp);
 
         String[] availableStocks2 = {
-                "SPY", "XLB", "XLE", "XLF", "XLK", "XLP", "XLU", "XLV", "TLT"};  //ETFs
-        */
+                "SPY", "XLB", "XLE", "XLF", "XLK", "XLP", "XLU", "XLV", "TLT"};  //ETFs*/
 
         //-------------------------------------------------
 /*        //GETTING COMPANY NEWS (LAST 10 NEWS ITEMS):
@@ -35,7 +34,7 @@ public class ATestKlass implements Comparator<String> {
 
         //-------------------------------------------------
 
-        //GETTING STOCK CHART DATA:
+/*        //GETTING STOCK CHART DATA:
         //possible periods:  5y, 2y, 1y, ytd, 6m, 3m, 1m, (1d)
         Stock stock = new Stock("FB");
         String period = "1d";  // "1m"
@@ -54,7 +53,7 @@ public class ATestKlass implements Comparator<String> {
             Double[] priceData = historicalPrices.get(dates.get(i));
             String volumeSize = period.equals("1d") ? ", volume (in thousands): " : ", volume (in millions): ";
             System.out.println(dates.get(i) + " - price: " + priceData[0] + volumeSize + priceData[1]);
-        }
+        }*/
         //-------------------------------------------------
 
        /*  //TESTING PORTFOLIO:
@@ -75,6 +74,48 @@ public class ATestKlass implements Comparator<String> {
         port.updatePrices();
         */
 
+        //-------------------------------------------------
+        //TESTING BATCH CREATION OF POTRFOLIO FOR ADMIN (WITH BATCH DOWNLOAD DATA FOR ALL STOCKS):
+        String [] availableSt = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
+                "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
+                "TSLA", "TWTR", "V", "WMT", "SPY"};
+        Portfolio masterPortfolio=new Portfolio(availableSt);
+        Map<String, Stock> portfolioStocks=masterPortfolio.getPortfolioStocks();
+        //System.out.println(portfolioStocks.get("WMT"));  //IT REALLY WORKS!!! :)
+        //System.out.println(portfolioStocks.get("SPY"));
+
+        for (int i = 0; i < 4; i++) {
+
+            if (i>0) {
+                masterPortfolio.updatePrices();
+            }
+            for (String s : availableSt) {
+                System.out.print(s+"\t");
+            }
+            System.out.println("");
+
+            for (int j = 0; j < availableSt.length; j++) {
+                String symb=availableSt[j];
+                System.out.print(portfolioStocks.get(symb).getCurrentPrice()+"\t");
+            }
+
+            System.out.println("\n");
+            int timeToSleep=7000;
+            System.out.print("Now Sleeping for " + timeToSleep/1000 +" seconds... ");
+            Thread.sleep(timeToSleep);  // in seconds
+            System.out.println("Woke up!");
+
+        }
+
+/*        System.out.println("Now sleeping...");
+        Thread.sleep(15000);  // 15 sek.
+        System.out.println("Now woke up!");*/
+
+
+
+/*        {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
+                "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
+                "TSLA", "TWTR", "V", "WMT"};*/
 
     }
 
