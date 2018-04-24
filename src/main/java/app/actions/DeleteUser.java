@@ -7,8 +7,8 @@ import java.util.Scanner;
 
 import static app.Iu.*;
 import static app.actions.AddUser.enterUserName;
-import static app.staticData.ANSI_RESET;
-import static app.staticData.ANSI_YELLOW;
+import static app.StaticData.ANSI_RESET;
+import static app.StaticData.ANSI_YELLOW;
 
 //Delete user - DeleteUser, nameInList
 

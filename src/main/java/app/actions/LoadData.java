@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Scanner;
 
 import static app.Iu.*;
-import static app.staticData.ANSI_RESET;
-import static app.staticData.ANSI_YELLOW;
+import static app.StaticData.ANSI_RESET;
+import static app.StaticData.ANSI_YELLOW;
 
 //Load data file - loadData, listFiles
 

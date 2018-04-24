@@ -1,7 +1,6 @@
 package app.actions;
 
 import app.CommandHandler;
-import app.Portfolio;
 import app.User;
 
 import java.util.ArrayList;
@@ -10,9 +9,9 @@ import java.util.Scanner;
 
 import static app.Iu.*;
 import static app.actions.DeleteUser.nameInList;
-import static app.staticData.ANSI_RED;
-import static app.staticData.ANSI_RESET;
-import static app.staticData.ANSI_YELLOW;
+import static app.StaticData.ANSI_RED;
+import static app.StaticData.ANSI_RESET;
+import static app.StaticData.ANSI_YELLOW;
 
 //Add user - AddUser, enterUserName
 

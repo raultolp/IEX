@@ -9,8 +9,8 @@ import static app.Iu.*;
 import static app.actions.AddUser.enterUserName;
 import static app.actions.DeleteUser.nameInList;
 import static app.actions.ShowUsersList.showUsersList;
-import static app.staticData.ANSI_RESET;
-import static app.staticData.ANSI_YELLOW;
+import static app.StaticData.ANSI_RESET;
+import static app.StaticData.ANSI_YELLOW;
 
 //Set activeUser user
 

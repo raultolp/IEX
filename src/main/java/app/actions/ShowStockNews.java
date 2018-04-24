@@ -3,17 +3,15 @@ package app.actions;
 import app.CommandHandler;
 import app.Iu;
 import app.Company;
-import app.Portfolio;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import static app.Iu.getActiveUser;
 import static app.actions.BuyStock.enterStockName;
 import static app.actions.ShowStockList.showStockList;
-import static app.staticData.ANSI_RED;
-import static app.staticData.ANSI_RESET;
+import static app.StaticData.ANSI_RED;
+import static app.StaticData.ANSI_RESET;
 
 // News on the company (last 10 news items)
 

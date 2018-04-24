@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.*;
 
 //import static app.actions.SaveData.saveData; //HETKEL EI TÖÖTA
-import static app.staticData.*;
+import static app.StaticData.*;
 
 public class Iu {
     //User, Portfolio, Stocks

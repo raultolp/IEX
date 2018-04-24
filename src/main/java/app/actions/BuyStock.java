@@ -9,8 +9,8 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import static app.Iu.*;
-import static app.staticData.ANSI_RED;
-import static app.staticData.ANSI_RESET;
+import static app.StaticData.ANSI_RED;
+import static app.StaticData.ANSI_RESET;
 import static app.actions.ShowStockList.showStockList;
 
 //Buy stock - BuyStock, enterStockName, enterQty

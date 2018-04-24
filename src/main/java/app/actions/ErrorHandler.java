@@ -4,9 +4,9 @@ import app.CommandHandler;
 
 import java.util.Scanner;
 
-import static app.staticData.ANSI_RED;
-import static app.staticData.ANSI_RESET;
-import static app.staticData.getMainMenuSize;
+import static app.StaticData.ANSI_RED;
+import static app.StaticData.ANSI_RESET;
+import static app.StaticData.getMainMenuSize;
 
 public class ErrorHandler implements CommandHandler {
 
