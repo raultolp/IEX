@@ -66,7 +66,7 @@ public class UserInterface extends Application {
 
 
         clickMe.setOnAction(event -> {
-            System.out.printf("popup");
+            System.out.print("popup");
             popup.show(stage);
         });
 
@@ -168,7 +168,6 @@ public class UserInterface extends Application {
     }
 
     private VBox addBuySellVBox() {
-        String stockSym = "";
 
         VBox buySellVB = new VBox();
         buySellVB.setPadding(new Insets(150, 12, 15, 12));
@@ -181,31 +180,18 @@ public class UserInterface extends Application {
         final TextField stockVolume = new TextField();
         stockVolume.setPromptText("Enter volume of stocks");
 
-
-        stockSymbol.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!(newValue.equals(""))) { //TODO: check if symbol in available stocks
-                System.out.println(newValue);
-                //selectedStock = new Stock(newValue);
-
-            }
-        });
-
-        stockVolume.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!(newValue.equals(""))) {
-                System.out.println(newValue);
-            }
-        });
         Button buy = new Button("Buy");
         buy.setStyle("-fx-background-color: #FFF5EE");
         buy.setOnAction((ActionEvent e) -> {
             try {
-                if (stockSymbol.getText() != null && stockVolume.getText() != null)
+                if (stockSymbol.getText() != null && stockVolume.getText() != null) {
                     portfolio.buyStock(stockSymbol.getText(), Integer.parseInt(stockVolume.getText()));
-                stockSymbol.clear();
-                stockVolume.clear();
+                    stockSymbol.clear();
+                    stockVolume.clear();
+                }
 
             } catch (Exception e1) {
-                System.out.println("Nope");
+                e1.printStackTrace();
             }
         });
 
@@ -214,17 +200,15 @@ public class UserInterface extends Application {
 
         sell.setOnAction(e -> {
             try {
-                if (stockSymbol.getText() != null && stockVolume.getText() != null)
+                if (stockSymbol.getText() != null && stockVolume.getText() != null) {
                     portfolio.sellStock(stockSymbol.getText(), Integer.parseInt(stockVolume.getText()));
-
-                stockSymbol.clear();
-                stockVolume.clear();
+                    stockSymbol.clear();
+                    stockVolume.clear();
+                }
 
             } catch (Exception e1) {
-                System.out.println("Nope");
+                e1.printStackTrace();
             }
-
-
         });
 
 
