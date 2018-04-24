@@ -22,7 +22,6 @@ public class Iu  {
 
     //Command handler
     private static Iu handler = new Iu();
-    //public static Thread t1 = new Thread(handler);
     public static Thread t2 = new Thread(new UpdatingPrices());
     private final List<CommandHandler> commandHandlers;
     //    private Integer command;
@@ -67,7 +66,6 @@ public class Iu  {
 
         //START PROGRAM
         System.out.println(mainTitle);
-        //t1.start();
         t2.start();
 
         //HANDLE COMMANDS

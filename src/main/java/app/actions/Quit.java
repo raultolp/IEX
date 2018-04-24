@@ -13,7 +13,6 @@ public class Quit implements CommandHandler {
         if (command == 18) {
             System.out.println("Quiting...");
             app.Iu.t2.interrupt();
-            //app.Iu.t1.interrupt();
 
             // Praegu ei tee midagi, kuid huljem võib olla vaja asjade sulgemiseks või mida iganes
             // QUIT toimub Iu-s hetkel
