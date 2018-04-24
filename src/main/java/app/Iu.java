@@ -9,6 +9,9 @@ import java.util.*;
 import static app.StaticData.*;
 
 public class Iu  {
+
+    /***** PAHAD JA KOLEDAD *****/
+
     //User, Portfolio, Stocks
     private static List<User> userList = new ArrayList<>();
     private static List<Portfolio> portfolioList = new ArrayList<>();
@@ -17,7 +20,7 @@ public class Iu  {
     //Base user and game
     //private static final User admin = new User("admin", 100000);
     private static User admin;
-    private static User activeUser=admin;
+    private static User activeUser = admin;
     private static File activeGame = null;
 
     //Command handler
@@ -30,37 +33,16 @@ public class Iu  {
     public Iu() {
         this.commandHandlers = loadCommandHandlers();
         boolean createMaster= createMasterPortfolio();
-        if (createMaster==false){
+//        User admin;
+//        User activeUser = admin;
+//        File activeGame = null;
+
+        if (createMaster == false) {
             return; //peaks väljuma programmist (?)
         }
     }
 
-    //CREATE ADMIN AND MASTERPORTFOLIO:
-    public boolean createMasterPortfolio(){
-        System.out.println("Downloading stock data from web...");
-        try {
-            admin = new User("admin", 1000000);
-            activeUser=admin;
-            masterPortfolio=admin.getPortfolio();
-        } catch (IOException e) {
-            System.out.println("Connection to IEX failed. Try again (Y/N)?");
-            String answer=sc.nextLine().trim().toUpperCase();
-            while(true) {
-                if (!answer.equals("N") && !answer.equals("Y")) {
-                    System.out.println("Wrong input. Try again (Y/N)?");
-                } else {
-                    break;
-                }
-            }
-            if (answer.equals("N")){
-                return false;
-            } else {
-                createMasterPortfolio();  //tries again to download data
-            }
-        }
-        return true;
-
-    }
+    /***** MAIN START HERE *****/
 
     public static void main(String[] args) throws Exception {
 
@@ -86,6 +68,35 @@ public class Iu  {
         }*/
     }
 
+    /***** CREATE ADMIN AND MASTERPORTFOLIO *****/
+
+    public boolean createMasterPortfolio(){
+        System.out.println("Downloading stock data from web...");
+        try {
+            admin = new User("admin", 1000000);
+            activeUser = admin;
+            masterPortfolio = admin.getPortfolio();
+        } catch (IOException e) {
+            System.out.println("Connection to IEX failed. Try again (Y/N)?");
+            String answer = sc.nextLine().trim().toUpperCase();
+            while(true) {
+                if (!answer.equals("N") && !answer.equals("Y")) {
+                    System.out.println("Wrong input. Try again (Y/N)?");
+                } else {
+                    break;
+                }
+            }
+            if (answer.equals("N")){
+                return false;
+            } else {
+                createMasterPortfolio();  //tries again to download data
+            }
+        }
+        return true;
+    }
+
+    /***** MAIN MENU *****/
+
     private static void printMenu(String[] menu) {
         System.out.println();
         for (int i = 0; i < menu.length / 2 + menu.length % 2; i++) {
@@ -104,6 +115,8 @@ public class Iu  {
                 ANSI_RED + "(not saved)" + ANSI_RESET) +
                 " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
     }
+
+    /***** MENU HANDLER COMMANDS LIST *****/
 
     private List<CommandHandler> loadCommandHandlers() {
         return Arrays.asList(
@@ -128,6 +141,8 @@ public class Iu  {
                 new ErrorHandler()
         );
     }
+
+    /***** RUN HANDLER, RUN *****/
 
     public void runInteractive(Scanner sc) throws Exception {
 
