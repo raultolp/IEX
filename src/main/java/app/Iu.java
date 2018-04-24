@@ -8,21 +8,22 @@ import java.util.*;
 //import static app.actions.SaveData.saveData; //HETKEL EI TÖÖTA
 import static app.StaticData.*;
 
-public class Iu {
+public class Iu  {
     //User, Portfolio, Stocks
     private static List<User> userList = new ArrayList<>();
     private static List<Portfolio> portfolioList = new ArrayList<>();
-    private static Map<String, Stock> stockMap = new HashMap<>();
+    private static Portfolio masterPortfolio;
 
     //Base user and game
     //private static final User admin = new User("admin", 100000);
     private static User admin;
     private static User activeUser=admin;
-    private static Portfolio masterPortfolio;
     private static File activeGame = null;
 
     //Command handler
     private static Iu handler = new Iu();
+    //public static Thread t1 = new Thread(handler);
+    public static Thread t2 = new Thread(new UpdatingPrices());
     private final List<CommandHandler> commandHandlers;
     //    private Integer command;
     private static Scanner sc = new Scanner(System.in);
@@ -63,8 +64,11 @@ public class Iu {
     }
 
     public static void main(String[] args) throws Exception {
+
         //START PROGRAM
         System.out.println(mainTitle);
+        //t1.start();
+        t2.start();
 
         //HANDLE COMMANDS
         handler.runInteractive(sc);
