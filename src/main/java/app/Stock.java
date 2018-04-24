@@ -39,6 +39,26 @@ public class Stock extends IEXdata{
         loadDataFromIEX();
     }
 
+    //for creating stocks based on batch download (for portfolios loaded from file):
+    public Stock (String symbol, double dividendYield, double eps, double peRatio, int marketCap,
+                  double previousClose, double change1Year, double change1Month, double change3Month,
+                  double shortRatio, double currentPrice){
+        this.symbol=symbol;
+        this.dividendYield=dividendYield;
+        this.eps=eps;
+        this.peRatio=peRatio;
+        this.marketCap=marketCap;
+        this.previousClose=previousClose;
+        this.change1Year=change1Year;
+        this.change1Month=change1Month;
+        this.change3Month=change3Month;
+        this.shortRatio=shortRatio;
+        this.currentPrice=currentPrice;
+
+    }
+
+
+
 
     public void loadDataFromIEX() {
 
@@ -157,6 +177,10 @@ public class Stock extends IEXdata{
 
     //-----------------------------------------------
 
+
+    public void setCurrentPrice(double currentPrice) {
+        this.currentPrice = currentPrice;
+    }
 
     public String getSymbol() {
         return symbol;

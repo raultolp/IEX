@@ -1,7 +1,10 @@
 package app;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import javafx.geometry.Pos;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,18 +12,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Portfolio {
+public class Portfolio extends IEXdata{
 
     private double availableFunds;
-    private Map<String, Stock> portfolio;
+    private Map<String, Stock> portfolioStocks;
     private Map<String, Position> positions;
     private double totalValueOfPositions; //sum of all totals (i.e. sum of all current positions)
     private double profit; //realised profit (from closed positions (sold stocks))
     private double unrealisedProfit; //gains/losses in value of stocks in portfolio (i.e of stocks not sold yet)
 
-    //Constructor - creates an empty portfolio:
+    //Constructor - creates an empty portfolio for new user:
     public Portfolio(double initialFunds) {
-        this.portfolio = new HashMap<>();
+        this.portfolioStocks = new HashMap<>();
         this.positions = new HashMap<>();
         this.totalValueOfPositions = 0.0;
         this.profit = 0.0;
@@ -28,12 +31,55 @@ public class Portfolio {
         this.availableFunds = initialFunds;
     }
 
-    public Portfolio(double availableFunds, Map<String, Stock> portfolio,
+    //Constructor - creates a dummy portfolio with no funds but with all availableStocks for admin:
+    public Portfolio(String[] availableStocks){
+        this(0.0); //uses another constructor
+
+
+
+
+        //Stock stock= new Stock(String symbol, double dividendYield, double eps, double peRatio, int marketCap,
+        //double previousClose, double change1Year, double change1Month, double change3Month,
+        //double shortRatio, double currentPrice);
+
+
+    }
+/*    //Constructing URL:
+    String stockSymbols=stockList();
+    String url="https://api.iextrading.com/1.0/stock/market/batch?symbols="+stockSymbols+"+&types=price";
+
+        try {
+        JsonElement root = IEXdata.downloadData(url);  // array or object
+        JsonObject rootobj = root.getAsJsonObject();
+
+        for (String stockSymb : portfolioStocks.keySet()) {
+            Stock stock=portfolioStocks.get(stockSymb);
+            Position position=positions.get(stockSymb);
+
+            double newPrice=rootobj.getAsJsonObject(stockSymb).get("price").getAsDouble();
+            System.out.println(stockSymb+": "+newPrice);
+            stock.setCurrentPrice(newPrice);
+            position.priceUpdate(newPrice);
+        }
+
+        calculateTotals();
+
+    } catch(IOException e) {
+        System.out.println("Connection to IEX failed. Prices were not updated.");
+    }*/
+
+
+
+
+
+
+    //Constructor - for loading user portfolio from file::
+    public Portfolio(double availableFunds,  Map<String, Stock> portfolio,
                      Map<String, Position> positions,
                      double totalValueOfPositions, double profit, double unrealisedProfit
     ) {
         this.availableFunds = availableFunds;
-        this.portfolio = portfolio;
+        this.portfolioStocks = portfolio;
         this.positions = positions;
         this.totalValueOfPositions = totalValueOfPositions;
         this.profit = profit;
@@ -47,7 +93,7 @@ public class Portfolio {
     public void buyStock(String symbol, int volume) {
         double price;
         String transactionType = "buy";
-        boolean newStock = !portfolio.containsKey(symbol);  // if stock already included in portfolio
+        boolean newStock = !portfolioStocks.containsKey(symbol);  // if stock already included in portfolio
         Stock stock;
         Position position;
         LocalDateTime transactionTime = java.time.LocalDateTime.now();
@@ -55,8 +101,9 @@ public class Portfolio {
         if (newStock) {
             stock = new Stock(symbol);
             price = stock.getCurrentPrice();
-        } else {
-            stock = portfolio.get(symbol);
+        }
+        else {
+            stock = portfolioStocks.get(symbol);
             price = stock.getLatestPrice();
         }
         Transaction transaction = new Transaction(symbol, price, volume, transactionType, transactionTime);
@@ -68,7 +115,7 @@ public class Portfolio {
             transaction.reportTransaction();
 
             if (newStock) {
-                portfolio.put(symbol, stock);
+                portfolioStocks.put(symbol, stock);
                 position = new Position(transaction, symbol, price, volume);
                 positions.put(symbol, position);
             } else {
@@ -99,7 +146,7 @@ public class Portfolio {
             volume = position.getVolume(); //if user tries to sell more, only the max number is sold
         }
 
-        Stock stock = portfolio.get(symbol);
+        Stock stock = portfolioStocks.get(symbol);
         double price = stock.getLatestPrice();  //current price
         position.priceUpdate(price);
 
@@ -121,7 +168,7 @@ public class Portfolio {
 
         //removing stock from portfolio in case its volume is zero after sell
         if (positions.get(symbol).getVolume() == 0) {
-            portfolio.remove(symbol);
+            portfolioStocks.remove(symbol);
             //positions.remove(symbol); //Should NOT be included, because: a) calculateTotals() depends on it,
             // and b) keeping closed positsions is important for creating the (planned) transactions report.
         }
@@ -173,10 +220,53 @@ public class Portfolio {
 
     //-----------------------------------------------
 
-/*    //update current prices of all stocks in portfolio:
+
+
+    //UPDATE CURRENT PRICES FOR ALL STOCKS IN PORTFOLIO:
     public void updatePrices() {
 
-        for (String symbol : portfolio.keySet()) {
+        //Constructing URL:
+        String stockSymbols=stockList();
+        String url="https://api.iextrading.com/1.0/stock/market/batch?symbols="+stockSymbols+"+&types=price";
+
+        try {
+            JsonElement root = IEXdata.downloadData(url);  // array or object
+            JsonObject rootobj = root.getAsJsonObject();
+
+            for (String stockSymb : portfolioStocks.keySet()) {
+                Stock stock=portfolioStocks.get(stockSymb);
+                Position position=positions.get(stockSymb);
+
+                double newPrice=rootobj.getAsJsonObject(stockSymb).get("price").getAsDouble();
+                System.out.println(stockSymb+": "+newPrice);
+                stock.setCurrentPrice(newPrice);
+                position.priceUpdate(newPrice);
+            }
+
+            calculateTotals();
+
+        } catch(IOException e) {
+            System.out.println("Connection to IEX failed. Prices were not updated.");
+        }
+    }
+
+
+    //-------------------------
+
+    public String stockList(){  //used in constructing URL for batch downloads
+        String stockSymbols="";
+        int i=0;
+
+        for (String symb : portfolioStocks.keySet()) {
+            stockSymbols+=symb;
+            if (i!=portfolioStocks.keySet().size()){
+                stockSymbols+=",";
+            }
+        }
+        return stockSymbols;
+    }
+
+/*        for (String symbol : portfolio.keySet()) {
             int indexOfStock = symbolList.indexOf(symbol);
             Stock stock = portfolio.get(symbol);
             int volume = volumes.get(indexOfStock);
@@ -192,14 +282,14 @@ public class Portfolio {
             profit = calculateTotal(profitsOrLosses);
             unrealisedProfit = calculateTotal(unrealisedProfitsOrLosses);
 
-        }
-    }*/
+        }*/
+
 
     //-----------------------------------------------
     //GETTER & SETTERS:
 
     public Stock getStock(String symbol) {
-        return portfolio.get(symbol);
+        return portfolioStocks.get(symbol);
     }
 
     public double getTotalValueOfPortfolio() {
@@ -207,7 +297,7 @@ public class Portfolio {
     }
 
     public Map<String, Stock> getPortfolio() {
-        return portfolio;
+        return portfolioStocks;
     }
 
     public double getTotalValueOfPositions() {
@@ -248,7 +338,7 @@ public class Portfolio {
     public String toString() {
         return "Portfolio{" +
                 "availableFunds=" + availableFunds +
-                ", portfolio=" + portfolio +
+                ", portfolio=" + portfolioStocks +
                 '}';
     }
 

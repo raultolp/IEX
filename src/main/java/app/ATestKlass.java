@@ -55,13 +55,16 @@ public class ATestKlass implements Comparator<String> {
 
         //TRANSACTIONS REPORT:
         port.buyStock("AAPL", 200);
-/*        port.sellStock("AAPL", 100);
+        //port.sellStock("AAPL", 100);
         port.buyStock("FB", 100);
         port.buyStock("GE", 100);
-        port.sellStock("GE", 10);*/
-        String transactionsReport=port.getTransactionsReport();
-        System.out.println(transactionsReport);
+        //port.sellStock("GE", 10);*//*
 
+/*        String transactionsReport=port.getTransactionsReport();
+        System.out.println(transactionsReport);*/
+
+        //STOCK PRICES BATCH UPDATE:
+        port.updatePrices();
 
 
     }

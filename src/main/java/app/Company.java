@@ -135,8 +135,7 @@ public class Company extends IEXdata {
                 "Sector: " + sector + " (" + industry + "),\n" +
                 "Descriprion: " + description + "\n";
     }
-    //TODO:  (PRIORITY 1) ADD ALL STOCKS IN THE AvailableStocks LIST TO THE TXT FILE (TO DECREASE DOWLNOADS).
-    //TODO: (PRIORITY 1) CHECK IF VIEWING INFO FOR ONE COMPANY (USING COMPANY'S TOSTRING) IS AVAILABLE IN MAIN MENU.
+
     //TODO: (PRIORITY 3) IT WOULD BE POSSIBLE TO ALSO DOWNLOAD COMPANY LOGO:
     // https://iextrading.com/developer/docs/#logo
 }
