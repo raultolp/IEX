@@ -16,7 +16,7 @@ public class ShowStockNews implements CommandHandler {
 
     @Override
     public void handle(Integer command, Iu handler) throws Exception {
-        if (command == 13) {
+        if (command == 14) {
             showStockList(handler);
             String name = MyUtils.enterStockName(handler.getSc());
 

@@ -19,6 +19,7 @@ public class Portfolio extends IEXdata {
     private Iu handler;
     private Portfolio masterPortfolio;
 
+
     //Constructor - creates an empty portfolio for new user:
     public Portfolio(double initialFunds, Iu handler) {
         this.portfolioStocks = new HashMap<>();
@@ -31,58 +32,24 @@ public class Portfolio extends IEXdata {
         this.masterPortfolio = handler.getMasterPortfolio();
     }
 
-    //Constructor - creates a MasterPortfolio with all availableStocks for admin:
-
     //TODO: (PRIORITY 3): IT WOULD ALSO BE POSSIBLE TO DOWNLOAD CHART DATA IN ONE GO, IF NEEDED:
     //https://api.iextrading.com/1.0/stock/market/batch?symbols=aapl,fb&types=quote,news,chart&range=1m&last=5
 
+    //Constructor - creates a MasterPortfolio with all availableStocks for admin:
     public Portfolio(String[] availableStocks, double availableFunds, Iu handler) throws IOException{
         this(availableFunds, handler); //uses another constructor for generating empty portfolio
 
-        HashSet<String> symbolSet=new HashSet<>();  //for using method stockList for coverting to String
-        for (String s : availableStocks) {
-            symbolSet.add(s);
-        }
-
-        String symbols=stockList(symbolSet);
+        String symbols = String.join(",", availableStocks);
         String url="https://api.iextrading.com/1.0/stock/market/batch?symbols="+symbols+"&types=quote,stats"; //,news,chart&range=1m&last=10";
 
-/*        try {*/
-            JsonElement root = IEXdata.downloadData(url);  // array or object
-            JsonObject rootobj = root.getAsJsonObject();
+        JsonElement root = IEXdata.downloadData(url);  // array or object
+        JsonObject rootobj = root.getAsJsonObject();
 
-            for (String stockSymb : availableStocks) {
-                JsonObject stockObject= rootobj.getAsJsonObject(stockSymb);
-
-                double currentPrice=stockObject.getAsJsonObject("quote").get("latestPrice").getAsDouble(); //168.38
-                double previousClose=stockObject.getAsJsonObject("quote").get("previousClose").getAsDouble();
-                long marketCapAsLong=stockObject.getAsJsonObject("quote").get("marketCap").getAsLong();
-                int marketCap=(int) (marketCapAsLong/1000000); //miljonites dollarites
-                double dividendYield = stockObject.getAsJsonObject("stats").get("dividendYield").getAsDouble();
-
-                double eps = stockObject.getAsJsonObject("stats").get("latestEPS").getAsDouble();
-                double change1Year = stockObject.getAsJsonObject("stats").get("year1ChangePercent").getAsDouble();
-                double change1Month = stockObject.getAsJsonObject("stats").get("day30ChangePercent").getAsDouble();
-                double change3Month = stockObject.getAsJsonObject("stats").get("month3ChangePercent").getAsDouble();
-                double shortRatio = stockObject.getAsJsonObject("stats").get("shortRatio").getAsDouble();
-
-                //For ETFs, PE ratio is not provided (is null):
-                double peRatio;
-                if (!stockObject.getAsJsonObject("quote").get("peRatio").isJsonNull()) {
-                    peRatio=stockObject.getAsJsonObject("quote").get("peRatio").getAsDouble();
-                }
-                else {
-                    peRatio=0.0;
-                }
-
-                Stock stock = new Stock(stockSymb, dividendYield, eps, peRatio, marketCap,
-                previousClose, change1Year, change1Month, change3Month, shortRatio, currentPrice);
-                portfolioStocks.put(stockSymb, stock);
-            }
-
-/*        } catch (IOException e) {
-            System.out.println("Connection to IEX failed. Try again?");
-        }*/
+        for (String stockSymb : availableStocks) {
+            JsonObject stockObject= rootobj.getAsJsonObject(stockSymb);
+            Stock stock = new Stock(stockSymb, stockObject);
+            portfolioStocks.put(stockSymb, stock);
+        }
     }
 
 
@@ -113,11 +80,11 @@ public class Portfolio extends IEXdata {
 
         if (newStock) {
             stock = masterPortfolio.getStock(symbol);
-            price = stock.getCurrentPrice();
         } else {
             stock = portfolioStocks.get(symbol);
-            price = stock.getLatestPrice();
         }
+        price = stock.getCurrentPrice();
+
         Transaction transaction = new Transaction(symbol, price, volume, transactionType, transactionTime);
 
         if (transaction.getTransactionAmount() > availableFunds) {
@@ -158,7 +125,7 @@ public class Portfolio extends IEXdata {
         }
 
         Stock stock = portfolioStocks.get(symbol);
-        double price = stock.getLatestPrice();  //current price
+        double price = stock.getCurrentPrice();  //current price
         position.priceUpdate(price);
 
         Transaction transaction = new Transaction(symbol, price, volume, transactionType, transactionTime);
@@ -220,7 +187,6 @@ public class Portfolio extends IEXdata {
         return report;
     }
 
-
     //-----------------------------------------------
 
 
@@ -228,13 +194,7 @@ public class Portfolio extends IEXdata {
     public void updatePrices() {
 
         //Constructing URL:
-        HashSet<String> symbolSet=new HashSet<>();  //for using method stockList for coverting to String
-        for (String s : portfolioStocks.keySet()) {
-            symbolSet.add(s);
-        }
-
-        //HashSet<String>symbols= (HashSet<String>) portfolioStocks.keySet();
-        String stockSymbols = stockList(symbolSet);
+        String stockSymbols = String.join(",", portfolioStocks.keySet());
         String url = "https://api.iextrading.com/1.0/stock/market/batch?symbols=" + stockSymbols + "+&types=price";
 
         try {
@@ -259,21 +219,6 @@ public class Portfolio extends IEXdata {
         }
     }
 
-
-    //-------------------------
-
-    public String stockList(HashSet<String> symbols) {  //used in constructing URL for batch downloads
-        String stockSymbols = "";
-        int i = 0;
-
-        for (String symb : symbols) {
-            stockSymbols += symb;
-            if (i != symbols.size()) {
-                stockSymbols += ",";
-            }
-        }
-        return stockSymbols;
-    }
 
 
     //-----------------------------------------------

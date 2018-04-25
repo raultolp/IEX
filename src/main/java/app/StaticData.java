@@ -42,11 +42,11 @@ public class StaticData {
             "View user transactions report",
             "View available stock list",
             "View stock list base data",
+            "View company data",
             "View stock base data",
             "View stock historical data",
             "View stock news",
             "View all portfolios performance",
-            "Refresh data from web",
             "Load data file",
             "Save data file",
             "Quit"};

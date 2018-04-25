@@ -34,7 +34,7 @@ public class ATestKlass implements Comparator<String> {
 
         //-------------------------------------------------
 /*        //GETTING COMPANY NEWS (LAST 10 NEWS ITEMS):
-        Company fb = new Company("FB");
+        Company fb = new Company("AAPL");
         ArrayList<String> news = fb.getCompanyNews();
         for (String n : news) {
             System.out.println(n);
@@ -42,8 +42,11 @@ public class ATestKlass implements Comparator<String> {
         //-------------------------------------------------
 
         //GETTING STOCK FUNDAMENTAL DATA:
-        Stock stock =masterPortfolio.getStock("AAPL");
+        Stock stock = masterPortfolio.getStock("AAPL");
         System.out.println(stock);
+/*        Thread.sleep(5000);
+        masterPortfolio.updatePrices();
+        System.out.println(stock);*/
 
         //-------------------------------------------------
 
@@ -76,7 +79,6 @@ public class ATestKlass implements Comparator<String> {
         //TRANSACTIONS REPORT:
         port.buyStock("AAPL", 200);
         //port.sellStock("AAPL", 100);
-        port.buyStock("FB", 100);
         port.buyStock("GE", 100);
         //port.sellStock("GE", 10);*//*
 
@@ -123,7 +125,12 @@ public class ATestKlass implements Comparator<String> {
                 "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
                 "TSLA", "TWTR", "V", "WMT"};*/
 
+/*        Set<String> h = new HashSet<>(Arrays.asList("a", "b", "c"));
+        String [] h1= {"a", "b", "c"};
+        String joined = String.join(" and ", h1); // "foo and bar and baz"
+        System.out.println(joined);*/
     }
+
 
     @Override
     public int compare(String s1, String s2) {

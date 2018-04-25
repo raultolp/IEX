@@ -8,7 +8,7 @@ public class ShowStockBaseData implements CommandHandler {
 
     @Override
     public void handle(Integer command, Iu handler) {
-        if (command == 11) {
+        if (command == 12) {
             showStockBaseData(handler);
         }
     }
@@ -21,10 +21,6 @@ public class ShowStockBaseData implements CommandHandler {
         String stockSym = handler.getSc().nextLine();
 
         try {
-            //company base data:
-            Company comp = new Company(stockSym);
-            System.out.println(comp);
-
             //stock fundamentals:
             System.out.println(masterPortfolio.getStock(stockSym));
 

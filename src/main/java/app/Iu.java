@@ -147,12 +147,12 @@ public class Iu {
                 new ShowUserTransactions(),
                 new ShowStockList(),
                 new ShowStockListBaseData(),
+                new showCompanyData(),
                 new ShowStockBaseData(),
                 new ShowStockHistoricalData(),
                 new ShowStockNews(),
                 new ShowPortfoliosProgress(),
-/*                new RefreshDataFromWeb(),  //HETKEL EI TÖÖTA  NEED KOLM
-                new LoadData(),
+/*              new LoadData(), //HETKEL EI TÖÖTA  NEED KAKS
                 new SaveData(),*/
                 new Quit(),
                 new ErrorHandler()

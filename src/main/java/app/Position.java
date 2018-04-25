@@ -14,56 +14,55 @@ public class Position {
     private double price; //current price
     private int volume; //number of stocks
     private double averagePrice; ////average purchase price (includes transaction fees) -
-                                //necessary also in order to take into account that
-                                // stocks can be bought with different prices at different times.
+    //necessary also in order to take into account that
+    // stocks can be bought with different prices at different times.
     private double profit; ////realised profit/loss (i.e.profit/loss from stocks sold)
     private double unrealisedProfit; // profit/loss that would be gained if stocks held were sold
-                                         // at current market price (does not include transaction fee)
+    // at current market price (does not include transaction fee)
     private double currentValue;  // volume*current price, i.e. current value of stock in portfolio
-    private List<Transaction> transactions = new ArrayList<>();;
+    private List<Transaction> transactions = new ArrayList<>();
 
 
     public Position(Transaction transaction, String symbol, double price, int volume) {
         this.symbol = symbol;
         this.price = price;
         this.volume = volume;
-        this.averagePrice=price+transaction.getTransactionFee();  //transaction.getTransactionAmount()/volume;
-        this.profit=0-transaction.getTransactionFees();
-        this.unrealisedProfit=0.0;
-        this.currentValue=price*volume;
-        this.open=true;
-        //this.transactions= new HashMap<>();
+        this.averagePrice = price + transaction.getTransactionFee();  //transaction.getTransactionAmount()/volume;
+        this.profit = 0 - transaction.getTransactionFees();
+        this.unrealisedProfit = 0.0;
+        this.currentValue = price * volume;
+        this.open = true;
         addTransaction(transaction);
     }
 
-    public void addTransaction(Transaction transaction){
+    public void addTransaction(Transaction transaction) {
         transaction.setAveragePurchasePrice(averagePrice);
         transactions.add(transaction);
     }
 
     public void priceUpdate(double newPrice) {
-        price=newPrice;
-        unrealisedProfit=(newPrice-averagePrice)*volume;
-        currentValue=newPrice*volume;
+        price = newPrice;
+        unrealisedProfit = (newPrice - averagePrice) * volume;
+        currentValue = newPrice * volume;
     }
 
-    public void increasePosition(Transaction transaction, double purchasePrice, double addedVolume){
-        profit-=transaction.getTransactionFees();
+    public void increasePosition(Transaction transaction, double purchasePrice, double addedVolume) {
+        profit -= transaction.getTransactionFees();
 
         // new weighted average purchase price:
-        averagePrice= (volume * averagePrice + transaction.getTransactionAmount()) / (volume + addedVolume);
+        averagePrice = (volume * averagePrice + transaction.getTransactionAmount()) / (volume + addedVolume);
 
-        volume+=addedVolume;
+        volume += addedVolume;
         priceUpdate(purchasePrice);
     }
 
-    public void decreasePosition(Transaction transaction, double salesPrice, double salesVolume){
-        volume-=salesVolume;
+    public void decreasePosition(Transaction transaction, double salesPrice, double salesVolume) {
+        volume -= salesVolume;
         priceUpdate(salesPrice);
-        profit+=salesVolume*(salesPrice-averagePrice)-transaction.getTransactionFees();
+        profit += salesVolume * (salesPrice - averagePrice) - transaction.getTransactionFees();
 
-        if (volume==0){
-            open=false; //position is closed
+        if (volume == 0) {
+            open = false; //position is closed
         }
     }
 

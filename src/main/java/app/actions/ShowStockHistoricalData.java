@@ -11,7 +11,7 @@ public class ShowStockHistoricalData implements CommandHandler {
 
     @Override
     public void handle(Integer command, Iu handler) {
-        if (command == 12) {
+        if (command == 13) {
             showStockHistoricalData(handler);
         }
     }

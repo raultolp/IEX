@@ -11,7 +11,7 @@ public class ShowPortfoliosProgress implements CommandHandler {
 
     @Override
     public void handle(Integer command, Iu handler) {
-        if (command == 14) {
+        if (command == 15) {
             System.out.println("Tuleb hiljem");
         }
     }
