@@ -1,8 +1,7 @@
 package app.actions;
 
 import app.CommandHandler;
-
-import java.util.Scanner;
+import app.Iu;
 
 //View stock list base data
 
@@ -11,7 +10,7 @@ import java.util.Scanner;
 public class ShowStockListBaseData implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Scanner sc) {
+    public void handle(Integer command, Iu handler) {
         if (command == 10) {
             System.out.println("Tuleb hiljem");
         }

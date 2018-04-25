@@ -2,7 +2,6 @@ package app;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import javafx.geometry.Pos;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -17,16 +16,19 @@ public class Portfolio extends IEXdata {
     private double totalValueOfPositions; //sum of all totals (i.e. sum of all current positions)
     private double profit; //realised profit (from closed positions (sold stocks))
     private double unrealisedProfit; //gains/losses in value of stocks in portfolio (i.e of stocks not sold yet)
-    Portfolio masterPortfolio=Iu.getMasterPortfolio();
+    private Iu handler;
+    private Portfolio masterPortfolio;
 
     //Constructor - creates an empty portfolio for new user:
-    public Portfolio(double initialFunds) {
+    public Portfolio(double initialFunds, Iu handler) {
         this.portfolioStocks = new HashMap<>();
         this.positions = new HashMap<>();
         this.totalValueOfPositions = 0.0;
         this.profit = 0.0;
         this.unrealisedProfit = 0.0;
         this.availableFunds = initialFunds;
+        this.handler = handler;
+        this.masterPortfolio = handler.getMasterPortfolio();
     }
 
     //Constructor - creates a MasterPortfolio with all availableStocks for admin:
@@ -34,8 +36,8 @@ public class Portfolio extends IEXdata {
     //TODO: (PRIORITY 3): IT WOULD ALSO BE POSSIBLE TO DOWNLOAD CHART DATA IN ONE GO, IF NEEDED:
     //https://api.iextrading.com/1.0/stock/market/batch?symbols=aapl,fb&types=quote,news,chart&range=1m&last=5
 
-    public Portfolio(String[] availableStocks, double availableFunds) throws IOException{
-        this(availableFunds); //uses another constructor for generating empty portfolio
+    public Portfolio(String[] availableStocks, double availableFunds, Iu handler) throws IOException{
+        this(availableFunds, handler); //uses another constructor for generating empty portfolio
 
         HashSet<String> symbolSet=new HashSet<>();  //for using method stockList for coverting to String
         for (String s : availableStocks) {

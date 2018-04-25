@@ -2,25 +2,23 @@ package app.actions;
 
 import app.*;
 
-import java.util.Scanner;
-
 //View stock base data
 
 public class ShowStockBaseData implements CommandHandler {
 
-    Portfolio masterPortfolio= Iu.getMasterPortfolio();
-
     @Override
-    public void handle(Integer command, Scanner sc) {
+    public void handle(Integer command, Iu handler) {
         if (command == 11) {
-            showStockBaseData(sc);
+            showStockBaseData(handler);
         }
     }
 
-    private void showStockBaseData(Scanner sc) {
-        sc.nextLine();
+    private void showStockBaseData(Iu handler) {
+        Portfolio masterPortfolio = handler.getMasterPortfolio();
+
+        handler.getSc().nextLine();
         System.out.println("Enter stock symbol: ");
-        String stockSym = sc.nextLine();
+        String stockSym = handler.getSc().nextLine();
 
         try {
             //company base data:
@@ -32,7 +30,7 @@ public class ShowStockBaseData implements CommandHandler {
 
 
         } catch (Exception e) {
-            System.out.println("Stock information not available.");
+            MyUtils.colorPrintYellow("Stock information not available.");
         }
     }
 

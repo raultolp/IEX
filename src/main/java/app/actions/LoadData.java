@@ -146,17 +146,5 @@ public class LoadData implements CommandHandler {
             }
         }
     }
-
-    private static void listFiles() {
-        File folder = new File(".");
-        File[] files = folder.listFiles();
-        int i = 1;
-        for (File file : files) {
-            if (file.getName().endsWith(".game"))
-                System.out.printf("%15s%s", file.getName(), i++ % 4 == 0 ? "\n" : " ");
-        }
-        if ((i - 1) % 4 != 0)
-            System.out.println();
-    }
 }
 */

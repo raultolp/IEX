@@ -1,29 +1,26 @@
 package app.actions;
 
 import app.CommandHandler;
-import app.Iu;
 import app.Company;
+import app.Iu;
+import app.MyUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
-import static app.actions.BuyStock.enterStockName;
 import static app.actions.ShowStockList.showStockList;
-import static app.StaticData.ANSI_RED;
-import static app.StaticData.ANSI_RESET;
 
 // News on the company (last 10 news items)
 
 public class ShowStockNews implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Scanner sc) throws Exception {
+    public void handle(Integer command, Iu handler) throws Exception {
         if (command == 13) {
-            showStockList();
-            String name = enterStockName(sc);
+            showStockList(handler);
+            String name = MyUtils.enterStockName(handler.getSc());
 
-            if (Arrays.asList(Iu.getAvailableStocks()).contains(name)) {
+            if (Arrays.asList(handler.getAvailableStocks()).contains(name)) {
                 Company company = new Company(name);
                 ArrayList<String> news = company.getCompanyNews();
                 for (String n : news) {
@@ -31,7 +28,7 @@ public class ShowStockNews implements CommandHandler {
                 }
 
             } else
-                System.out.println(ANSI_RED + "This stock is not available." + ANSI_RESET);
+                MyUtils.colorPrintRed("This stock is not available.");
 
         }
     }

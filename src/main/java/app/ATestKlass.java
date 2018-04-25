@@ -7,8 +7,9 @@ import java.util.*;
 public class ATestKlass implements Comparator<String> {
 
     public static void main(String[] args) throws Exception {
+        Iu handler = new Iu();
 
-        Portfolio masterPortfolio=Iu.getMasterPortfolio();
+        Portfolio masterPortfolio = handler.getMasterPortfolio();
 
 /*        //TESTING BATCH CREATION OF POTRFOLIO FOR ADMIN (WITH BATCH DOWNLOAD DATA FOR ALL STOCKS):
         String [] availableSt = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",

@@ -1,13 +1,10 @@
 package app.actions;
 
 import app.CommandHandler;
+import app.Iu;
 import app.Portfolio;
 import app.User;
 
-import java.util.Scanner;
-
-import static app.Iu.getActiveUser;
-import static app.Iu.getUserList;
 import static app.actions.ShowUsersList.showUsersList;
 
 //View user portfolio - showUserPortfolio
@@ -15,24 +12,24 @@ import static app.actions.ShowUsersList.showUsersList;
 public class ShowUserPortfolio implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Scanner sc) {
+    public void handle(Integer command, Iu handler) {
         if (command == 7) {
-            showUserPortfolio(sc);
+            showUserPortfolio(handler);
         }
     }
 
-    private static void showUserPortfolio(Scanner sc) {
+    private static void showUserPortfolio(Iu handler) {
         String username;
 
-        sc.nextLine();
-        showUsersList();
+        handler.getSc().nextLine();
+        showUsersList(handler.getUserList());
         System.out.print("Enter username: ");
-        username = sc.nextLine();
+        username = handler.getSc().nextLine();
 
         if (username.length() < 3)
-            username = getActiveUser().getUserName();
+            username = handler.getActiveUser().getUserName();
 
-        for (User user : getUserList()) {
+        for (User user : handler.getUserList()) {
             if (user.getUserName().equals(username)) {
                 Portfolio portfolio = user.getPortfolio();
                 System.out.print("\nAvailable cash: ");

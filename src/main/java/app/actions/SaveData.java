@@ -2,12 +2,12 @@
 package app.actions;
 
 import app.CommandHandler;
+import app.Iu;
 import app.User;
 
 import java.io.*;
 import java.util.Scanner;
 
-import static app.Iu.*;
 import static app.StaticData.ANSI_RESET;
 import static app.StaticData.ANSI_YELLOW;
 
@@ -16,37 +16,37 @@ import static app.StaticData.ANSI_YELLOW;
 public class SaveData implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Scanner sc) throws Exception {
+    public void handle(Integer command, Iu handler) throws Exception {
         if (command == 17) {
-            saveData(sc);
+            saveData(handler);
         }
     }
 
-    public static void saveData(Scanner sc) throws IOException {
+    public static void saveData(Iu handler) throws IOException {
         File file;
-        sc.nextLine();
+        handler.getSc().nextLine();
 
-        if (getActiveGame() == null) {
+        if (handler.getActiveGame() == null) {
             System.out.print("Enter filename to save data: ");
-            String filename = sc.nextLine();
+            String filename = handler.getSc().nextLine();
 
             if (!filename.endsWith(".game"))
                 filename += ".game";
 
             file = new File(filename);
         } else {
-            file = getActiveGame();
+            file = handler.getActiveGame();
         }
 
         file.createNewFile();
 
         Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-        for (User user : getUserList()) {
+        for (User user : handler.getUserList()) {
             writer.write(user.getPortfolio().toStringForFile());
         }
         writer.close();
-        setActiveGame(file);
-        System.out.println(ANSI_YELLOW + getActiveGame().getName() + " file saved." + ANSI_RESET);
+        handler.setActiveGame(file);
+        System.out.println(ANSI_YELLOW + handler.getActiveGame().getName() + " file saved." + ANSI_RESET);
     }
 }
 */

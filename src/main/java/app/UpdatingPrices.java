@@ -1,8 +1,14 @@
 package app;
 
 public class UpdatingPrices implements Runnable{
+    private Iu handler;
+    private Portfolio masterPortfolio;
 
-    Portfolio masterPortfolio= Iu.getMasterPortfolio();
+    public UpdatingPrices(Iu handler) {
+        this.handler = handler;
+        this.masterPortfolio = handler.getMasterPortfolio();
+    }
+
 
     @Override
     public void run() {
