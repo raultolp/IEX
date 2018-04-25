@@ -1,31 +1,28 @@
 package app.actions;
 
 import app.CommandHandler;
+import app.Iu;
+import app.MyUtils;
 import app.User;
 
-import java.util.Scanner;
-
-import static app.Iu.*;
-import static app.actions.AddUser.enterUserName;
-import static app.actions.DeleteUser.nameInList;
-import static app.actions.ShowUsersList.showUsersList;
 import static app.StaticData.ANSI_RESET;
 import static app.StaticData.ANSI_YELLOW;
+import static app.actions.ShowUsersList.showUsersList;
 
 //Set activeUser user
 
 public class SetActiveUser implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Scanner sc) throws Exception {
+    public void handle(Integer command, Iu handler) throws Exception {
         if (command == 4) {
-            showUsersList();
-            sc.nextLine();
-            String name = enterUserName(sc);
-            Integer index = nameInList(name);
+            showUsersList(handler.getUserList());
+            handler.getSc().nextLine();
+            String name = MyUtils.enterUserName(handler);
+            Integer index = MyUtils.nameInList(name, handler.getUserList());
             if (index > -1) {
-                User activeUser = getUserList().get(index);
-                setActiveUser(activeUser);
+                User activeUser = handler.getUserList().get(index);
+                handler.setActiveUser(activeUser);
                 System.out.println(ANSI_YELLOW + "User " + name + " is now active." + ANSI_RESET);
             }
         }

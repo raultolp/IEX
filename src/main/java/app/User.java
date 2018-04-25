@@ -9,15 +9,16 @@ public class User {
     private String userName;
     private Portfolio portfolio;
     private double initialFunds;
+    private Iu handler;
 
-    public User(String userName, double availableFunds) throws IOException {
+    public User(String userName, double availableFunds, Iu handler) throws IOException {
         this.userName = userName;
         this.initialFunds = availableFunds;
 
         if (userName.equals("admin")){
-            this.portfolio=new Portfolio(availableStocks, availableFunds); // MasterPorfolio for admin
+            this.portfolio=new Portfolio(availableStocks, availableFunds, handler); // MasterPorfolio for admin
         } else {
-            this.portfolio = new Portfolio(availableFunds);
+            this.portfolio = new Portfolio(availableFunds, handler);
         }
     }
 

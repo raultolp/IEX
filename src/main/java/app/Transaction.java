@@ -9,18 +9,14 @@ public class Transaction {
 
     private String symbol;
     private String type;
-    private double transactionFee;
-    ; // 10 cents per stock
+    private double transactionFee;  // 10 cents per stock
     private double price; //current price
     private int volume; //number of stocks
-    //private LocalDateTime transactionTime;
     private String date;
     private String time;
     private double profitFromSell;
     private double averagePurchasePrice;
 
-
-    //TODO: ADD TOSTRING
 
     public Transaction(String symbol, double price, int volume, String type, LocalDateTime transactionTime) {
         this.symbol = symbol;
@@ -28,7 +24,6 @@ public class Transaction {
         this.price = price;
         this.volume = volume;
         this.type = type; //buy or sell
-        //this.transactionTime=transactionTime;
         this.date = transactionTime.getDayOfMonth() + "-" + transactionTime.getMonthValue() + "-" + transactionTime.getYear(); //String.valueOf(...)
         this.time = transactionTime.getHour() + ":" + transactionTime.getMinute() + ":" + transactionTime.getSecond();
         if (type.equals("buy")) {

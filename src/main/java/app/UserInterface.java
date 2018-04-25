@@ -22,9 +22,16 @@ import javafx.scene.layout.*;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 
 public class UserInterface extends Application {
-    Portfolio portfolio = new Portfolio(10000);
+    private Iu handler;
+    Portfolio portfolio = new Portfolio(10000, handler);
+
+    public UserInterface() throws IOException {
+        this.handler = new Iu();
+    }
 
     public static void main(String[] args) {
         {

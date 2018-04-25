@@ -1,37 +1,23 @@
 package app.actions;
 
 import app.CommandHandler;
-import app.User;
+import app.Iu;
+import app.MyUtils;
 
-import java.util.Scanner;
-
-import static app.Iu.*;
-import static app.actions.AddUser.enterUserName;
-import static app.StaticData.ANSI_RESET;
-import static app.StaticData.ANSI_YELLOW;
-
-//Delete user - DeleteUser, nameInList
+//Delete user
 
 public class DeleteUser implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Scanner sc) throws Exception {
+    public void handle(Integer command, Iu handler) throws Exception {
         if (command == 2) {
-            sc.nextLine();
-            String name = enterUserName(sc);
-            Integer index = nameInList(name);
+            handler.getSc().nextLine();
+            String name = MyUtils.enterUserName(handler);
+            Integer index = MyUtils.nameInList(name, handler.getUserList());
             if (index > -1) {
-                getUserList().remove(index); //TODO ???
-                System.out.println(ANSI_YELLOW + "User " + name + " has been deleted." + ANSI_RESET);
+                handler.getUserList().remove(index); //TODO ???
+                MyUtils.colorPrintYellow("User " + name + " has been deleted.");
             }
         }
-    }
-
-    public static int nameInList(String name) {
-        for (User user : getUserList()) {
-            if (user.getUserName().equals(name))
-                return getUserList().indexOf(user);
-        }
-        return -1;
     }
 }

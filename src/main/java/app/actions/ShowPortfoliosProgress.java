@@ -3,14 +3,15 @@ package app.actions;
 //View all portfolios progress
 
 import app.CommandHandler;
+import app.Iu;
 
-import java.util.Scanner;
+//TODO Priority 1
 
 public class ShowPortfoliosProgress implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Scanner sc) {
-        if (command == 14) {
+    public void handle(Integer command, Iu handler) {
+        if (command == 15) {
             System.out.println("Tuleb hiljem");
         }
     }

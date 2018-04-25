@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Stock extends IEXdata{
+public class Stock extends IEXdata {
 
     private final String symbol; //aktsia sümbol
 
@@ -21,7 +21,7 @@ public class Stock extends IEXdata{
     private double eps; //Earnings-per-share (kasum aktsia kohta viimase majandusaasta aruande kohaselt)
     private double peRatio;
     private int marketCap; //turukapitalisatsioon miljonites dollarites (näitab ettevõtte suurust)
-                            // (s.o kõigi noteeritud aktsiate hetkehindade summa)
+    // (s.o kõigi noteeritud aktsiate hetkehindade summa)
     private double previousClose; //eelmine sulgemishind
     private double change1Year; //hinnamuutus viimase 1 aasta jooksul (protsendina)
     private double change1Month; //hinnamuutus viimase 1 kuu jooksul (protsendina)
@@ -36,88 +36,80 @@ public class Stock extends IEXdata{
 
     public Stock(String symbol) {
         this.symbol = symbol.toUpperCase();
-        loadDataFromIEX();
+
+        try {
+            loadDataFromIEX();
+        } catch (IOException e) {
+            System.out.println("Connection to IEX failed. Please try again.");
+        }
+
+    }
+
+    //for creating stocks from JSON object based on MasterPortfolio:
+    public Stock(String symbol, JsonObject stockObject) {
+        this.symbol = symbol.toUpperCase();
+        createStockFromJson(stockObject);
     }
 
     //for creating stocks based on batch download (for portfolios loaded from file):
     public Stock(String symbol, double dividendYield, double eps, double peRatio, int marketCap,
                  double previousClose, double change1Year, double change1Month, double change3Month,
-                 double shortRatio, double currentPrice){
-        this.symbol=symbol;
-        this.dividendYield=dividendYield;
-        this.eps=eps;
-        this.peRatio=peRatio;
-        this.marketCap=marketCap;
-        this.previousClose=previousClose;
-        this.change1Year=change1Year;
-        this.change1Month=change1Month;
-        this.change3Month=change3Month;
-        this.shortRatio=shortRatio;
-        this.currentPrice=currentPrice;
+                 double shortRatio, double currentPrice) {
+        this.symbol = symbol;
+        this.dividendYield = dividendYield;
+        this.eps = eps;
+        this.peRatio = peRatio;
+        this.marketCap = marketCap;
+        this.previousClose = previousClose;
+        this.change1Year = change1Year;
+        this.change1Month = change1Month;
+        this.change3Month = change3Month;
+        this.shortRatio = shortRatio;
+        this.currentPrice = currentPrice;
 
     }
 
 
-    public void loadDataFromIEX() {
-
-        try {
-            String URL="https://api.iextrading.com/1.0/stock/"+symbol+"/batch?types=quote,stats"; //,news,chart&range=1m&last=10";
-            JsonElement root = IEXdata.downloadData(URL);  // array or object
-            JsonObject rootobj = root.getAsJsonObject();
-
-            currentPrice=rootobj.getAsJsonObject("quote").get("latestPrice").getAsDouble(); //168.38
-            previousClose=rootobj.getAsJsonObject("quote").get("previousClose").getAsDouble();
-            long marketCapAsLong=rootobj.getAsJsonObject("quote").get("marketCap").getAsLong();
-            marketCap=(int) (marketCapAsLong/1000000); //miljonites dollarites
-            dividendYield = rootobj.getAsJsonObject("stats").get("dividendYield").getAsDouble();
-
-            eps = rootobj.getAsJsonObject("stats").get("latestEPS").getAsDouble();
-            change1Year = rootobj.getAsJsonObject("stats").get("year1ChangePercent").getAsDouble();
-            change1Month = rootobj.getAsJsonObject("stats").get("day30ChangePercent").getAsDouble();
-            change3Month = rootobj.getAsJsonObject("stats").get("month3ChangePercent").getAsDouble();
-            shortRatio = rootobj.getAsJsonObject("stats").get("shortRatio").getAsDouble();
-
-            //For ETFs, PE ratio is not provided (is null):
-            if (!rootobj.getAsJsonObject("quote").get("peRatio").isJsonNull()) {
-                peRatio=rootobj.getAsJsonObject("quote").get("peRatio").getAsDouble();
-            }
-            else {
-                peRatio=0.0;
-            }
-
-
-        } catch(IOException e) {
-            System.out.println("Connection to IEX failed. Please try again.");
-        }
+    public void loadDataFromIEX() throws IOException {
+        String URL = "https://api.iextrading.com/1.0/stock/" + symbol + "/batch?types=quote,stats"; //,news,chart&range=1m&last=10";
+        JsonElement root = IEXdata.downloadData(URL);  // array or object
+        JsonObject rootobj = root.getAsJsonObject();
+        createStockFromJson(rootobj);
     }
 
+    //For creation of stocks bases on JSON Object (used for both creating a single stock,
+    //as well as for batch creation of stocks for MasterPortfolio (the latter is used in
+    // Portfolio lass):
+    public void createStockFromJson(JsonObject rootobj) {
+        currentPrice = rootobj.getAsJsonObject("quote").get("latestPrice").getAsDouble(); //168.38
+        previousClose = rootobj.getAsJsonObject("quote").get("previousClose").getAsDouble();
+        long marketCapAsLong = rootobj.getAsJsonObject("quote").get("marketCap").getAsLong();
+        marketCap = (int) (marketCapAsLong / 1000000); //miljonites dollarites
+        dividendYield = rootobj.getAsJsonObject("stats").get("dividendYield").getAsDouble();
 
-    //-----------------------------------------------
-    //Meetod kiiresti viimase hinna leidmiseks:
-    public double getLatestPrice(){
-        String sURL = "https://api.iextrading.com/1.0/stock/"+symbol+"/price";
-        double latestPrice;
+        eps = rootobj.getAsJsonObject("stats").get("latestEPS").getAsDouble();
+        change1Year = rootobj.getAsJsonObject("stats").get("year1ChangePercent").getAsDouble();
+        change1Month = rootobj.getAsJsonObject("stats").get("day30ChangePercent").getAsDouble();
+        change3Month = rootobj.getAsJsonObject("stats").get("month3ChangePercent").getAsDouble();
+        shortRatio = rootobj.getAsJsonObject("stats").get("shortRatio").getAsDouble();
 
-        try {
-            JsonElement root = IEXdata.downloadData(sURL);  // array or object
-            latestPrice= root.getAsDouble();
-
-        } catch (IOException e) {
-            System.out.println("Connection to IEX failed.");
-            return currentPrice; //tagastab varasema hinna
+        //For ETFs, PE ratio is not provided (is null):
+        if (!rootobj.getAsJsonObject("quote").get("peRatio").isJsonNull()) {
+            peRatio = rootobj.getAsJsonObject("quote").get("peRatio").getAsDouble();
+        } else {
+            peRatio = 0.0;
         }
-        return latestPrice;
     }
 
 
     //-----------------------------------------------
 
     // DATA FOR DRAWING CHART (includes price and volume data):
-    public Map<String, Double []> getHistoricalPrices(String period){
+    public Map<String, Double[]> getHistoricalPrices(String period) {
         //possible periods:  5y, 2y, 1y, ytd, 6m, 3m, 1m, (1d)
 
-        String sURL = "https://api.iextrading.com/1.0/stock/"+symbol+"/chart/"+period;
-        Map<String, Double []> historical=new HashMap<>();
+        String sURL = "https://api.iextrading.com/1.0/stock/" + symbol + "/chart/" + period;
+        Map<String, Double[]> historical = new HashMap<>();
         //String - date; Double[]- close price, volume in millions (or thousands for one-day chart)
 
         try {
@@ -125,25 +117,24 @@ public class Stock extends IEXdata{
             JsonArray rootArray = root.getAsJsonArray(); // here, it is JsonArray instead...
 
             for (JsonElement jsonElement : rootArray) {
-                JsonObject timeObject=jsonElement.getAsJsonObject();
+                JsonObject timeObject = jsonElement.getAsJsonObject();
                 double price, volume;
                 String timeDataPoint;
 
-                if (period.equals("1d")){
-                    timeDataPoint=timeObject.get("minute").getAsString();
-                    price=timeObject.get("average").getAsDouble();
-                    long volumeAsLong=timeObject.get("volume").getAsLong();
-                    volume= (int)(volumeAsLong/1000); //tuhandetes dollarites - NB!
+                if (period.equals("1d")) {
+                    timeDataPoint = timeObject.get("minute").getAsString();
+                    price = timeObject.get("average").getAsDouble();
+                    long volumeAsLong = timeObject.get("volume").getAsLong();
+                    volume = (int) (volumeAsLong / 1000); //tuhandetes dollarites - NB!
                     //Note: in one day chart, the number of data points is ca 390.
-                }
-                else{
-                    timeDataPoint=timeObject.get("date").getAsString();
-                    price=timeObject.get("close").getAsDouble();
-                    long volumeAsLong=timeObject.get("volume").getAsLong();
-                    volume= (int)(volumeAsLong/1000000); //miljonites dollarites - NB!
+                } else {
+                    timeDataPoint = timeObject.get("date").getAsString();
+                    price = timeObject.get("close").getAsDouble();
+                    long volumeAsLong = timeObject.get("volume").getAsLong();
+                    volume = (int) (volumeAsLong / 1000000); //miljonites dollarites - NB!
                 }
 
-                Double [] priceAndVolume= {price, volume};
+                Double[] priceAndVolume = {price, volume};
                 historical.put(timeDataPoint, priceAndVolume);
             }
 
@@ -161,8 +152,6 @@ public class Stock extends IEXdata{
 
     //TODO: (PRIORITY 2)- When drawing up charts, it's possible to request data points with certain interval
     // by using param. chartInterval in url (could be done if deemed necessary).
-
-    //TODO: (PRIORITY 3) - If deemed necessary: add volatility calculation
 
 
     //-----------------------------------------------
@@ -230,9 +219,4 @@ public class Stock extends IEXdata{
                 "Short ratio: " + String.format("%.2f", shortRatio) + '\n' +
                 "Current price: " + currentPrice + '\n';
     }
-    //TODO: (PRIORITY 1) - STOCK INFO SHOULD NOT BE SAVED TO FILE (IT SHOULD BE ALWAYS
-    //DOWNLOADED FROM WEB EACH TIME THE PROGRAMME IS LAUNCHED. CHECK IF THIS IS SO.
-    //CHECK ALSO IF STOCK INFO IS DOWNLOADED FOR ALL AVAILABLESTOCKS SOMEWHERE IN
-    // THE BEGINNING OF PROGRAMME.
-
 }
