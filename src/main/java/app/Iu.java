@@ -147,7 +147,7 @@ public class Iu {
                 new ShowUserTransactions(),
                 new ShowStockList(),
                 new ShowStockListBaseData(),
-                new showCompanyData(),
+                new ShowCompanyData(),
                 new ShowStockBaseData(),
                 new ShowStockHistoricalData(),
                 new ShowStockNews(),
