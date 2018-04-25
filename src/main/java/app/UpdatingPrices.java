@@ -1,15 +1,15 @@
 package app;
 
-public class UpdatingPrices implements Runnable{
+public class UpdatingPrices implements Runnable {
 
-    Portfolio masterPortfolio= Iu.getMasterPortfolio();
+    Portfolio masterPortfolio = Iu.getMasterPortfolio();
 
     @Override
     public void run() {
-        int timeToSleep=10000; // in seconds
+        int timeToSleep = 10000; // in milliseconds
 
         //Downloading price information from IEX at regular time intervals:
-        while(true) {
+        while (true) {
             masterPortfolio.updatePrices();
             //System.out.println("ok");  //for testing
             try {

@@ -12,7 +12,7 @@ public class ShowPortfoliosProgress implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) {
-        if (command == 14) {
+        if (command == 15) {
             System.out.println("Tuleb hiljem");
         }
     }

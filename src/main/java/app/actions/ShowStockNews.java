@@ -19,7 +19,7 @@ public class ShowStockNews implements CommandHandler {
 
     @Override
     public void handle(Integer command, Scanner sc) throws Exception {
-        if (command == 13) {
+        if (command == 14) {
             showStockList();
             String name = enterStockName(sc);
 
