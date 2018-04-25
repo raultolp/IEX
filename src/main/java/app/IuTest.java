@@ -2,41 +2,50 @@ package app;
 
 import app.actions.*;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
-//import static app.actions.SaveData.saveData; //HETKEL EI TÖÖTA
 import static app.StaticData.*;
 
-public class Iu  {
+//import static app.actions.SaveData.saveData; //HETKEL EI TÖÖTA
+
+public class IuTest {
 
     /***** PAHAD JA KOLEDAD *****/
 
     //User, Portfolio, Stocks
-    private static List<User> userList = new ArrayList<>();
-    private static List<Portfolio> portfolioList = new ArrayList<>();
-    private static Portfolio masterPortfolio;
-
-    //Base user and game
-    //private static final User admin = new User("admin", 100000);
-    private static User admin;
-    private static User activeUser = admin;
-    private static File activeGame = null;
+    private List<User> userList;
+    private List<Portfolio> portfolioList;
+    private Portfolio masterPortfolio;
 
     //Command handler
-    private static Iu handler = new Iu();
-    public static Thread t2 = new Thread(new UpdatingPrices());
     private final List<CommandHandler> commandHandlers;
-    //    private Integer command;
-    private static Scanner sc = new Scanner(System.in);
+    private Scanner sc;
 
-    private Iu() {
+    //Base user and game
+    private User admin;
+    private User activeUser;
+    private File activeGame;
+
+    private IuTest() throws IOException {
         this.commandHandlers = loadCommandHandlers();
-        boolean createMaster= createMasterPortfolio();
-//        User admin;
-//        User activeUser = admin;
-//        File activeGame = null;
+        boolean createMaster = createMasterPortfolio();
 
+        //User, Portfolio, Stocks
+        this.userList = new ArrayList<>();
+        this.portfolioList = new ArrayList<>();
+        this.masterPortfolio = null;
+
+        // One and Only - my precious
+        this.sc = new Scanner(System.in);
+
+        //Base user and game
+//        this.admin = new User("admin", 1000000); // teeme hetkel createMaster all
+        this.activeUser = admin;
+        this.activeGame = null;
+
+        //Mingi kahtlase väärtusega - don't blame me, code analysis ütles
         if (!createMaster) {
             return; //peaks väljuma programmist (?)
         }
@@ -46,17 +55,23 @@ public class Iu  {
 
     public static void main(String[] args) throws Exception {
 
-        //START PROGRAM
-        System.out.println(mainTitle);
+        //Command handler
+        IuTest handler = new IuTest();
+
+        //Run IEX data collector
+        Thread t2 = new Thread(new UpdatingPrices());
         t2.start();
 
+        //START PROGRAM
+        System.out.println(mainTitle);
+
         //HANDLE COMMANDS
-        handler.runInteractive(sc);
+        handler.runInteractive(handler.sc);
 
         // QUIT PROGRAM
-        if (getActiveGame() != null)
+        if (handler.activeGame != null)
             //saveData(sc); //HETKEL EI TÖÖTA
-            sc.close();
+            handler.sc.close();
 
         System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
 
@@ -97,7 +112,7 @@ public class Iu  {
 
     /***** MAIN MENU *****/
 
-    private static void printMenu(String[] menu) {
+    private void printMenu(String[] menu) {
         System.out.println();
         for (int i = 0; i < menu.length / 2 + menu.length % 2; i++) {
             int next = menu.length / 2 + i + menu.length % 2;
@@ -110,7 +125,7 @@ public class Iu  {
         commandPrompt();
     }
 
-    public static void commandPrompt() {
+    public void commandPrompt() {
         System.out.print((activeGame != null ? ANSI_BLUE + activeGame.getName() + ANSI_RESET :
                 ANSI_RED + "(not saved)" + ANSI_RESET) +
                 " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
@@ -168,62 +183,63 @@ public class Iu  {
         }
     }
 
-    public static boolean isAlphaNumeric(String text) {
+    public boolean isAlphaNumeric(String text) {
         return text.matches("[a-zA-Z0-9]+");
     }
 
-    public static boolean isAlpha(String text) {
+    public boolean isAlpha(String text) {
         return text.matches("[a-zA-Z]+");
     }
 
-    public static boolean isNumeric(String text) {
+    public boolean isNumeric(String text) {
         return text.matches("[0-9]+");
     }
 
-    public static String[] getAvailableStocks() {
+    public String[] getAvailableStocks() {
         return availableStocks;
     }
 
-    public static List<User> getUserList() {
+    public List<User> getUserList() {
         return userList;
     }
 
-    public static void setUserList(List<User> userList) {
-        Iu.userList = userList;
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
     }
 
-    public static List<Portfolio> getPortfolioList() {
+    public List<Portfolio> getPortfolioList() {
         return portfolioList;
     }
 
-    public static User getAdmin() {
-        return admin;
+    public User getAdmin() {
+        return this.admin;
     }
 
-    public static User getActiveUser() {
-        return activeUser;
+    public User getActiveUser() {
+        return this.activeUser;
     }
 
-    public static void setActiveUser(User activeUser) {
-        Iu.activeUser = activeUser;
+    public void setActiveUser(User activeUser) {
+        this.activeUser = activeUser;
     }
 
-
-    public static File getActiveGame() {
-        return activeGame;
+    public File getActiveGame() {
+        return this.activeGame;
     }
 
-    public static void setActiveGame(File activeGame) {
-        Iu.activeGame = activeGame;
+    public void setActiveGame(File activeGame) {
+        this.activeGame = activeGame;
     }
 
-/*    public static Map<String, Stock> getStockMap() {
+/*    public Map<String, Stock> getStockMap() {
         return stockMap;
     }*/
 
-    public static Portfolio getMasterPortfolio(){
+    public Portfolio getMasterPortfolio(){
         return masterPortfolio;
     }
 
-
+    public Scanner getSc() {
+        return sc;
+    }
 }
