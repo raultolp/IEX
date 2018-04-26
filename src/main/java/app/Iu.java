@@ -35,7 +35,7 @@ public class Iu {
         //User, Portfolio, Stocks
         this.userList = new ArrayList<>();
         this.portfolioList = new ArrayList<>();
-        this.masterPortfolio = null;
+        //this.masterPortfolio = null;
 
         // One and Only - my precious
         this.sc = new Scanner(System.in);
