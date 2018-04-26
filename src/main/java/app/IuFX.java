@@ -1,6 +1,5 @@
 package app;
 
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Application;
@@ -9,19 +8,12 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
 import java.io.File;
-import java.util.EventListener;
 import java.util.HashSet;
 import java.util.Objects;
-
 import java.util.Set;
 
 //LightSlateGray 	#778899
@@ -57,7 +49,7 @@ public class IuFX extends Application {
 
         Scene scene = new Scene(borderPane, 200, 400);
 
-       // start.setOnMouseClicked(event ->);
+        // start.setOnMouseClicked(event ->);
 
 
         stage.setTitle("Start");
