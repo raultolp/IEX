@@ -111,6 +111,20 @@ public class Position {
         return posObj;
     }
 
+    //For printing out position info when viewing User's portfolio:
+    public String toStringForPortfolio() {
+        String sep = "\t";
+        String info = symbol + sep + sep + volume + sep + sep + String.format("%.2f", price) + sep + sep +
+                String.format("%.2f", currentValue) + sep + sep +
+                String.format("%.2f", unrealisedProfit) + sep + sep +
+                String.format("%.2f", profit) + sep + "\n";
+
+        //NB! Average purchase price ('averagePrice') currently not shown in portfolio.
+        // (Maybe previous (realized) profit ('profit') should also be left out.)
+
+        return info;
+    }
+
     public int getVolume() {
         return volume;
     }
@@ -139,6 +153,9 @@ public class Position {
         return transactions;
     }
 
+    public boolean isOpen() {
+        return open;
+    }
     //TODO: (PRIORITY 2) - ADD SHORT POSITIONS
 
 }

@@ -72,11 +72,14 @@ public class User implements Comparable<User> {
 
     public void setPortfolioTotalValue() {
         this.portfolioTotalValue = portfolio.getTotalValueOfPortfolio();
-        ;
     }
 
-    public double getPercentageIncrease() { //increase in portfolio value from the beginning of the game
-        return (portfolioTotalValue - initialFunds) / initialFunds;
+    public double getPercentageIncrease() { //increase in portfolio value from the beginning of the game (%)
+        return ((portfolioTotalValue - initialFunds) / initialFunds) * 100;
+    }
+
+    public double getValueIncrease() { //increase in portfolio value from the beginning of the game (USD)
+        return portfolioTotalValue - initialFunds;
     }
 
     @Override

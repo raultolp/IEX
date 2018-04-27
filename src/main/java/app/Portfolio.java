@@ -312,56 +312,36 @@ public class Portfolio extends IEXdata {
 
     }
 
-
-    public List<String> roundDoubleList(List<Double> arrayList) {
-        DecimalFormat df = new DecimalFormat("###.##");
-        List<String> roundedDoubles = new ArrayList<>();
-
-        for (Double dbl : arrayList) {
-            roundedDoubles.add(df.format(dbl));
-
-        }
-        return roundedDoubles;
-    }
-
     @Override
     public String toString() {
-        return "Portfolio{" +
-                "availableFunds=" + availableFunds +
-                ", portfolio=" + portfolioStocks +
-                '}';
-    }
 
-    /*    @Override
-    public String toString() {
-        return
-                "Stock names: \n" + symbolList.toString() + '\n' +
-                        "Prices: \n" + prices.toString() + '\n' +
-                        "Volumes: \n" + volumes.toString() + '\n' +
-                        "Average purchase prices: \n" + averagePrices + '\n' +
-                        "Profits or losses: \n" + profitsOrLosses + '\n' +
-                        "Unrealised profits or losses: \n" + roundDoubleList(unrealisedProfitsOrLosses) + '\n' +
-                        "Current values of positions: \n" + currentValuesOfPositions + '\n' +
-                        "Total current value of positions: \n" + totalValueOfPositions + '\n' +
-                        "Total profit or loss: \n" + profit + '\n' +
-                        "Total unrealised profit or loss: \n" + unrealisedProfit + '\n' +
-                        "Transaction fee: \n" + transactionFee + '\n';
-    }
+        //Information on positsions:
+        String info = "---------------------------------------------------\n";
+        info += "STOCK\tVOLUME\tPRICE\tVALUE\tUNREALIZED P/L\tREALIZED P/L\n";
+        info += "---------------------------------------------------\n";
+        if (positions.size() > 0) {
+            for (String symbol : positions.keySet()) {
+                if (positions.get(symbol).isOpen()) { // only open positions are shown when viewing in portfolio
+                    info += positions.get(symbol).toStringForPortfolio();
+                }
+            }
+        } else {
+            info += "Portfolio contains no open positions...\n";
+        }
 
-    public String toStringForFile() {
-        return
-                "" + user.getUserName() + ";" + availableFunds + ";" +
-                        symbolList + ';' +
-                        prices + ';' +
-                        volumes + ';' +
-                        averagePrices + ';' +
-                        profitsOrLosses + ';' +
-                        roundDoubleList(unrealisedProfitsOrLosses) + ';' +
-                        currentValuesOfPositions + ';' +
-                        totalValueOfPositions + ';' +
-                        profit + ';' +
-                        unrealisedProfit + ';' +
-                        transactionFee + '\n';
-    }*/
+        info.trim();
+
+        //Information on portfolio totals:
+        info += "---------------------------------------------------\n";
+        info += "PORTFOLIO TOTAL VALUE: " + String.format("%.2f", getTotalValueOfPortfolio()) + " USD\n";
+        info += "     - incl. OPEN POSITIONS: " + String.format("%.2f", totalValueOfPositions) + " USD\n";
+        info += "           - of which: TOTAL ACQUISITION PRICE (INCL. TRANSACTION FEES): " + String.format("%.2f", totalValueOfPositions - unrealisedProfit) + " USD\n";
+        info += "           - of which: INCERASE IN VALUE (UNREALIZED PROFIT): " + String.format("%.2f", unrealisedProfit) + " USD\n";
+        info += "     - incl. CASH: " + String.format("%.2f", availableFunds) + " USD\n";
+        info += "---------------------------------------------------\n";
+        info += "REALIZED PROFIT (FROM SALES): " + String.format("%.2f", profit) + " USD";
+
+        return info;
+    }
 
 }

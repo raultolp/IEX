@@ -5,9 +5,12 @@ import app.Iu;
 import app.Portfolio;
 import app.User;
 
+import java.util.Collections;
+import java.util.List;
+
 import static app.actions.ShowUsersList.showUsersList;
 
-//View user portfolio - showUserPortfolio
+//View active user's portfolio - showUserPortfolio
 
 public class ShowUserPortfolio implements CommandHandler {
 
@@ -19,14 +22,27 @@ public class ShowUserPortfolio implements CommandHandler {
     }
 
     private static void showUserPortfolio(Iu handler) {
-        String username;
+        User user = handler.getActiveUser();
+        String username = user.getUserName();
 
-        handler.getSc().nextLine();
-        showUsersList(handler.getUserList());
-        System.out.print("Enter username: ");
-        username = handler.getSc().nextLine();
+        //Info from Portfolio:
+        System.out.println("\n" + username.toUpperCase() + "'s PORTFOLIO: ");
+        System.out.println(user.getPortfolio());
 
-        if (username.length() < 3)
+        //Info from User:
+        String portValueIncrease = String.format("%.2f", user.getValueIncrease());
+        String portfValueIncreasePercent = String.format("%.4f", user.getPercentageIncrease());
+        System.out.println("PORTFOLIO'S TOTAL INCREASE IN VALUE (REALIZED + UNREALIZED PROFIT): " +
+                portValueIncrease + " USD (" + portfValueIncreasePercent + "%)");
+
+        //Getting user ranking in TopList:
+        List<User> userList = handler.getUserList();
+        Collections.sort(userList);
+        int ranking = userList.indexOf(user) + 1;
+        System.out.println(username + "'s ranking in game: " + ranking);
+
+
+/*        if (username.length() < 3)
             username = handler.getActiveUser().getUserName();
 
         for (User user : handler.getUserList()) {
@@ -34,12 +50,12 @@ public class ShowUserPortfolio implements CommandHandler {
                 Portfolio portfolio = user.getPortfolio();
                 System.out.print("\nAvailable cash: ");
                 System.out.printf("%.2f", user.getAvailableFunds());
-                System.out.println("\n" + portfolio.toString());
+                //System.out.println("\n" + portfolio.toString());
                 System.out.print("Portfolio total value: ");
                 System.out.printf("%.2f", portfolio.getTotalValueOfPortfolio());
                 System.out.println();
             }
-        }
+        }*/
     }
 
 }

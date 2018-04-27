@@ -11,7 +11,7 @@ import java.util.*;
 
 //Top list, based on portfolio total value:
 
-public class ShowPortfoliosProgress implements CommandHandler {
+public class ShowGameTopList implements CommandHandler {
 
     @Override
     public void handle(Integer command, Iu handler) {
@@ -30,14 +30,17 @@ public class ShowPortfoliosProgress implements CommandHandler {
 
         System.out.println("\nTOP LIST:");
         System.out.println("-------------------------------------------------\n" +
-                "USER\tPORTF.VALUE\t\tINCREASE IN VALUE (%)\n" +
+                "RANK USER\t\tPORTF.VALUE\t\t\tINCREASE IN VALUE\n" +
                 "-------------------------------------------------");
 
-        for (User user : userList) {
+        for (int i = 1; i < userList.size() + 1; i++) {
+            User user = userList.get(i - 1);
             String name = user.getUserName();
-            String portfTotalValue = String.format("%.4f", user.getPortfolioTotalValue());
-            String portfValueIncrease = String.format("%.4f", user.getPercentageIncrease());
-            System.out.println(name + "\t\t" + portfTotalValue + "\t\t\t" + portfValueIncrease);
+            String portfTotalValue = String.format("%.2f", user.getPortfolioTotalValue());
+            String portValueIncrease = String.format("%.2f", user.getValueIncrease());
+            String portfValueIncreasePercent = String.format("%.4f", user.getPercentageIncrease());
+            System.out.println(i + ". " + name + " \t\t" + portfTotalValue + " USD\t\t " +
+                    portValueIncrease + " USD (" + portfValueIncreasePercent + "%)");
         }
     }
 }

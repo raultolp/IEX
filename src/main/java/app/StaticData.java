@@ -46,7 +46,7 @@ public class StaticData {
             "View stock base data",
             "View stock historical data",
             "View stock news",
-            "View all portfolios performance",
+            "View game Top List",
             "Load data file",
             "Save data file",
             "Quit"};

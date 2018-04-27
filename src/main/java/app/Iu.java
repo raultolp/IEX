@@ -144,7 +144,7 @@ public class Iu {
                 new ShowStockBaseData(),
                 new ShowStockHistoricalData(),
                 new ShowStockNews(),
-                new ShowPortfoliosProgress(),
+                new ShowGameTopList(),
                 new LoadData(),
                 new SaveData(),
                 new Quit(),
