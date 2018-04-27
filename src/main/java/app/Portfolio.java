@@ -35,17 +35,17 @@ public class Portfolio extends IEXdata {
     //https://api.iextrading.com/1.0/stock/market/batch?symbols=aapl,fb&types=quote,news,chart&range=1m&last=5
 
     //Constructor - creates a MasterPortfolio with all availableStocks for admin:
-    public Portfolio(String[] availableStocks, double availableFunds, Iu handler) throws IOException{
+    public Portfolio(String[] availableStocks, double availableFunds, Iu handler) throws IOException {
         this(availableFunds, handler); //uses another constructor for generating empty portfolio
 
         String symbols = String.join(",", availableStocks);
-        String url="https://api.iextrading.com/1.0/stock/market/batch?symbols="+symbols+"&types=quote,stats"; //,news,chart&range=1m&last=10";
+        String url = "https://api.iextrading.com/1.0/stock/market/batch?symbols=" + symbols + "&types=quote,stats"; //,news,chart&range=1m&last=10";
 
         JsonElement root = IEXdata.downloadData(url);  // array or object
         JsonObject rootobj = root.getAsJsonObject();
 
         for (String stockSymb : availableStocks) {
-            JsonObject stockObject= rootobj.getAsJsonObject(stockSymb);
+            JsonObject stockObject = rootobj.getAsJsonObject(stockSymb);
             Stock stock = new Stock(stockSymb, stockObject);
             portfolioStocks.put(stockSymb, stock);
         }

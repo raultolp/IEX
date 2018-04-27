@@ -18,7 +18,7 @@ public class ShowStockHistoricalData implements CommandHandler {
 
     private void showStockHistoricalData(Iu handler) {
 
-        Portfolio masterPortfolio= handler.getMasterPortfolio();
+        Portfolio masterPortfolio = handler.getMasterPortfolio();
 
         //TODO: add option to choose time period
 

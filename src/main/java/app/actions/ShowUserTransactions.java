@@ -13,11 +13,10 @@ public class ShowUserTransactions implements CommandHandler {
     public void handle(Integer command, Iu handler) {
         if (command == 8) {
             Portfolio portfolio = handler.getActiveUser().getPortfolio();
-            if (portfolio != null){
-                String report=portfolio.getTransactionsReport();
+            if (portfolio != null) {
+                String report = portfolio.getTransactionsReport();
                 System.out.println(report);
-            }
-            else {
+            } else {
                 MyUtils.colorPrintYellow("No transactions have been made yet.");
             }
         }

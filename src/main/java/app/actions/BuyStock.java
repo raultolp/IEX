@@ -31,7 +31,7 @@ public class BuyStock implements CommandHandler {
                     MyUtils.colorPrintYellow("Not enough funds!");
                 }
             } else
-                MyUtils.colorPrintRed( "This stock is not available.");
+                MyUtils.colorPrintRed("This stock is not available.");
         }
     }
 }

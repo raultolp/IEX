@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.util.List;
+
 import static app.StaticData.availableStocks;
 
 public class User implements Comparable<User> {
@@ -20,7 +21,7 @@ public class User implements Comparable<User> {
         this.initialFunds = availableFunds;
         this.handler = handler;
 
-        if (userName.equals("admin")){
+        if (userName.equals("admin")) {
             this.portfolio = new Portfolio(handler.getAvailableStocks(), availableFunds, handler); // MasterPorfolio for admin
         } else {
             this.portfolio = new Portfolio(availableFunds, handler);

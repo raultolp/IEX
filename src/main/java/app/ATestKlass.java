@@ -23,7 +23,7 @@ public class ATestKlass implements Comparator<String> {
         }
 
         //TESTING BATCH CREATION OF POTRFOLIO FOR ADMIN (WITH BATCH DOWNLOAD DATA FOR ALL STOCKS):
-        String [] availableSt = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
+        String[] availableSt = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
                 "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
                 "TSLA", "TWTR", "V", "WMT", "SPY"};
         //Portfolio masterPortfolio=new Portfolio(availableSt, 100000, handler);
@@ -118,11 +118,11 @@ public class ATestKlass implements Comparator<String> {
         //TESTING BATCH UPDATE OF PRICES AT REGULAR TIME INTERVALS:
         for (int i = 0; i < 4; i++) {
 
-            if (i>0) {
+            if (i > 0) {
                 masterPortfolio.updatePrices(userList);
             }
             for (String s : availableSt) {
-                System.out.print(s+"\t");
+                System.out.print(s + "\t");
             }
             System.out.println("");
 
@@ -142,8 +142,8 @@ public class ATestKlass implements Comparator<String> {
             }
 
             System.out.println("\n");
-            int timeToSleep=7000;
-            System.out.print("Now Sleeping for " + timeToSleep/1000 +" seconds... ");
+            int timeToSleep = 7000;
+            System.out.print("Now Sleeping for " + timeToSleep / 1000 + " seconds... ");
             Thread.sleep(timeToSleep);  // in seconds
             System.out.println("Woke up!");
 
