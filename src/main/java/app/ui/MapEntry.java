@@ -1,4 +1,4 @@
-package app;
+package app.ui;
 
 import java.util.Objects;
 

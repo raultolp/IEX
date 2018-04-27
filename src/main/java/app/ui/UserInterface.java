@@ -1,5 +1,5 @@
 
-package app;
+package app.ui;
 
 //LightSlateGray 	#778899
 //LightSlateGrey 	#778899
@@ -7,7 +7,9 @@ package app;
 //SeaShell 	#FFF5EE
 //SteelBlue 	#4682B4
 
-import javafx.application.Application;
+import app.Iu;
+import app.Portfolio;
+import app.Stock;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
@@ -25,21 +27,14 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 
-public class UserInterface extends Application {
-    private Iu handler;
-    Portfolio portfolio = new Portfolio(10000, handler);
+public class UserInterface extends Stage {
+    private Iu handler = new Iu();
+    Portfolio portfolio = handler.getMasterPortfolio();
 
     public UserInterface() throws IOException {
-        this.handler = new Iu();
     }
 
-    public static void main(String[] args) {
-        {
-            launch(args);
-        }
-    }
 
-    @Override
     public void start(Stage stage) {
 
         GridPane centerGrid = new GridPane();

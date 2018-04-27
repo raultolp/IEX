@@ -1,5 +1,7 @@
-package app;
+package app.ui;
 
+import app.Iu;
+import app.User;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
@@ -9,15 +11,15 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
-import java.io.File;
+import java.io.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -29,6 +31,11 @@ import java.util.Set;
 //SteelBlue 	#4682B4
 
 public class IuFX extends Application {
+    private CreateUser CU = new CreateUser();
+    private String selectedGame = "";
+    private StockGraphPopup graphPopup = new StockGraphPopup();
+    private ListView<String> savedGames = addListView();
+
 
     @Override
 
@@ -48,7 +55,7 @@ public class IuFX extends Application {
 
         VBox centerBox = new VBox();
         centerBox.setSpacing(20);
-        centerBox.getChildren().addAll(gameTitle, addListView());
+        centerBox.getChildren().addAll(gameTitle, savedGames);
 
         centerGrid.getChildren().add(centerBox);
 
@@ -68,7 +75,27 @@ public class IuFX extends Application {
 
         Scene scene = new Scene(borderPane, 200, 400);
 
-        //start.setOnMouseClicked(event ->);
+
+        start.setOnMouseClicked(event -> {
+                    try {
+                        //load game (selectedGame)
+                        graphPopup.start(stage);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Start " + selectedGame);
+                }
+        );
+
+        create.setOnAction(event -> {
+            try {
+                saveData(gameTitle.getText());
+                new UserInterface().start(stage);
+                //start game
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
 
         stage.setTitle("Start");
@@ -78,11 +105,13 @@ public class IuFX extends Application {
 
     private JFXListView<String> addListView() {
         JFXListView<String> gameList = new JFXListView<>();
-        ObservableList<String> items = FXCollections.observableArrayList(
+        final ObservableList<String> items = FXCollections.observableArrayList(
                 listFilesForFolder());
         gameList.setItems(items);
 
         gameList.cellFactoryProperty();
+
+        gameList.setOnMouseClicked(event -> selectedGame = gameList.getSelectionModel().getSelectedItem());
 
         return gameList;
     }
@@ -100,11 +129,27 @@ public class IuFX extends Application {
         return games;
     }
 
-    private Popup gamePopup() {
-        Popup popup = new Popup();
-        return popup;
-    }
+    public void saveData(String filename) throws IOException {
+        File directory = new File("Games");
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        try {
+            File file = new File("Games" + "/" + filename);
+            Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+            file = new File(filename);
+            Iu iu = new Iu();
 
+            for (User user : iu.getUserList()) {
+                writer.write(user.getPortfolio().toString());
+            }
+            writer.close();
+            iu.setActiveGame(file);
+        } catch (IOException io) {
+            io.printStackTrace();
+            System.exit(1);
+        }
+    }
 
     public static void main(String args[]) {
         launch(args);
