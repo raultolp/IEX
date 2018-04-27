@@ -49,12 +49,11 @@ public class Transaction {
     public String toStringForReport() {
         String sep = "\t";
         String report = type + sep + sep + date + sep + time + sep + volume + sep + sep + price + sep +
-                String.format("%.2f", getTransactionFees()) + sep +
-                String.format("%.2f", getTransactionAmount()) + sep + sep;
+                "-" + String.format("%.2f", getTransactionFees()) + sep;
         if (type.equals("buy")) {
-            report += "-";
+            report += "-" + String.format("%.2f", getTransactionAmount()) + sep + sep + "-";
         } else {
-            report += String.format("%.2f", profitFromSell);
+            report += "+" + String.format("%.2f", getTransactionAmount()) + sep + String.format("%.2f", profitFromSell);
         }
 
         return report;

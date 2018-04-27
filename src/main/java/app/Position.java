@@ -77,6 +77,7 @@ public class Position {
 
         volume += addedVolume;
         priceUpdate(purchasePrice);
+        addTransaction(transaction);
     }
 
     public void decreasePosition(Transaction transaction, double salesPrice, double salesVolume) {
@@ -87,6 +88,7 @@ public class Position {
         if (volume == 0) {
             open = false; //position is closed
         }
+        addTransaction(transaction);
     }
 
     public JsonObject covertToJson() {

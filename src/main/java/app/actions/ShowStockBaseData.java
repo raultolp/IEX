@@ -18,7 +18,7 @@ public class ShowStockBaseData implements CommandHandler {
 
         handler.getSc().nextLine();
         System.out.println("Enter stock symbol: ");
-        String stockSym = handler.getSc().nextLine();
+        String stockSym = handler.getSc().nextLine().toUpperCase();
 
         try {
             //stock fundamentals:

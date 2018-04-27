@@ -24,7 +24,7 @@ public class ShowStockHistoricalData implements CommandHandler {
 
         handler.getSc().nextLine();
         System.out.println("Enter stock symbol: ");
-        String stockSym = handler.getSc().nextLine();
+        String stockSym = handler.getSc().nextLine().toUpperCase();
 
         try {
             Stock stock = masterPortfolio.getStock(stockSym);
