@@ -1,5 +1,8 @@
 package app;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +38,26 @@ public class Position {
         addTransaction(transaction);
     }
 
+    //For initiating position from JSON:
+    public Position(JsonObject posObj) {
+        this.symbol = posObj.get("symbol").getAsString();
+        this.open = posObj.get("open").getAsBoolean();
+        this.price = posObj.get("price").getAsDouble();
+        this.volume = posObj.get("volume").getAsInt();
+        this.averagePrice = posObj.get("averagePrice").getAsDouble();
+        this.profit = posObj.get("profit").getAsDouble();
+        this.unrealisedProfit = posObj.get("unrealisedProfit").getAsDouble();
+        this.currentValue = posObj.get("currentValue").getAsDouble();
+
+        //Adding transactions related to the position:
+        JsonArray transListObj = posObj.get("transactions").getAsJsonArray();
+        for (int i = 0; i < transListObj.size(); i++) {
+            JsonObject trans = transListObj.get(i).getAsJsonObject();
+            Transaction transaction = new Transaction(trans);
+            transactions.add(transaction);
+        }
+    }
+
     public void addTransaction(Transaction transaction) {
         transaction.setAveragePurchasePrice(averagePrice);
         transactions.add(transaction);
@@ -66,6 +89,28 @@ public class Position {
         }
     }
 
+    public JsonObject covertToJson() {
+        JsonObject posObj = new JsonObject(); //kasutaja portf. positsiooni väljad
+        posObj.addProperty("open", open);
+        posObj.addProperty("symbol", symbol);
+        posObj.addProperty("price", price);
+        posObj.addProperty("volume", volume);
+        posObj.addProperty("averagePrice", averagePrice);
+        posObj.addProperty("profit", profit);
+        posObj.addProperty("unrealisedProfit", unrealisedProfit);
+        posObj.addProperty("currentValue", currentValue);
+
+        //Adding transactions:
+        JsonArray transListObj = new JsonArray(); //kasutaja portf. positsiooni tehingute list
+        for (Transaction trans : transactions) {
+            JsonObject transObj = trans.covertToJson();
+            transListObj.add(transObj);
+        }
+        posObj.add("transactions", transListObj);  //transactions!!!
+
+        return posObj;
+    }
+
     public int getVolume() {
         return volume;
     }
@@ -84,6 +129,10 @@ public class Position {
 
     public double getAveragePrice() {
         return averagePrice;
+    }
+
+    public String getSymbol() {
+        return symbol;
     }
 
     public List<Transaction> getTransactions() {

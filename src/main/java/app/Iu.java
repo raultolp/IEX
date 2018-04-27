@@ -8,13 +8,13 @@ import java.util.*;
 
 import static app.StaticData.*;
 
-//import static app.actions.SaveData.saveData; //HETKEL EI TÖÖTA
+import app.actions.SaveData;
+
 
 public class Iu {
 
     //User, Portfolio, Stocks
     private List<User> userList;
-    private List<Portfolio> portfolioList;
     private Portfolio masterPortfolio;
 
     //Command handler
@@ -34,8 +34,6 @@ public class Iu {
 
         //User, Portfolio, Stocks
         this.userList = new ArrayList<>();
-        this.portfolioList = new ArrayList<>();
-        //this.masterPortfolio = null;
 
         // One and Only - my precious
         this.sc = new Scanner(System.in);
@@ -72,17 +70,12 @@ public class Iu {
 
         // QUIT PROGRAM
         if (handler.activeGame != null)
-            //saveData(sc); //HETKEL EI TÖÖTA
+            handler.getDataCollector().interrupt();
+        //app.actions.SaveData.saveData(handler);  //võib-olla ei taha salvestada
             handler.sc.close();
 
         System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
 
-/*        //Peaks kuskil ees olema .. praegu siin
-        for (String symbol : availableStocks) {
-            Stock stock = new Stock(symbol);
-            stockMap.put(symbol, stock);
-
-        }*/
     }
 
     /***** CREATE ADMIN AND MASTER PORTFOLIO *****/
@@ -152,8 +145,8 @@ public class Iu {
                 new ShowStockHistoricalData(),
                 new ShowStockNews(),
                 new ShowPortfoliosProgress(),
-/*              new LoadData(), //HETKEL EI TÖÖTA  NEED KAKS
-                new SaveData(),*/
+                new LoadData(),
+                new SaveData(),
                 new Quit(),
                 new ErrorHandler()
         );
@@ -197,10 +190,6 @@ public class Iu {
         this.userList = userList;
     }
 
-    public List<Portfolio> getPortfolioList() {
-        return portfolioList;
-    }
-
     public User getAdmin() {
         return this.admin;
     }
@@ -220,10 +209,6 @@ public class Iu {
     public void setActiveGame(File activeGame) {
         this.activeGame = activeGame;
     }
-
-/*    public Map<String, Stock> getStockMap() {
-        return stockMap;
-    }*/
 
     public Portfolio getMasterPortfolio(){
         return this.masterPortfolio;

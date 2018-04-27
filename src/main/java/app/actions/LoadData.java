@@ -1,19 +1,20 @@
-/*
 package app.actions;
 
 import app.CommandHandler;
+import app.Iu;
 import app.Portfolio;
 import app.User;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import static app.Iu.*;
+import app.MyUtils;
+
 import static app.StaticData.ANSI_RESET;
 import static app.StaticData.ANSI_YELLOW;
 
@@ -22,129 +23,59 @@ import static app.StaticData.ANSI_YELLOW;
 public class LoadData implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Scanner sc) throws Exception {
+    public void handle(Integer command, Iu handler) throws Exception {
         if (command == 16) {
-            loadData(sc);
+            loadData(handler);
         }
     }
 
-    public static void loadData(Scanner sc) throws IOException {
-        double availableFunds = 0.0;
-        double transactionFee = 0.1;
-        double totalUnrealisedProfitOrLoss = 0.0;
-        double totalProfitOrLoss = 0.0;
-        double totalCurrentValueOfPositions = 0.0;
-        List<User> userList = getUserList();
-        List<Portfolio> portfolioList = getPortfolioList();
+    public void loadData(Iu handler) throws IOException {
 
-        listFiles();
-        sc.nextLine();
+        //Scanner sc=handler.getSc();
+        File currentDir = new File(".");
+        List<String> fileNames = Arrays.asList(currentDir.list());
 
+        MyUtils.listFiles();
+
+        handler.getSc().nextLine();
         System.out.print("Enter filename: ");
-        String filename = sc.nextLine();
+        String name = handler.getSc().nextLine();
 
-        // if (!filename.endsWith(".game"))
-        //   filename += ".game";
+        if (!name.endsWith(".game")) {
+            name += ".game";
+        }
 
-        File file = new File(filename);
+        //If file does not exist:
+        if (!fileNames.contains(name)) {
+            System.out.println("File does not exist.");
+        }
 
-        if (file.exists()) {
-            try ( BufferedReader br = new BufferedReader(new FileReader(file)) ) {
-                userList.clear();
-                portfolioList.clear();
-                String line;
-                //reads all lines from file and adds users and portfolios to their respective arraylists
+        //If file exists: loading data from file:
+        else {
+            File file = new File(name);
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream
+                    (file), "UTF-8"))) {
 
-                while ((line = br.readLine()) != null) {
+                //Converting data to JSON object:
+                String gameAsString = br.readLine();
+                JsonParser jp = new JsonParser();
+                JsonObject gameObj = jp.parse(gameAsString).getAsJsonObject(); //from String to json
 
-                    String[] elements = line.split(";");
-
-                    String[] syms = elements[2].split(",");
-                    List<String> symbols = new ArrayList<>();
-                    for (String sym : syms) {
-                        if (!(sym.equals("[]")))
-                            symbols.add(sym.replaceAll("[\\W]", ""));
-                        else symbols.add("");
-                    }
-
-                    String[] price = elements[3].split(",");
-                    List<Double> prices = new ArrayList<>();
-                    for (String pri : price) {
-                        if (!(pri.equals("[]")))
-                            prices.add(Double.parseDouble(pri.replaceAll("[\\W]", "")));
-                    }
-
-                    String[] vols = elements[4].split(",");
-                    List<Integer> volumes = new ArrayList<>();
-                    for (String number : vols) {
-                        if (!(number.equals("[]")))
-                            volumes.add(Integer.parseInt(number.replaceAll("[\\W]", "")));
-                    }
-
-                    String[] avgPrc = elements[5].split(",");
-                    List<Double> averagePrices = new ArrayList<>();
-                    for (String avg : avgPrc) {
-                        if (!(avg.equals("[]")))
-                            averagePrices.add(Double.parseDouble(avg.replaceAll("[\\W]", "")));
-                    }
-
-                    String[] profLoss = elements[6].split(",");
-                    List<Double> profitsOrLosses = new ArrayList<>();
-                    for (String profL : profLoss) {
-                        if (!(profL.equals("[]")))
-                            profitsOrLosses.add(Double.parseDouble(profL.replaceAll("[\\W]", "")));
-                    }
-
-                    String[] unreals = elements[7].split(",");
-                    List<Double> unrealisedProfitsOrLosses = new ArrayList<>();
-                    for (String pl : unreals) {
-                        if (!(pl.equals("[]")))
-                            unrealisedProfitsOrLosses.add(Double.parseDouble(pl.replaceAll("[\\W]", "")));
-                    }
-
-                    String[] currs = elements[8].split(",");
-                    List<Double> currentValuesOfPositions = new ArrayList<>();
-                    for (String cr : currs) {
-                        if (!(cr.equals("[]")))
-                            currentValuesOfPositions.add(Double.parseDouble(cr.replaceAll("[\\W]", "")));
-                        else
-                            currentValuesOfPositions.add(0.0);
-                    }
-
-                    if (!(elements[1].equals("[]")))
-                        availableFunds = Double.parseDouble(elements[1]);
-
-                    if (!(elements[9].equals("[]")))
-                        totalCurrentValueOfPositions = Double.parseDouble(elements[9]);
-
-                    if (!(elements[10].equals("[]")))
-                        totalProfitOrLoss = Double.parseDouble(elements[10]);
-
-                    if (!(elements[11].equals("[]")))
-                        totalUnrealisedProfitOrLoss = Double.parseDouble(elements[11]);
-
-                    if (!(elements[12].equals("[]")))
-                        transactionFee = Double.parseDouble(elements[12]);
-
-
-                    User user = new User(elements[0], new Portfolio(), Double.parseDouble(elements[1]));
-
-
-                    Portfolio port = new Portfolio(availableFunds, user,
-                            symbols, prices, volumes, averagePrices, profitsOrLosses, unrealisedProfitsOrLosses,
-                            currentValuesOfPositions, totalCurrentValueOfPositions, totalProfitOrLoss,
-                            totalUnrealisedProfitOrLoss, transactionFee);
-
-                    User newUser = new User(elements[0], port, Double.parseDouble(elements[1]));
-
-                    portfolioList.add(port);
-                    userList.add(newUser);
+                //Creating users (with their portfolios, positions and transactions):
+                List<User> newUserList = new ArrayList<>();
+                for (String username : gameObj.keySet()) {
+                    JsonObject userObj = gameObj.get(username).getAsJsonObject();
+                    User newUser = new User(username, userObj, handler);
+                    newUserList.add(newUser);
                 }
+
+                handler.setUserList(newUserList);
+
             } finally {
-                setActiveGame(file);
-                System.out.println(ANSI_YELLOW + getActiveGame().getName() + " file loaded." + ANSI_RESET);
+                handler.setActiveGame(file);
+                System.out.println(ANSI_YELLOW + handler.getActiveGame().getName() + " file loaded." + ANSI_RESET);
             }
         }
+
     }
 }
-*/

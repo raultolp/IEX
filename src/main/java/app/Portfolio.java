@@ -1,5 +1,6 @@
 package app;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -13,11 +14,10 @@ public class Portfolio extends IEXdata {
     private double availableFunds;
     private Map<String, Stock> portfolioStocks;
     private Map<String, Position> positions;
-    private double totalValueOfPositions; //sum of all totals (i.e. sum of all current positions)
-    private double profit; //realised profit (from closed positions (sold stocks))
-    private double unrealisedProfit; //gains/losses in value of stocks in portfolio (i.e of stocks not sold yet)
+    private double totalValueOfPositions = 0.0; //sum of all totals (i.e. sum of all current positions)
+    private double profit = 0.0; //realised profit (from closed positions (sold stocks))
+    private double unrealisedProfit = 0.0; //gains/losses in value of stocks in portfolio (i.e of stocks not sold yet)
     private Iu handler;
-    private Portfolio masterPortfolio;
 
 
     //Constructor - creates an empty portfolio for new user:
@@ -29,7 +29,6 @@ public class Portfolio extends IEXdata {
         this.unrealisedProfit = 0.0;
         this.availableFunds = initialFunds;
         this.handler = handler;
-        this.masterPortfolio = handler.getMasterPortfolio();
     }
 
     //TODO: (PRIORITY 3): IT WOULD ALSO BE POSSIBLE TO DOWNLOAD CHART DATA IN ONE GO, IF NEEDED:
@@ -52,18 +51,24 @@ public class Portfolio extends IEXdata {
         }
     }
 
+    //Constructor - for initiating user portfolio from Json:
+    public Portfolio(JsonObject portfObj, Iu handler) {
+        this(-10, handler); //uses another constructor for generating empty portfolio
+        this.availableFunds = portfObj.get("availableFunds").getAsDouble();
 
-    //Constructor - for loading user portfolio from file::
-    public Portfolio(double availableFunds, Map<String, Stock> portfolioStocks,
-                     Map<String, Position> positions,
-                     double totalValueOfPositions, double profit, double unrealisedProfit
-    ) {
-        this.availableFunds = availableFunds;
-        this.portfolioStocks = portfolioStocks;
-        this.positions = positions;
-        this.totalValueOfPositions = totalValueOfPositions;
-        this.profit = profit;
-        this.unrealisedProfit = unrealisedProfit;
+        JsonArray posListArray = portfObj.getAsJsonArray("positions").getAsJsonArray(); //kasutaja portfelli positsioonid
+
+        if (posListArray.size() != 0) {
+            for (int i = 0; i < posListArray.size(); i++) {
+                JsonObject posObj = posListArray.get(i).getAsJsonObject();
+                Position position = new Position(posObj);
+                String stockSymb = position.getSymbol();
+                positions.put(stockSymb, position);
+                Stock stock = handler.getMasterPortfolio().getStock(stockSymb);
+                portfolioStocks.put(stockSymb, stock);
+            }
+            calculateTotals();
+        }
     }
 
 
@@ -79,7 +84,7 @@ public class Portfolio extends IEXdata {
         LocalDateTime transactionTime = java.time.LocalDateTime.now();
 
         if (newStock) {
-            stock = masterPortfolio.getStock(symbol);
+            stock = handler.getMasterPortfolio().getStock(symbol);
         } else {
             stock = portfolioStocks.get(symbol);
         }
@@ -103,6 +108,7 @@ public class Portfolio extends IEXdata {
                 position.increasePosition(transaction, price, volume);
             }
             calculateTotals();
+            //System.out.println(symbol+"vol"+positions.get(symbol).getVolume()+"value: "+positions.get(symbol).getCurrentValue());
         }
     }
 
@@ -149,15 +155,17 @@ public class Portfolio extends IEXdata {
     //-----------------------------------------------
     //calculate portfolio total (sum of all current positions in stock):
     public void calculateTotals() {
-        totalValueOfPositions = 0.0;
-        profit = 0.0;
-        unrealisedProfit = 0.0;
+        if (positions.size() != 0) {
+            totalValueOfPositions = 0.0;
+            profit = 0.0;
+            unrealisedProfit = 0.0;
 
-        for (String s : positions.keySet()) {
-            Position position = positions.get(s);
-            totalValueOfPositions += position.getCurrentValue();
-            profit += position.getProfit(); //for both open and closed positions
-            unrealisedProfit += position.getUnrealisedProfit();
+            for (String s : positions.keySet()) {
+                Position position = positions.get(s);
+                totalValueOfPositions += position.getCurrentValue();
+                profit += position.getProfit(); //for both open and closed positions
+                unrealisedProfit += position.getUnrealisedProfit();
+            }
         }
     }
     //-----------------------------------------------
@@ -189,36 +197,63 @@ public class Portfolio extends IEXdata {
 
     //-----------------------------------------------
 
-
-    //UPDATE CURRENT PRICES FOR ALL STOCKS IN PORTFOLIO:
-    public void updatePrices() {
+    //UPDATE CURRENT PRICES FOR ALL STOCKS IN MASTER PORTFOLIO AND USER PORTFOLIOS:
+    public void updatePrices(List<User> userList) {
 
         //Constructing URL:
         String stockSymbols = String.join(",", portfolioStocks.keySet());
         String url = "https://api.iextrading.com/1.0/stock/market/batch?symbols=" + stockSymbols + "+&types=price";
 
+        //List<User> userList= Iu.getUserList();  //VT KAS PANNA TAGASI
+
         try {
             JsonElement root = IEXdata.downloadData(url);  // array or object
             JsonObject rootobj = root.getAsJsonObject();
 
+            // Updating prices of all stocks (updates prices in MasterPortfolio, but also in
+            //  Users' portfolios, given that stock instances contained in them are just taken
+            // from MasterPortfolio):
             for (String stockSymb : portfolioStocks.keySet()) {
                 Stock stock = portfolioStocks.get(stockSymb);
                 double newPrice = rootobj.getAsJsonObject(stockSymb).get("price").getAsDouble();
                 stock.setCurrentPrice(newPrice);
-
-                if (positions.size()!=0){  //if not admin's portfolio (or other empty portfolio)
-                    Position position = positions.get(stockSymb);
-                    position.priceUpdate(newPrice);
-                }
             }
 
-            calculateTotals();
+            //Updating positions in MasterPortfolio:
+            if (positions.size() != 0) {  //if not empty portfolio
+                updatePositions(positions);
+                calculateTotals();
+            }
+
+            //Updating positions in users' portfolios:
+            if (userList.size() > 0) {
+                for (User user : userList) {
+                    Portfolio userportf = user.getPortfolio();
+                    Map<String, Position> userPositions = userportf.getPositions();
+                    updatePositions(userPositions);
+                    userportf.calculateTotals();
+                }
+            }
 
         } catch (IOException e) {
             System.out.println("Connection to IEX failed. Prices were not updated.");
         }
     }
 
+    //Updating positions of MasterPortfolio and all Users' portfolios:
+    public void updatePositions(Map<String, Position> userPositions) {
+        Portfolio masterPortfolio = handler.getMasterPortfolio();
+        if (userPositions.size() != 0) {  //if not empty portfolio
+            for (String stockSymb : userPositions.keySet()) {
+                Position position = userPositions.get(stockSymb);
+                double newprice = masterPortfolio.getStock(stockSymb).getCurrentPrice();
+                //System.out.print("old: "+position.getCurrentValue());
+                //System.out.print(", newprice*volume: "+newprice*position.getVolume());
+                position.priceUpdate(newprice);
+                //System.out.println(", actual new: "+position.getCurrentValue());
+            }
+        }
+    }
 
 
     //-----------------------------------------------
@@ -229,6 +264,7 @@ public class Portfolio extends IEXdata {
     }
 
     public double getTotalValueOfPortfolio() {
+        calculateTotals();
         return availableFunds + totalValueOfPositions;
     }
 
@@ -256,8 +292,26 @@ public class Portfolio extends IEXdata {
         return availableFunds;
     }
 
+    public Map<String, Position> getPositions() {
+        return positions;
+    }
 
     //-----------------------------------------------
+
+    public JsonObject covertToJson() {
+        JsonObject portfObj = new JsonObject();  // kasutaja portf
+        JsonArray posListArray = new JsonArray(); //kasutaja portfelli positsioonid
+
+        for (String stockSymb : positions.keySet()) {
+            JsonObject posObj = positions.get(stockSymb).covertToJson();
+            posListArray.add(posObj);
+        }
+        portfObj.add("positions", posListArray);
+        portfObj.addProperty("availableFunds", availableFunds);
+        return portfObj;
+
+    }
+
 
     public List<String> roundDoubleList(List<Double> arrayList) {
         DecimalFormat df = new DecimalFormat("###.##");

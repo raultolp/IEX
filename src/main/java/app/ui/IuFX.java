@@ -31,7 +31,7 @@ import java.util.Set;
 //SteelBlue 	#4682B4
 
 public class IuFX extends Application {
-    private CreateUser CU = new CreateUser();
+    //private CreateUser CU = new CreateUser();  //ANDIS VEA, EI SAANUD IU-D TESTIDA
     private String selectedGame = "";
     private StockGraphPopup graphPopup = new StockGraphPopup();
     private ListView<String> savedGames = addListView();

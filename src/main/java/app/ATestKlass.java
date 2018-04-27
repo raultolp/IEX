@@ -1,5 +1,12 @@
 package app;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.jfoenix.controls.IFXTextInputControl;
+
+import javax.sound.sampled.Port;
 import java.io.IOException;
 import java.util.*;
 //import static app.Iu.masterPortfolio;
@@ -11,14 +18,18 @@ public class ATestKlass implements Comparator<String> {
 
         Portfolio masterPortfolio = handler.getMasterPortfolio();
 
-/*        //TESTING BATCH CREATION OF POTRFOLIO FOR ADMIN (WITH BATCH DOWNLOAD DATA FOR ALL STOCKS):
+        if (masterPortfolio == null) {
+            System.out.println("NULL!!!!!!!!!!");
+        }
+
+        //TESTING BATCH CREATION OF POTRFOLIO FOR ADMIN (WITH BATCH DOWNLOAD DATA FOR ALL STOCKS):
         String [] availableSt = {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
                 "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",
                 "TSLA", "TWTR", "V", "WMT", "SPY"};
-        Portfolio masterPortfolio=new Portfolio(availableSt, 100000);
-        Map<String, Stock> portfolioStocks=masterPortfolio.getPortfolioStocks();
+        //Portfolio masterPortfolio=new Portfolio(availableSt, 100000, handler);
+        //Map<String, Stock> portfolioStocks=masterPortfolio.getPortfolioStocks();
         //System.out.println(portfolioStocks.get("WMT"));  //IT REALLY WORKS!!! :)
-        //System.out.println(portfolioStocks.get("SPY"));*/
+        //System.out.println(portfolioStocks.get("SPY"));
 
         //-------------------------------------------------
 /*        //PRINTING OUT COMPANY BASE DATA:
@@ -91,22 +102,43 @@ public class ATestKlass implements Comparator<String> {
 
         //-------------------------------------------------
 
+        //FOR TESTIN NON-FUNCTIONAL UPDATING PRICES:
+        User pets = new User("Pets", 1000000, handler);
+        Portfolio port = pets.getPortfolio();
 
+        port.buyStock("AAPL", 1000);
+        //port.sellStock("AAPL", 100);
+        port.buyStock("AMZN", 200);
+        port.buyStock("CSCO", 5000);
+        //port.sellStock("GE", 10);
+        Map<String, Position> positions = port.getPositions();
+        List<User> userList = new ArrayList<>();
+        userList.add(pets);
 
-/*        //TESTING BATCH UPDATE OF PRICES AT REGULAR TIME INTERVALS:
+        //TESTING BATCH UPDATE OF PRICES AT REGULAR TIME INTERVALS:
         for (int i = 0; i < 4; i++) {
 
             if (i>0) {
-                masterPortfolio.updatePrices();
+                masterPortfolio.updatePrices(userList);
             }
             for (String s : availableSt) {
                 System.out.print(s+"\t");
             }
             System.out.println("");
 
-            for (int j = 0; j < availableSt.length; j++) {
+/*            for (int j = 0; j < availableSt.length; j++) {
                 String symb=availableSt[j];
                 System.out.print(portfolioStocks.get(symb).getCurrentPrice()+"\t");
+            }
+            for (int j = 0; j < port.getPortfolioStocks().size(); j++) {
+                System.out.print(port.getTotalValueOfPositions()+", ");
+            }*/
+
+            for (String symbol : positions.keySet()) {
+                Position pos = positions.get(symbol);
+                Stock stock1 = masterPortfolio.getPortfolioStocks().get(symbol);
+                System.out.print(symbol + "- PETS: " + pos.getCurrentValue());
+                System.out.println(", ACTUAL: " + stock1.getCurrentPrice() * pos.getVolume());
             }
 
             System.out.println("\n");
@@ -115,11 +147,31 @@ public class ATestKlass implements Comparator<String> {
             Thread.sleep(timeToSleep);  // in seconds
             System.out.println("Woke up!");
 
-        }*/
+            System.out.println("Pets's portf: " + pets.getPortfolio().getTotalValueOfPortfolio());
+            for (String s : positions.keySet()) {
+                System.out.println(s + ": " + positions.get(s).getCurrentValue());
+            }
+
+        }
 
 
+        //-----------------------------------
+        //TESTING JSON:
+/*        User pets = new User("Pets", 1000000, handler);
+        Portfolio port = pets.getPortfolio();
+        port.buyStock("AAPL", 1000);
+        port.buyStock("AMZN", 200);
+        port.buyStock("CSCO", 5000);
+        port.sellStock("AAPL", 500);
 
+        //JsonObject allPortsObj=new JsonObject();  //kõik kasutajad
+        //allPortsObj.add("pets", port.covertToJson());
 
+        JsonObject userobj=pets.covertToJson();
+        String petsStringina = userobj.toString(); // from json to String
+        JsonParser jp=new JsonParser();
+        JsonObject petsTagasiJsoniks=jp.parse(petsStringina).getAsJsonObject(); //from String to json
+        System.out.println(petsTagasiJsoniks.toString());*/
 
 /*        {"AAPL", "AMZN", "CSCO", "F", "GE", "GM", "GOOG",
                 "HPE", "IBM", "INTC", "JNJ", "K", "KO", "MCD", "MSFT", "NFLX", "NKE", "PEP", "PG", "SBUX",

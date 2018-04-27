@@ -1,5 +1,7 @@
 package app;
 
+import com.google.gson.JsonObject;
+
 import javax.print.DocFlavor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,7 +11,7 @@ public class Transaction {
 
     private String symbol;
     private String type;
-    private double transactionFee;  // 10 cents per stock
+    private double transactionFee = 0.1;  // 10 cents per stock
     private double price; //current price
     private int volume; //number of stocks
     private String date;
@@ -20,7 +22,6 @@ public class Transaction {
 
     public Transaction(String symbol, double price, int volume, String type, LocalDateTime transactionTime) {
         this.symbol = symbol;
-        this.transactionFee = 0.1;
         this.price = price;
         this.volume = volume;
         this.type = type; //buy or sell
@@ -31,6 +32,18 @@ public class Transaction {
         } else {
             this.profitFromSell = volume * (price - averagePurchasePrice - 2 * transactionFee);
         }
+    }
+
+    //For initiating transaction from JSON:
+    public Transaction(JsonObject transObj) {
+        this.symbol = transObj.get("symbol").getAsString();
+        this.price = transObj.get("price").getAsDouble();
+        this.volume = transObj.get("volume").getAsInt();
+        this.type = transObj.get("type").getAsString(); //buy or sell
+        this.date = transObj.get("date").getAsString();
+        this.time = transObj.get("time").getAsString();
+        this.profitFromSell = transObj.get("profitFromSell").getAsDouble();
+        this.averagePurchasePrice = transObj.get("averagePurchasePrice").getAsDouble();
     }
 
     public String toStringForReport() {
@@ -67,6 +80,20 @@ public class Transaction {
         System.out.println(" USD).");
     }
 
+    //For sending data from Server to Client, in order to initiate Client's portfolio
+    // (possibly also for saving/loading):
+    public JsonObject covertToJson() {
+        JsonObject transObj = new JsonObject();  //kasutaja portf. positsiooni tehing
+        transObj.addProperty("symbol", symbol);
+        transObj.addProperty("type", type);
+        transObj.addProperty("price", price);
+        transObj.addProperty("volume", volume);
+        transObj.addProperty("date", date);
+        transObj.addProperty("time", time);
+        transObj.addProperty("profitFromSell", profitFromSell);
+        transObj.addProperty("averagePurchasePrice", averagePurchasePrice);
+        return transObj;
+    }
 
     public double getTransactionFee() {
         return transactionFee;

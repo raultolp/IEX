@@ -93,7 +93,7 @@ public final class MyUtils {
         return qty;
     }
 
-    public void listFiles() {
+    public static void listFiles() {
         File folder = new File(".");
         File[] files = folder.listFiles();
         int i = 1;
