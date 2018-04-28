@@ -81,7 +81,7 @@ public class IuFX extends Application {
         start.setOnMouseClicked(event -> {
                     try {
                         fxLoadData();
-                        graphPopup.start(stage);
+                        new UserInterface().start(stage);
                     } catch (Exception e) {
                         e.printStackTrace();
                         System.out.println("Caught sth at start");
