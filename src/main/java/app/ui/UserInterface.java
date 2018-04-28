@@ -55,7 +55,7 @@ public class UserInterface extends Stage {
         stockInfo.setStyle("-fx-background-color: #FFF5EE");
         stockInfo.setPrefSize(100, 20);
 
-        Button clickMe = new Button("Click me for a popup");
+        Button clickMe = new Button("Create user");
         clickMe.setStyle("-fx-background-color: #FFF5EE");
         stockInfo.setPrefSize(200, 20);
 
@@ -68,8 +68,11 @@ public class UserInterface extends Stage {
 
 
         clickMe.setOnAction(event -> {
-            System.out.print("popup");
-            popup.show(stage);
+            try {
+                new CreateUser().start(stage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
 
