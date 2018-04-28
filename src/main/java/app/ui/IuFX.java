@@ -31,8 +31,6 @@ import java.util.*;
 //SeaShell 	#FFF5EE
 //SteelBlue 	#4682B4
 
-//TODO ETTEVAATUST – KATKI!!
-
 public class IuFX extends Application {
     //private CreateUser CU = new CreateUser();  //ANDIS VEA, EI SAANUD IU-D TESTIDA
     private String selectedGame = "";
