@@ -120,7 +120,6 @@ public class UserInterface extends Stage {
 
     //https://stackoverflow.com/questions/38487797/javafx-populate-tableview-with-an-observablemap-that-has-a-custom-class-for-its
 
-    //TODO SIIN TEEN RUMALUSI, NAUDI
     private TableView<MapEntry<String, Stock>> addTableView() {
 
         ObservableMap<String, Stock> map = FXCollections.observableHashMap();
@@ -128,6 +127,9 @@ public class UserInterface extends Stage {
         portfolio.getPortfolioStocks().forEach(map::put); //kõik väärtused masterportfoliost tabelisse
 
         ObservableList<MapEntry<String, Stock>> stocks = FXCollections.observableArrayList();
+        for (String key : map.keySet()) {
+            stocks.add(new MapEntry<>(key, map.get(key)));
+        }
 
         final TableView<MapEntry<String, Stock>> table = new TableView<>(stocks);
 
@@ -154,26 +156,7 @@ public class UserInterface extends Stage {
         TableColumn<MapEntry<String, Stock>, String> stockSymbols = new TableColumn<>("Stock");
         stockSymbols.setCellValueFactory(cd -> Bindings.createStringBinding(() -> cd.getValue().getKey()));
 
-        TableColumn<MapEntry<String, Stock>, String> price = new TableColumn<>("portfolioStocks");
-        price.setCellValueFactory(new PropertyValueFactory<>("portfolioStocks"));
-
-        TableColumn<MapEntry<String, Stock>, String> volume = new TableColumn<>("marketCap");
-        price.setCellValueFactory(new PropertyValueFactory<>("marketCap"));
-
-        TableColumn<MapEntry<String, Stock>, String> positionTotal = new TableColumn<>("Dividend yield");
-        positionTotal.setCellValueFactory(new PropertyValueFactory<>("dividendYield"));
-
-        TableColumn<MapEntry<String, Stock>, String> unrealised = new TableColumn<>("EPS");
-        positionTotal.setCellValueFactory(new PropertyValueFactory<>("eps"));
-
-        TableColumn<MapEntry<String, Stock>, String> avgPaid = new TableColumn<>("Previous close");
-        avgPaid.setCellValueFactory(new PropertyValueFactory<>("previousClose"));
-
-        TableColumn<MapEntry<String, Stock>, String> realised = new TableColumn<>("Change 1 month");
-        realised.setCellValueFactory(new PropertyValueFactory<>("change1Month"));
-
-
-        table.getColumns().addAll(stockSymbols, price, volume, positionTotal, unrealised, avgPaid, realised);
+        table.getColumns().addAll(stockSymbols);
 
 
         return table;
