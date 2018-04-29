@@ -18,7 +18,7 @@ public class SetActiveUser implements CommandHandler {
         if (command == 4) {
             showUsersList(handler.getUserList());
             handler.getSc().nextLine();
-            String name = MyUtils.enterUserName(handler);
+            String name = MyUtils.enterUserName(handler, false);
             Integer index = MyUtils.nameInList(name, handler.getUserList());
             if (index > -1) {
                 User activeUser = handler.getUserList().get(index);

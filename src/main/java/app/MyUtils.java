@@ -37,16 +37,19 @@ public final class MyUtils {
         System.out.println(ANSI_BLUE + text + ANSI_RESET);
     }
 
-    public static String enterUserName(Iu handler) {
+    public static String enterUserName(Iu handler, boolean newUser) {
         String name;
         do {
             System.out.print("Enter user name: ");
             name = handler.getSc().nextLine().trim();
+
             if (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name))
                 colorPrintRed("Use name with 3..12 characters and numbers.");
-            else if (nameInList(name, handler.getUserList()) > -1) {
+            else if (nameInList(name, handler.getUserList()) > -1 && newUser)
                 colorPrintRed("Name already exists!");
-            }
+            else if (nameInList(name, handler.getUserList()) == -1 && !newUser)
+                colorPrintRed("Name does not exists!");
+
             if (name.length() == 0)
                 return null;
         } while (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name));

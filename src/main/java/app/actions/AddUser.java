@@ -18,7 +18,7 @@ public class AddUser implements CommandHandler {
 
         if (command == 1) {
             handler.getSc().nextLine();
-            String name = MyUtils.enterUserName(handler);
+            String name = MyUtils.enterUserName(handler, true);
             if (name != null) {
                 newUserList = handler.getUserList();
                 newUserList.add(new User(name, 100000, handler));
