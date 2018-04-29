@@ -10,6 +10,7 @@ package app.ui;
 import app.Iu;
 import app.Portfolio;
 import app.Stock;
+import app.User;
 import com.jfoenix.controls.JFXButton;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -22,9 +23,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
-import javafx.scene.shape.SVGPath;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -32,20 +32,26 @@ import java.util.List;
 import java.util.Map;
 
 
-public class UserInterface extends Stage {
-    private Iu handler = new Iu();
+public class UserInterface {
+    private Iu handler;
     private IuFX FX;
-    private Portfolio portfolio = handler.getMasterPortfolio();
+    private Portfolio portfolio;
+    private List<User> userList;
+    private String selectedUser;
     private Scene scene;
     private Stage stage;
+    private User user;
+
 
     public UserInterface(IuFX FX) throws Exception {
-        this.stage = buildStage();
+        this.handler = FX.getHandler();
+        this.portfolio = this.handler.getMasterPortfolio();
         this.FX = FX;
+        this.userList = this.handler.getUserList();
     }
 
 
-    public Stage buildStage() {
+    public Stage buildStage() throws Exception {
 
         Stage stage = new Stage();
 
@@ -68,32 +74,18 @@ public class UserInterface extends Stage {
         stockInfo.setStyle("-fx-background-color: #FFF5EE");
         stockInfo.setPrefSize(100, 20);
 
-        Button clickMe = new JFXButton("Create user");
-        clickMe.setStyle("-fx-background-color: #FFF5EE");
-        stockInfo.setPrefSize(200, 20);
-
-
-        clickMe.setOnAction(event -> {
-            try {
-                Stage stage1 = new Stage();
-                stage1.setScene(FX.getCU().getScene());
-                stage1.show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(centerGrid);
-        borderPane.setBottom(hbox);
-        borderPane.setRight(addBuySellVBox());
+        borderPane.setBottom(addBottomHBox());
+        borderPane.setRight(addRightSideVBox());
+        borderPane.setStyle("-fx-background-color: #4682B4");
 
-        hbox.getChildren().addAll(stockInfo, refresh, clickMe);
+
+        hbox.getChildren().addAll(stockInfo, refresh);
         Scene scene = new Scene(borderPane, 750, 550);
         addTableView();
 
-        stage.setTitle("Start");
+        stage.setTitle("Master portfolio");
         stage.setScene(scene);
 
         return stage;
@@ -106,15 +98,37 @@ public class UserInterface extends Stage {
         hbox.setSpacing(10);
         hbox.setStyle("-fx-background-color: #4682B4;");
 
-        Button refresh = new Button("Refresh");
+        Button refresh = new JFXButton("Refresh");
         refresh.setStyle("-fx-background-color: #FFF5EE");
         refresh.setPrefSize(100, 20);
 
-        Button stockInfo = new Button("Stock info");
+        Button stockInfo = new JFXButton("Stock info");
         stockInfo.setStyle("-fx-background-color: #FFF5EE");
         stockInfo.setPrefSize(100, 20);
 
-        hbox.getChildren().addAll(stockInfo, refresh);
+        Button userPort = new JFXButton("My portfolio");
+        userPort.setStyle("-fx-background-color: #FFF5EE");
+        userPort.setPrefSize(100, 20);
+
+
+        //praegu ei tööta ja ei peagi
+        refresh.setOnMouseClicked(event -> {
+            /**try {
+             handler.runInteractive(FX.getHandler(), 1111);
+             } catch (Exception e) {
+             e.printStackTrace();
+             }*/
+        });
+
+        stockInfo.setOnMouseClicked(event -> {
+            try {//TODO get selected stock and display graph
+                handler.runInteractive(FX.getHandler(), 12);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        hbox.getChildren().addAll(stockInfo, refresh, userPort);
 
 
         return hbox;
@@ -155,22 +169,37 @@ public class UserInterface extends Stage {
             }
         });
 
+        //STOCK, VOLUME, PRICE, VALUE, UNREALIZED P/L, REALIZED P/L
+
+        //TODO property value factories
 
         TableColumn<MapEntry<String, Stock>, String> stockSymbols = new TableColumn<>("Stock");
         stockSymbols.setCellValueFactory(cd -> Bindings.createStringBinding(() -> cd.getValue().getKey()));
 
-        table.getColumns().addAll(stockSymbols);
+        TableColumn<MapEntry<String, Stock>, String> volume = new TableColumn<>("Volume");
+
+        TableColumn<MapEntry<String, Stock>, String> price = new TableColumn<>("Price");
+
+        TableColumn<MapEntry<String, Stock>, String> value = new TableColumn<>("Value");
+
+        TableColumn<MapEntry<String, Stock>, String> unrealisedPL = new TableColumn<>("Unrealized P/L");
+
+        TableColumn<MapEntry<String, Stock>, String> realisedPL = new TableColumn<>("Realized P/L");
+
+
+        table.getColumns().addAll(stockSymbols, volume, price, value, unrealisedPL, realisedPL);
 
 
         return table;
     }
 
+    //OSTU-MÜÜGI KAST
     private VBox addBuySellVBox() {
 
         VBox buySellVB = new VBox();
         buySellVB.setPadding(new Insets(150, 12, 15, 12));
         buySellVB.setSpacing(20);
-        buySellVB.setStyle("-fx-background-color: #4682B4;");
+        buySellVB.setStyle("-fx-background-color: #4682B4");
 
         final TextField stockSymbol = new TextField();
         stockSymbol.setPromptText("Enter stock symbol");
@@ -216,7 +245,65 @@ public class UserInterface extends Stage {
         return buySellVB;
     }
 
-    public Stage getStage() {
-        return stage;
+    private VBox addRightSideVBox() {
+        VBox rightBox = new VBox();
+        rightBox.setPadding(new Insets(150, 12, 15, 12));
+        rightBox.setSpacing(20);
+        rightBox.setStyle("-fx-background-color: #4682B4");
+
+        Button createUser = new JFXButton("Create user");
+        createUser.setStyle("-fx-background-color: #FFF5EE");
+        createUser.setPrefSize(200, 20);
+
+        Button openUserPortfolio = new JFXButton("Open portfolio");
+        openUserPortfolio.setStyle("-fx-background-color: #FFF5EE");
+        openUserPortfolio.setPrefSize(200, 20);
+
+        //kasutajad menüüsse
+        MenuButton selectUser = new SplitMenuButton();
+        //if (!(userList.isEmpty()))
+        for (User user : handler.getUserList()) {
+            System.out.println("sthsth");
+            MenuItem item = new MenuItem(user.getUserName());
+            selectUser.getItems().add(item);
+            //kui menu item valitud, siis muudab activeUseri
+            item.setOnAction(a -> {
+                //TODO aktiivne kasutaja peab jääma aktiivseks
+                FX.getHandler().setActiveUser(user);
+                System.out.println(FX.getHandler().getActiveUser().getUserName());
+            });
+        }
+        selectUser.setStyle("-fx-background-color: #4682B4");
+        selectUser.setPrefSize(200, 20);
+
+        openUserPortfolio.setOnMouseClicked(event -> {
+         //   FX.getUP().getStage().show();
+            //hide UI
+        });
+
+
+        createUser.setOnAction(event -> {
+            try {
+                Stage stage1 = new Stage();
+                stage1.setScene(FX.getCU().getScene());
+                stage1.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+
+        rightBox.getChildren().addAll(selectUser, createUser, openUserPortfolio);
+
+        return rightBox;
+    }
+
+    public VBox getBuySellVBox() {
+        return addBuySellVBox();
+    }
+
+
+    public Stage getStage() throws Exception {
+        return buildStage();
     }
 }

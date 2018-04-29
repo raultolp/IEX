@@ -72,7 +72,7 @@ public class Iu {
         if (handler.activeGame != null)
             handler.getDataCollector().interrupt();
         //app.actions.SaveData.saveData(handler);  //võib-olla ei taha salvestada
-            handler.sc.close();
+        handler.sc.close();
 
         System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
 
@@ -80,7 +80,7 @@ public class Iu {
 
     /***** CREATE ADMIN AND MASTER PORTFOLIO *****/
 
-    public boolean createMasterPortfolio(Iu handler){
+    public boolean createMasterPortfolio(Iu handler) {
         System.out.println("Downloading stock data from web...");
         try {
             admin = new User("admin", 1000000, handler);
@@ -89,14 +89,14 @@ public class Iu {
         } catch (IOException e) {
             System.out.println("Connection to IEX failed. Try again (Y/N)?");
             String answer = sc.nextLine().trim().toUpperCase();
-            while(true) {
+            while (true) {
                 if (!answer.equals("N") && !answer.equals("Y")) {
                     System.out.println("Wrong input. Try again (Y/N)?");
                 } else {
                     break;
                 }
             }
-            if (answer.equals("N")){
+            if (answer.equals("N")) {
                 return false;
             } else {
                 createMasterPortfolio(handler);  //tries again to download data
@@ -178,6 +178,29 @@ public class Iu {
         }
     }
 
+
+    public void runInteractive(Iu handler, int command) throws Exception {
+
+        //TODO runInteractive
+
+        while (true) {
+
+            try {
+
+                for (CommandHandler commandHandler : commandHandlers) {
+                    commandHandler.handle(command, handler);
+                }
+
+                //Quit
+                if (command == getMainMenuSize())
+                    break;
+
+            } catch (InputMismatchException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public String[] getAvailableStocks() {
         return availableStocks;
     }
@@ -210,7 +233,7 @@ public class Iu {
         this.activeGame = activeGame;
     }
 
-    public Portfolio getMasterPortfolio(){
+    public Portfolio getMasterPortfolio() {
         return this.masterPortfolio;
     }
 

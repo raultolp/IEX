@@ -2,6 +2,7 @@ package app.ui;
 
 import app.Iu;
 import app.MyUtils;
+import app.Portfolio;
 import app.User;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -36,15 +37,21 @@ public class IuFX extends Application {
     private Iu handler;
     private CreateUser CU;
     private UserInterface UI;
+    private UserPortfolio UP;
     private String selectedGame = "";
     private StockGraphPopup graphPopup;
     private ListView<String> savedGames = addListView();
+    private Portfolio userPortfolio;
+    //private List<User> userList = handler.getUserList();
     private String gameTitle;
 
     public IuFX() throws Exception {
         this.UI = new UserInterface(this);
         this.CU = new CreateUser(this);
+        this.UP = new UserPortfolio(this);
         this.handler = iu;
+        this.userPortfolio = handler.getActiveUser().getPortfolio();
+
     }
 
 
@@ -90,6 +97,8 @@ public class IuFX extends Application {
         start.setOnMouseClicked(event -> {
                     try {
                         fxLoadData();
+                        System.out.println(handler.getUserList());
+                        UI.getStage().setTitle("Master portfolio");
                         UI.getStage().show();
                         stage.hide();
                         System.out.println("Start " + selectedGame);
@@ -108,13 +117,11 @@ public class IuFX extends Application {
                     saveData(gameTitle.getText());
                     System.out.println("create if");
                 } else fxLoadData();
-               // Stage stage1 = new Stage();
-                //stage1.setScene(UI.getScene());
-                //stage1.show();
-                stage.setScene(UI.getScene());
+                UI.getStage().show();
+                stage.hide();
                 System.out.println("Olen create'i stage juures");
                 //start game
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Caught sth at create");
             }
@@ -176,7 +183,6 @@ public class IuFX extends Application {
     }
 
     public void fxLoadData() throws IOException {
-        Iu handler = new Iu();
         Set<String> fileNames = listFilesForFolder();
         System.out.println(fileNames);
         List<User> newUserList = new ArrayList<>();
@@ -217,7 +223,27 @@ public class IuFX extends Application {
     }
 
     public Iu getHandler() {
-        return handler;
+        return iu;
+    }
+
+    public UserInterface getUI() {
+        return UI;
+    }
+
+    public UserPortfolio getUP() {
+        return UP;
+    }
+
+    public Portfolio getUserPortfolio() {
+        return userPortfolio;
+    }
+
+    public String getSelectedGame() {
+        return selectedGame;
+    }
+
+    public String getGameTitle() {
+        return gameTitle;
     }
 
     public static void main(String args[]) {

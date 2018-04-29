@@ -4,7 +4,6 @@ import app.Iu;
 import app.MyUtils;
 import app.User;
 import com.jfoenix.controls.JFXButton;
-import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,14 +12,19 @@ import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Window;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+//LightSlateGray 	#778899
+//LightSlateGrey 	#778899
+//LightSteelBlue 	#B0C4DE
+//SeaShell 	#FFF5EE
+//SteelBlue 	#4682B4
 
 public class CreateUser {
     IuFX FX;
@@ -76,15 +80,14 @@ public class CreateUser {
 
     private void addUIControls(GridPane gridPane) {
         // Add Header
-        Label headerLabel = new Label("Registration Form");
-        headerLabel.setFont(Font.font("Times New Roman", FontWeight.EXTRA_BOLD, 24));
+        Label headerLabel = new Label("Registration form");
         gridPane.add(headerLabel, 0, 0, 2, 1);
         GridPane.setHalignment(headerLabel, HPos.CENTER);
         GridPane.setMargin(headerLabel, new Insets(20, 0, 20, 0));
+        gridPane.setStyle("-fx-background-color: #4682B4");
 
         // Add Name Label
         Label username = new Label("Username: ");
-        username.setFont(Font.font("Times new roman", FontWeight.MEDIUM, 16));
         gridPane.add(username, 0, 1);
 
         // Add Name Text Field
@@ -98,6 +101,7 @@ public class CreateUser {
         submitButton.setPrefHeight(40);
         submitButton.setDefaultButton(true);
         submitButton.setPrefWidth(100);
+        submitButton.setStyle("-fx-background-color: #FFF5EE");
         gridPane.add(submitButton, 0, 4, 2, 1);
         GridPane.setHalignment(submitButton, HPos.CENTER);
         GridPane.setMargin(submitButton, new Insets(20, 0, 20, 0));
@@ -129,12 +133,14 @@ public class CreateUser {
 
 
     private void fxAddUser(String name) throws IOException {
-
+        System.out.println(FX.getHandler().getUserList());
         List<User> newUserList = new ArrayList<>(FX.getHandler().getUserList());
         newUserList.add(new User(name, 100000, FX.getHandler()));
         MyUtils.colorPrintYellow("Created user: " + name);
-
+        System.out.println(newUserList + " add user list");
         FX.getHandler().setUserList(newUserList);
+        FX.saveData(FX.getSelectedGame());
+        System.out.println(FX.getSelectedGame());
     }
 
 
