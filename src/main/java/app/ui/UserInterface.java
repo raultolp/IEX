@@ -10,6 +10,7 @@ package app.ui;
 import app.Iu;
 import app.Portfolio;
 import app.Stock;
+import com.jfoenix.controls.JFXButton;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
@@ -21,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.scene.shape.SVGPath;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
@@ -32,13 +34,21 @@ import java.util.Map;
 
 public class UserInterface extends Stage {
     private Iu handler = new Iu();
+    private IuFX FX;
     private Portfolio portfolio = handler.getMasterPortfolio();
+    private Scene scene;
+    private Stage stage;
 
-    public UserInterface() throws IOException {
+    public UserInterface(IuFX FX) throws Exception {
+        this.stage = buildStage();
+        this.FX = FX;
     }
 
 
-    public void start(Stage stage) {
+    public Stage buildStage() {
+
+        Stage stage = new Stage();
+
 
         GridPane centerGrid = new GridPane();
         centerGrid.setVgap(8);
@@ -50,29 +60,24 @@ public class UserInterface extends Stage {
         hbox.setSpacing(10);
         hbox.setStyle("-fx-background-color: #4682B4;");
 
-        Button refresh = new Button("Refresh");
+        Button refresh = new JFXButton("Refresh");
         refresh.setStyle("-fx-background-color: #FFF5EE");
         refresh.setPrefSize(100, 20);
 
-        Button stockInfo = new Button("Stock info");
+        Button stockInfo = new JFXButton("Stock info");
         stockInfo.setStyle("-fx-background-color: #FFF5EE");
         stockInfo.setPrefSize(100, 20);
 
-        Button clickMe = new Button("Create user");
+        Button clickMe = new JFXButton("Create user");
         clickMe.setStyle("-fx-background-color: #FFF5EE");
         stockInfo.setPrefSize(200, 20);
-
-        Button closePopup = new Button("Close");
-
-        Popup popup = new Popup();
-        popup.getContent().add(closePopup);
-
-        closePopup.setOnAction(event -> popup.hide());
 
 
         clickMe.setOnAction(event -> {
             try {
-                new CreateUser().start(stage);
+                Stage stage1 = new Stage();
+                stage1.setScene(FX.getCU().getScene());
+                stage1.show();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -85,15 +90,13 @@ public class UserInterface extends Stage {
         borderPane.setRight(addBuySellVBox());
 
         hbox.getChildren().addAll(stockInfo, refresh, clickMe);
-
+        Scene scene = new Scene(borderPane, 750, 550);
         addTableView();
 
-        Scene scene = new Scene(borderPane, 750, 550);
-
-
-        stage.setTitle("Portfolio");
+        stage.setTitle("Start");
         stage.setScene(scene);
-        stage.show();
+
+        return stage;
     }
 
 
@@ -212,5 +215,8 @@ public class UserInterface extends Stage {
 
         return buySellVB;
     }
-}
 
+    public Stage getStage() {
+        return stage;
+    }
+}

@@ -1,5 +1,9 @@
 package app.ui;
 
+import app.Iu;
+import app.MyUtils;
+import app.User;
+import com.jfoenix.controls.JFXButton;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -11,26 +15,32 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class CreateUser extends Application {
+public class CreateUser {
+    IuFX FX;
+    Scene scene;
 
-    //https://www.callicoder.com/javafx-registration-form-gui-tutorial/
+    public CreateUser(IuFX iuFX) throws Exception {
+        this.scene = buildScene();
+        this.FX = iuFX;
+    }
+//https://www.callicoder.com/javafx-registration-form-gui-tutorial/
 
-    public void start(Stage stage) throws Exception {
+    public Scene buildScene() throws Exception {
 
         GridPane gridPane = registrationFormPane();
 
-
         addUIControls(gridPane); //add username fields etc
-        Scene scene = new Scene(gridPane, 800, 500);
 
-        stage.setScene(scene);
-        stage.setTitle("Registration Form");
-        stage.show();
+        Scene scene = new Scene(gridPane, 450, 200);
+
+        return scene;
     }
 
     private GridPane registrationFormPane() {
@@ -84,7 +94,7 @@ public class CreateUser extends Application {
 
 
         // Add Submit Button
-        Button submitButton = new Button("Submit");
+        Button submitButton = new JFXButton("Submit");
         submitButton.setPrefHeight(40);
         submitButton.setDefaultButton(true);
         submitButton.setPrefWidth(100);
@@ -97,11 +107,12 @@ public class CreateUser extends Application {
             if (nameField.getText().isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!", "Please enter your name");
             }
-                /*if(passwordField.getText().isEmpty()) {
-                    showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!", "Please enter a password");
-                    return;
-                }*/
-//TODO make this actually add a new user
+
+            try {
+                fxAddUser(nameField.getText());
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
             showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Registration Successful!", "Welcome " + nameField.getText());
         });
 
@@ -114,6 +125,21 @@ public class CreateUser extends Application {
         alert.setContentText(message);
         alert.initOwner(owner);
         alert.show();
+    }
+
+
+    private void fxAddUser(String name) throws IOException {
+
+        List<User> newUserList = new ArrayList<>(FX.getHandler().getUserList());
+        newUserList.add(new User(name, 100000, FX.getHandler()));
+        MyUtils.colorPrintYellow("Created user: " + name);
+
+        FX.getHandler().setUserList(newUserList);
+    }
+
+
+    public Scene getScene() {
+        return scene;
     }
 }
 

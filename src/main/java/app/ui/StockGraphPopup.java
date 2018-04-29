@@ -9,14 +9,15 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class StockGraphPopup extends Application {
+public class StockGraphPopup {
+    private Scene scene;
 
-    public static void main(String[] args) {
-        launch(args);
+    public StockGraphPopup() throws Exception {
+        this.scene = buildScene();
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
+    public Scene buildScene() throws Exception {
+        Stage stage = new Stage();
         BorderPane borderPane = new BorderPane();
 
         final NumberAxis xAxis = new NumberAxis();
@@ -54,5 +55,10 @@ public class StockGraphPopup extends Application {
         stage.setTitle("nimi");
         stage.setScene(scene);
         stage.show();
+        return scene;
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 }

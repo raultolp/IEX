@@ -32,11 +32,20 @@ import java.util.*;
 //SteelBlue 	#4682B4
 
 public class IuFX extends Application {
-    //private CreateUser CU = new CreateUser();  //ANDIS VEA, EI SAANUD IU-D TESTIDA
+    private Iu iu = new Iu();
+    private Iu handler;
+    private CreateUser CU;
+    private UserInterface UI;
     private String selectedGame = "";
-    private StockGraphPopup graphPopup = new StockGraphPopup();
+    private StockGraphPopup graphPopup;
     private ListView<String> savedGames = addListView();
     private String gameTitle;
+
+    public IuFX() throws Exception {
+        this.UI = new UserInterface(this);
+        this.CU = new CreateUser(this);
+        this.handler = iu;
+    }
 
 
     @Override
@@ -81,12 +90,15 @@ public class IuFX extends Application {
         start.setOnMouseClicked(event -> {
                     try {
                         fxLoadData();
-                        new UserInterface().start(stage);
+                        UI.getStage().show();
+                        stage.hide();
+                        System.out.println("Start " + selectedGame);
+                        System.out.println("Olen start'i stage juures");
                     } catch (Exception e) {
                         e.printStackTrace();
                         System.out.println("Caught sth at start");
                     }
-                    System.out.println("Start " + selectedGame);
+
                 }
         );
 
@@ -94,9 +106,13 @@ public class IuFX extends Application {
             try {
                 if (selectedGame == null || !gameTitle.getText().equals("")) {
                     saveData(gameTitle.getText());
-                    System.out.println("create if");}
-                else fxLoadData();
-                new UserInterface().start(stage);
+                    System.out.println("create if");
+                } else fxLoadData();
+               // Stage stage1 = new Stage();
+                //stage1.setScene(UI.getScene());
+                //stage1.show();
+                stage.setScene(UI.getScene());
+                System.out.println("Olen create'i stage juures");
                 //start game
             } catch (IOException e) {
                 e.printStackTrace();
@@ -163,6 +179,7 @@ public class IuFX extends Application {
         Iu handler = new Iu();
         Set<String> fileNames = listFilesForFolder();
         System.out.println(fileNames);
+        List<User> newUserList = new ArrayList<>();
         //If file does not exist:
         if (!fileNames.contains(selectedGame)) {
             saveData(selectedGame);
@@ -180,7 +197,7 @@ public class IuFX extends Application {
                 JsonObject gameObj = jp.parse(gameAsString).getAsJsonObject(); //from String to json
 
                 //Creating users (with their portfolios, positions and transactions):
-                List<User> newUserList = new ArrayList<>();
+
 
                 for (String username : gameObj.keySet()) {
                     JsonObject userObj = gameObj.get(username).getAsJsonObject();
@@ -188,12 +205,19 @@ public class IuFX extends Application {
                     newUserList.add(newUser);
                 }
                 handler.setUserList(newUserList);
-
             } finally {
                 handler.setActiveGame(file);
             }
         }
 
+    }
+
+    public CreateUser getCU() {
+        return CU;
+    }
+
+    public Iu getHandler() {
+        return handler;
     }
 
     public static void main(String args[]) {
