@@ -1,13 +1,10 @@
 package app;
 
 import app.actions.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-
 import static app.StaticData.*;
-
 import app.actions.SaveData;
 
 
@@ -174,29 +171,6 @@ public class Iu {
 
             } catch (InputMismatchException e) {
                 System.out.println("Wrong input: " + sc.nextLine());
-            }
-        }
-    }
-
-
-    public void runInteractive(Iu handler, int command) throws Exception {
-
-        //TODO runInteractive
-
-        while (true) {
-
-            try {
-
-                for (CommandHandler commandHandler : commandHandlers) {
-                    commandHandler.handle(command, handler);
-                }
-
-                //Quit
-                if (command == getMainMenuSize())
-                    break;
-
-            } catch (InputMismatchException e) {
-                e.printStackTrace();
             }
         }
     }

@@ -14,22 +14,16 @@ import app.User;
 import com.jfoenix.controls.JFXButton;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class UserInterface {
@@ -111,18 +105,11 @@ public class UserInterface {
         userPort.setPrefSize(100, 20);
 
 
-        //praegu ei tööta ja ei peagi
         refresh.setOnMouseClicked(event -> {
-            /**try {
-             handler.runInteractive(FX.getHandler(), 1111);
-             } catch (Exception e) {
-             e.printStackTrace();
-             }*/
         });
 
         stockInfo.setOnMouseClicked(event -> {
             try {//TODO get selected stock and display graph
-                handler.runInteractive(FX.getHandler(), 12);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -150,24 +137,6 @@ public class UserInterface {
 
         final TableView<MapEntry<String, Stock>> table = new TableView<>(stocks);
 
-        map.addListener((MapChangeListener.Change<? extends String, ? extends Stock> change) -> {
-            boolean removed = change.wasRemoved();
-            if (removed != change.wasAdded()) {
-                if (removed) {
-                    // no put for existing key, remove pair completely
-                    stocks.remove(new MapEntry<>(change.getKey(), (Stock) null));
-                } else {
-                    // add new entry
-                    stocks.add(new MapEntry<>(change.getKey(), change.getValueAdded()));
-                }
-            } else {
-                // replace existing entry
-                MapEntry<String, Stock> entry = new MapEntry<>(change.getKey(), change.getValueAdded());
-
-                int index = stocks.indexOf(entry);
-                stocks.set(index, entry);
-            }
-        });
 
         //STOCK, VOLUME, PRICE, VALUE, UNREALIZED P/L, REALIZED P/L
 
@@ -261,23 +230,20 @@ public class UserInterface {
 
         //kasutajad menüüsse
         MenuButton selectUser = new SplitMenuButton();
-        //if (!(userList.isEmpty()))
         for (User user : handler.getUserList()) {
-            System.out.println("sthsth");
             MenuItem item = new MenuItem(user.getUserName());
             selectUser.getItems().add(item);
             //kui menu item valitud, siis muudab activeUseri
             item.setOnAction(a -> {
                 //TODO aktiivne kasutaja peab jääma aktiivseks
                 FX.getHandler().setActiveUser(user);
-                System.out.println(FX.getHandler().getActiveUser().getUserName());
             });
         }
         selectUser.setStyle("-fx-background-color: #4682B4");
         selectUser.setPrefSize(200, 20);
 
         openUserPortfolio.setOnMouseClicked(event -> {
-         //   FX.getUP().getStage().show();
+            //FX.getUP().getStage().show();
             //hide UI
         });
 

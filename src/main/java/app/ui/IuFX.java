@@ -1,7 +1,6 @@
 package app.ui;
 
 import app.Iu;
-import app.MyUtils;
 import app.Portfolio;
 import app.User;
 import com.google.gson.JsonObject;
@@ -80,11 +79,11 @@ public class IuFX extends Application {
         Button start = new JFXButton("Start");
         start.setStyle("-fx-background-color:'#B0C4DE'");
 
-        Button create = new JFXButton("New game");
+       Button create = new JFXButton("New game");
         create.setStyle("-fx-background-color: '#B0C4DE'");
 
         buttonHBox.setSpacing(10.0);
-        buttonHBox.getChildren().addAll(start, create);
+        buttonHBox.getChildren().addAll(start);
 
 
         bottomBP.getChildren().addAll(buttonHBox);
@@ -102,10 +101,9 @@ public class IuFX extends Application {
                         UI.getStage().show();
                         stage.hide();
                         System.out.println("Start " + selectedGame);
-                        System.out.println("Olen start'i stage juures");
                     } catch (Exception e) {
                         e.printStackTrace();
-                        System.out.println("Caught sth at start");
+                        System.out.println("@ start");
                     }
 
                 }
@@ -115,15 +113,13 @@ public class IuFX extends Application {
             try {
                 if (selectedGame == null || !gameTitle.getText().equals("")) {
                     saveData(gameTitle.getText());
-                    System.out.println("create if");
                 } else fxLoadData();
                 UI.getStage().show();
                 stage.hide();
-                System.out.println("Olen create'i stage juures");
                 //start game
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("Caught sth at create");
+                System.out.println("@ create");
             }
         });
 
