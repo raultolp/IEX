@@ -3,11 +3,8 @@ package app;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Position {
 
@@ -115,11 +112,8 @@ public class Position {
 
     //For printing out position info when viewing User's portfolio:
     public String toStringForPortfolio() {
-        String sep = "\t";
-        String info = symbol + sep + sep + volume + sep + sep + String.format("%.2f", price) + sep + sep +
-                String.format("%.2f", currentValue) + sep + sep +
-                String.format("%.2f", unrealisedProfit) + sep + sep +
-                String.format("%.2f", profit) + sep + "\n";
+        String info = String.format("%-5s %8d %10.2f %12.2f %16.2f %14.2f\n",
+                        symbol, volume, price, currentValue, unrealisedProfit, profit);
 
         //NB! Average purchase price ('averagePrice') currently not shown in portfolio.
         // (Maybe previous (realized) profit ('profit') should also be left out.)

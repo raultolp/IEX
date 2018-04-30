@@ -5,9 +5,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Portfolio extends IEXdata {
 
@@ -316,9 +317,9 @@ public class Portfolio extends IEXdata {
     public String toString() {
 
         //Information on positsions:
-        String info = "---------------------------------------------------\n";
-        info += "STOCK\tVOLUME\tPRICE\tVALUE\tUNREALIZED P/L\tREALIZED P/L\n";
-        info += "---------------------------------------------------\n";
+        String header = "STOCK   VOLUME      PRICE        VALUE   UNREALIZED P/L   REALIZED P/L";
+        String info = MyUtils.createHeader(header);
+
         if (positions.size() > 0) {
             for (String symbol : positions.keySet()) {
                 if (positions.get(symbol).isOpen()) { // only open positions are shown when viewing in portfolio
@@ -332,13 +333,13 @@ public class Portfolio extends IEXdata {
         info.trim();
 
         //Information on portfolio totals:
-        info += "---------------------------------------------------\n";
+        info += MyUtils.createSeparator(header.length());
         info += "PORTFOLIO TOTAL VALUE: " + String.format("%.2f", getTotalValueOfPortfolio()) + " USD\n";
-        info += "     - incl. OPEN POSITIONS: " + String.format("%.2f", totalValueOfPositions) + " USD\n";
-        info += "           - of which: TOTAL ACQUISITION PRICE (INCL. TRANSACTION FEES): " + String.format("%.2f", totalValueOfPositions - unrealisedProfit) + " USD\n";
-        info += "           - of which: INCERASE IN VALUE (UNREALIZED PROFIT): " + String.format("%.2f", unrealisedProfit) + " USD\n";
-        info += "     - incl. CASH: " + String.format("%.2f", availableFunds) + " USD\n";
-        info += "---------------------------------------------------\n";
+        info += "  - incl. OPEN POSITIONS: " + String.format("%.2f", totalValueOfPositions) + " USD\n";
+        info += "    - of which: TOTAL ACQUISITION PRICE (INCL. TRANSACTION FEES): " + String.format("%.2f", totalValueOfPositions - unrealisedProfit) + " USD\n";
+        info += "    - of which: INCERASE IN VALUE (UNREALIZED PROFIT): " + String.format("%.2f", unrealisedProfit) + " USD\n";
+        info += "  - incl. CASH: " + String.format("%.2f", availableFunds) + " USD\n";
+        info += MyUtils.createSeparator(header.length());
         info += "REALIZED PROFIT (FROM SALES): " + String.format("%.2f", profit) + " USD";
 
         return info;

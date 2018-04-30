@@ -107,4 +107,12 @@ public final class MyUtils {
         if ((i - 1) % 4 != 0)
             System.out.println();
     }
+
+    public static String createHeader(String header) {
+        return createSeparator(header.length()) + header + '\n' + createSeparator(header.length());
+    }
+
+    public static String createSeparator(int length) {
+        return String.format("%0" + length + "d", 0).replace('0', '-') + '\n';
+    }
 }
