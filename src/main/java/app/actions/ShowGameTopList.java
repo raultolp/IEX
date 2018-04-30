@@ -4,10 +4,11 @@ package app.actions;
 
 import app.CommandHandler;
 import app.Iu;
-import app.Portfolio;
+import app.MyUtils;
 import app.User;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 //Top list, based on portfolio total value:
 
@@ -29,18 +30,17 @@ public class ShowGameTopList implements CommandHandler {
         Collections.sort(userList);
 
         System.out.println("\nTOP LIST:");
-        System.out.println("-------------------------------------------------\n" +
-                "RANK USER\t\tPORTF.VALUE\t\t\tINCREASE IN VALUE\n" +
-                "-------------------------------------------------");
+        System.out.println(MyUtils.createHeader(String.format("%-5s%-12s%16s%30s",
+                "RANK", "USER", "PORTF.VALUE", "INCREASE IN VALUE")));
 
         for (int i = 1; i < userList.size() + 1; i++) {
             User user = userList.get(i - 1);
-            String name = user.getUserName();
-            String portfTotalValue = String.format("%.2f", user.getPortfolioTotalValue());
-            String portValueIncrease = String.format("%.2f", user.getValueIncrease());
-            String portfValueIncreasePercent = String.format("%.4f", user.getPercentageIncrease());
-            System.out.println(i + ". " + name + " \t\t" + portfTotalValue + " USD\t\t " +
-                    portValueIncrease + " USD (" + portfValueIncreasePercent + "%)");
+
+            System.out.println(String.format("%4d. %-12s %10.2f USD %13.2f USD (%8.3f%%)",
+                    i, user.getUserName(),
+                    user.getPortfolioTotalValue(),
+                    user.getValueIncrease(),
+                    user.getPercentageIncrease()));
         }
     }
 }
