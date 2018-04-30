@@ -129,8 +129,8 @@ public class Company extends IEXdata {
         return "\nCOMPANY INFORMATION FOR " + symbol + ": \n" +
                 "Company name: " + companyName + "(" + website + ")\n" +
                 "CEO: " + CEO + "\n" +
-                "Sector: " + sector + " (" + industry + "),\n" +
-                "Descriprion: " + description + "\n";
+                "Sector: " + sector + " (" + industry + "),\n\n" +
+                "Descriprion:\n" + description + "\n";
     }
 
     //TODO: (PRIORITY 3) IT WOULD BE POSSIBLE TO ALSO DOWNLOAD COMPANY LOGO:
