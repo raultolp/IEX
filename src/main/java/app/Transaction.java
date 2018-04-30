@@ -2,10 +2,7 @@ package app;
 
 import com.google.gson.JsonObject;
 
-import javax.print.DocFlavor;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class Transaction {
 
@@ -47,14 +44,21 @@ public class Transaction {
     }
 
     public String toStringForReport() {
-        String sep = "\t";
-        String report = type + sep + sep + date + sep + time + sep + volume + sep + sep + price + sep +
-                "-" + String.format("%.2f", getTransactionFees()) + sep;
-        if (type.equals("buy")) {
-            report += "-" + String.format("%.2f", getTransactionAmount()) + sep + sep + "-";
-        } else {
-            report += "+" + String.format("%.2f", getTransactionAmount()) + sep + String.format("%.2f", profitFromSell);
-        }
+//        String sep = "\t";
+        String report = String.format("%-7s%-10s %-10s %6d %10.2f %7.2f %+15.2f %10.2f",
+                type, date, time, volume, price, getTransactionFees(),
+                type.equals("buy") ? -getTransactionAmount() : getTransactionAmount(),
+                type.equals("buy") ? 0 : profitFromSell);
+
+        // VANA -- ootab delete
+
+//        String report = type + sep + sep + date + sep + time + sep + volume + sep + sep + price + sep +
+//                "-" + String.format("%.2f", getTransactionFees()) + sep;
+//        if (type.equals("buy")) {
+//            report += "-" + String.format("%.2f", getTransactionAmount()) + sep + sep + "-";
+//        } else {
+//            report += "+" + String.format("%.2f", getTransactionAmount()) + sep + String.format("%.2f", profitFromSell);
+//        }
 
         return report;
 

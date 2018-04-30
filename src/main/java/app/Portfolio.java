@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static app.StaticData.ANSI_RESET;
+import static app.StaticData.ANSI_YELLOW;
+
 public class Portfolio extends IEXdata {
 
     private double availableFunds;
@@ -173,20 +176,21 @@ public class Portfolio extends IEXdata {
 
     //GET/PRINT TRANSACTIONS REPORT:
     public String getTransactionsReport() {
-        String report = "\n--------------------------------------------------" +
-                "\nTRANSACTIONS REPORT" +
-                "\n--------------------------------------------------\n";
+        String report = MyUtils.createHeader("TRANSACTIONS REPORT");
+
         double totalProfit = 0.0;
         for (String symb : positions.keySet()) {
             double positionProfit = 0.0;
-            report += symb;
-            report += "\nTYPE\tDATE\t\tTIME\tVOLUME\tPRICE\tFEES\tPAID/RECEIVED\tPROFIT\n";
+            report += ANSI_YELLOW + ">>> " + symb + ANSI_RESET + '\n';
+            report += "TYPE   DATE       TIME       VOLUME      PRICE    FEES   PAID/RECEIVED     PROFIT\n";
             Position position = positions.get(symb);
             List<Transaction> transactions = position.getTransactions();
+
             for (Transaction t : transactions) {
                 report += t.toStringForReport() + "\n";
                 positionProfit += t.getProfitFromSell();
             }
+
             report += "POSITION PROFIT(" + symb + "): " + positionProfit;
             totalProfit += positionProfit;
             report += "\n\n";

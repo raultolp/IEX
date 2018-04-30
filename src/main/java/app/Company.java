@@ -6,13 +6,11 @@ import com.google.gson.JsonObject;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Company extends IEXdata {
 
     private final String symbol; //aktsia sümbol
-
     private String companyName;
     private String sector;
     private String industry; // täpsustab sektorit
