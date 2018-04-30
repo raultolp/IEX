@@ -1,9 +1,6 @@
 package app.actions;
 
-import app.CommandHandler;
-import app.Iu;
-import app.Portfolio;
-import app.Stock;
+import app.*;
 
 //View stock historical data
 
@@ -19,6 +16,7 @@ public class ShowStockHistoricalData implements CommandHandler {
     private void showStockHistoricalData(Iu handler) {
 
         Portfolio masterPortfolio = handler.getMasterPortfolio();
+        String header = MyUtils.createHeader("Stock price change (%)");
 
         //TODO: add option to choose time period
 
@@ -26,11 +24,14 @@ public class ShowStockHistoricalData implements CommandHandler {
         System.out.println("Enter stock symbol: ");
         String stockSym = handler.getSc().nextLine().toUpperCase();
 
+        System.out.println(header.substring(0, header.length() - 1));
+
         try {
             Stock stock = masterPortfolio.getStock(stockSym);
-            System.out.println("One month: " + stock.getChange1Month() + '\n' +
-                    "Three months: " + stock.getChange3Month() + '\n' +
-                    "Year: " + stock.getChange1Year());
+            System.out.printf("One month    : %+7.2f\nThree months : %+7.2f\nOne Year     : %+7.2f\n",
+                    stock.getChange1Month() * 100,
+                    stock.getChange3Month() * 100,
+                    stock.getChange1Year() * 100);
         } catch (Exception e) {
             System.out.println("Stock info not available.");
         }

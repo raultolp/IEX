@@ -32,7 +32,8 @@ public class StaticData {
 
     public static final String mainTitle = "\n+++ BÖRSIMÄNG +++\n\nLoading stock data from web ...\n";
 
-    public static final String[] mainMenu = {"Add user",
+    public static final String[] mainMenu = {
+            "Add user",
             "Delete user",
             "List users",
             "Set active user",
@@ -49,7 +50,8 @@ public class StaticData {
             "View game Top List",
             "Load data file",
             "Save data file",
-            "Quit"};
+            "Quit"
+    };
 
     public static int getMainMenuSize() {
         return mainMenu.length;
