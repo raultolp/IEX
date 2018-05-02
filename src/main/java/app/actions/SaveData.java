@@ -54,7 +54,6 @@ public class SaveData implements CommandHandler {
         String gameAsString = gameObj.toString();
 
         //Saving users' data to file:
-        file.createNewFile();
         Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
         writer.write(gameAsString);
         writer.close();

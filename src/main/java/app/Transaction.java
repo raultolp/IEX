@@ -1,7 +1,6 @@
 package app;
 
 import com.google.gson.JsonObject;
-
 import java.time.LocalDateTime;
 
 public class Transaction {
@@ -17,7 +16,7 @@ public class Transaction {
     private double averagePurchasePrice;
 
 
-    public Transaction(String symbol, double price, int volume, String type, LocalDateTime transactionTime) {
+    public Transaction(String symbol, double price, int volume, double averagePurchasePrice, String type, LocalDateTime transactionTime) {
         this.symbol = symbol;
         this.price = price;
         this.volume = volume;
@@ -27,7 +26,8 @@ public class Transaction {
         if (type.equals("buy")) {
             this.profitFromSell = 0.0;
         } else {
-            this.profitFromSell = volume * (price - averagePurchasePrice - 2 * transactionFee);
+            this.averagePurchasePrice = averagePurchasePrice;
+            this.profitFromSell = volume * (price - averagePurchasePrice - transactionFee);
         }
     }
 
@@ -44,21 +44,10 @@ public class Transaction {
     }
 
     public String toStringForReport() {
-//        String sep = "\t";
         String report = String.format("%-7s%-10s %-10s %6d %10.2f %7.2f %+15.2f %10.2f",
                 type, date, time, volume, price, getTransactionFees(),
                 type.equals("buy") ? -getTransactionAmount() : getTransactionAmount(),
                 type.equals("buy") ? 0 : profitFromSell);
-
-        // VANA -- ootab delete
-
-//        String report = type + sep + sep + date + sep + time + sep + volume + sep + sep + price + sep +
-//                "-" + String.format("%.2f", getTransactionFees()) + sep;
-//        if (type.equals("buy")) {
-//            report += "-" + String.format("%.2f", getTransactionAmount()) + sep + sep + "-";
-//        } else {
-//            report += "+" + String.format("%.2f", getTransactionAmount()) + sep + String.format("%.2f", profitFromSell);
-//        }
 
         return report;
 

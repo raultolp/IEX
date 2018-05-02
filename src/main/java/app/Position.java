@@ -2,7 +2,6 @@ package app;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,8 @@ public class Position {
         this.unrealisedProfit = 0.0;
         this.currentValue = price * volume;
         this.open = true;
-        addTransaction(transaction);
+        transaction.setAveragePurchasePrice(averagePrice);
+        transactions.add(transaction);
     }
 
     //For initiating position from JSON:
@@ -55,10 +55,6 @@ public class Position {
         }
     }
 
-    public void addTransaction(Transaction transaction) {
-        transaction.setAveragePurchasePrice(averagePrice);
-        transactions.add(transaction);
-    }
 
     public void priceUpdate(double newPrice) {
         price = newPrice;
@@ -74,7 +70,8 @@ public class Position {
 
         volume += addedVolume;
         priceUpdate(purchasePrice);
-        addTransaction(transaction);
+        transaction.setAveragePurchasePrice(averagePrice);
+        transactions.add(transaction);
     }
 
     public void decreasePosition(Transaction transaction, double salesPrice, double salesVolume) {
@@ -85,7 +82,7 @@ public class Position {
         if (volume == 0) {
             open = false; //position is closed
         }
-        addTransaction(transaction);
+        transactions.add(transaction);
     }
 
     public JsonObject covertToJson() {
@@ -108,15 +105,17 @@ public class Position {
         posObj.add("transactions", transListObj);  //transactions!!!
 
         return posObj;
+
+        //ALTERNATIIV OLEKS:
+        //new Gson().toJson(this) // ei anna küll JsonObjecti, vaid teeb lihtsalt kogu objekti stringiks
     }
+
 
     //For printing out position info when viewing User's portfolio:
     public String toStringForPortfolio() {
         String info = String.format("%-5s %8d %10.2f %12.2f %16.2f %14.2f\n",
                         symbol, volume, price, currentValue, unrealisedProfit, profit);
-
         //NB! Average purchase price ('averagePrice') currently not shown in portfolio.
-        // (Maybe previous (realized) profit ('profit') should also be left out.)
 
         return info;
     }

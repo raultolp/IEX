@@ -62,17 +62,15 @@ public class Portfolio extends IEXdata {
 
         JsonArray posListArray = portfObj.getAsJsonArray("positions").getAsJsonArray(); //kasutaja portfelli positsioonid
 
-        if (posListArray.size() != 0) {
-            for (int i = 0; i < posListArray.size(); i++) {
-                JsonObject posObj = posListArray.get(i).getAsJsonObject();
-                Position position = new Position(posObj);
-                String stockSymb = position.getSymbol();
-                positions.put(stockSymb, position);
-                Stock stock = handler.getMasterPortfolio().getStock(stockSymb);
-                portfolioStocks.put(stockSymb, stock);
-            }
-            calculateTotals();
+        for (int i = 0; i < posListArray.size(); i++) {
+            JsonObject posObj = posListArray.get(i).getAsJsonObject();
+            Position position = new Position(posObj);
+            String stockSymb = position.getSymbol();
+            positions.put(stockSymb, position);
+            Stock stock = handler.getMasterPortfolio().getStock(stockSymb);
+            portfolioStocks.put(stockSymb, stock);
         }
+        calculateTotals();
     }
 
 
@@ -94,7 +92,7 @@ public class Portfolio extends IEXdata {
         }
         price = stock.getCurrentPrice();
 
-        Transaction transaction = new Transaction(symbol, price, volume, transactionType, transactionTime);
+        Transaction transaction = new Transaction(symbol, price, volume, 0.0, transactionType, transactionTime);
 
         if (transaction.getTransactionAmount() > availableFunds) {
             throw new RuntimeException("Not enough funds!");
@@ -112,7 +110,6 @@ public class Portfolio extends IEXdata {
                 position.increasePosition(transaction, price, volume);
             }
             calculateTotals();
-            //System.out.println(symbol+"vol"+positions.get(symbol).getVolume()+"value: "+positions.get(symbol).getCurrentValue());
         }
     }
 
@@ -138,7 +135,8 @@ public class Portfolio extends IEXdata {
         double price = stock.getCurrentPrice();  //current price
         position.priceUpdate(price);
 
-        Transaction transaction = new Transaction(symbol, price, volume, transactionType, transactionTime);
+        double avgPurchasePrice = position.getAveragePrice();
+        Transaction transaction = new Transaction(symbol, price, volume, avgPurchasePrice, transactionType, transactionTime);
         availableFunds += transaction.getTransactionAmount();
 
         profit += volume * (price - position.getAveragePrice()) - transaction.getTransactionFees();
@@ -148,9 +146,9 @@ public class Portfolio extends IEXdata {
 
         //removing stock from portfolio in case its volume is zero after sell
         if (positions.get(symbol).getVolume() == 0) {
-            portfolioStocks.remove(symbol);
-            //positions.remove(symbol); //Should NOT be included, because: a) calculateTotals() depends on it,
-            // and b) keeping closed positsions is important for creating the (planned) transactions report.
+            portfolioStocks.remove(symbol);  //AT the same time, symbol should NOT be removed from positions,
+            // because: a) calculateTotals() depends on it, and b) keeping closed positsions is important
+            //  for creating the (planned) transactions report.
         }
     }
 
@@ -159,17 +157,15 @@ public class Portfolio extends IEXdata {
     //-----------------------------------------------
     //calculate portfolio total (sum of all current positions in stock):
     public void calculateTotals() {
-        if (positions.size() != 0) {
-            totalValueOfPositions = 0.0;
-            profit = 0.0;
-            unrealisedProfit = 0.0;
+        totalValueOfPositions = 0.0;
+        profit = 0.0;
+        unrealisedProfit = 0.0;
 
-            for (String s : positions.keySet()) {
-                Position position = positions.get(s);
-                totalValueOfPositions += position.getCurrentValue();
-                profit += position.getProfit(); //for both open and closed positions
-                unrealisedProfit += position.getUnrealisedProfit();
-            }
+        for (String s : positions.keySet()) {
+            Position position = positions.get(s);
+            totalValueOfPositions += position.getCurrentValue();
+            profit += position.getProfit(); //for both open and closed positions
+            unrealisedProfit += position.getUnrealisedProfit();
         }
     }
     //-----------------------------------------------
@@ -191,11 +187,11 @@ public class Portfolio extends IEXdata {
                 positionProfit += t.getProfitFromSell();
             }
 
-            report += "POSITION PROFIT(" + symb + "): " + positionProfit;
+            report += "POSITION PROFIT(" + symb + "): " + String.format("%.2f", positionProfit) + " USD";
             totalProfit += positionProfit;
             report += "\n\n";
         }
-        report += "TOTAL PROFIT: " + totalProfit;
+        report += "TOTAL PROFIT: " + String.format("%.2f", totalProfit) + " USD";
         //System.out.println(report);
         return report;
     }
@@ -231,13 +227,11 @@ public class Portfolio extends IEXdata {
             }
 
             //Updating positions in users' portfolios:
-            if (userList.size() > 0) {
-                for (User user : userList) {
-                    Portfolio userportf = user.getPortfolio();
-                    Map<String, Position> userPositions = userportf.getPositions();
-                    updatePositions(userPositions);
-                    userportf.calculateTotals();
-                }
+            for (User user : userList) {
+                Portfolio userportf = user.getPortfolio();
+                Map<String, Position> userPositions = userportf.getPositions();
+                updatePositions(userPositions);
+                userportf.calculateTotals();
             }
 
         } catch (IOException e) {
@@ -248,15 +242,13 @@ public class Portfolio extends IEXdata {
     //Updating positions of MasterPortfolio and all Users' portfolios:
     public void updatePositions(Map<String, Position> userPositions) {
         Portfolio masterPortfolio = handler.getMasterPortfolio();
-        if (userPositions.size() != 0) {  //if not empty portfolio
-            for (String stockSymb : userPositions.keySet()) {
-                Position position = userPositions.get(stockSymb);
-                double newprice = masterPortfolio.getStock(stockSymb).getCurrentPrice();
-                //System.out.print("old: "+position.getCurrentValue());
-                //System.out.print(", newprice*volume: "+newprice*position.getVolume());
-                position.priceUpdate(newprice);
-                //System.out.println(", actual new: "+position.getCurrentValue());
-            }
+        for (String stockSymb : userPositions.keySet()) {
+            Position position = userPositions.get(stockSymb);
+            double newprice = masterPortfolio.getStock(stockSymb).getCurrentPrice();
+            //System.out.print("old: "+position.getCurrentValue());
+            //System.out.print(", newprice*volume: "+newprice*position.getVolume());
+            position.priceUpdate(newprice);
+            //System.out.println(", actual new: "+position.getCurrentValue());
         }
     }
 
@@ -324,17 +316,17 @@ public class Portfolio extends IEXdata {
         String header = "STOCK   VOLUME      PRICE        VALUE   UNREALIZED P/L   REALIZED P/L";
         String info = MyUtils.createHeader(header);
 
-        if (positions.size() > 0) {
-            for (String symbol : positions.keySet()) {
-                if (positions.get(symbol).isOpen()) { // only open positions are shown when viewing in portfolio
-                    info += positions.get(symbol).toStringForPortfolio();
-                }
+        boolean positionsEmpty = true;
+        for (String symbol : positions.keySet()) {
+            if (positions.get(symbol).isOpen()) { // only open positions are shown when viewing in portfolio
+                info += positions.get(symbol).toStringForPortfolio();
+                positionsEmpty = false;
+                System.out.println("NOT EMPTY!");
             }
-        } else {
+        }
+        if (positionsEmpty == true) {
             info += "Portfolio contains no open positions...\n";
         }
-
-        info.trim();
 
         //Information on portfolio totals:
         info += MyUtils.createSeparator(header.length());

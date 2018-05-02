@@ -10,27 +10,23 @@ import app.Portfolio;
 public class ShowCompanyData implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler) {
+    public void handle(Integer command, Iu handler) throws Exception {
         if (command == 11) {
             showCompanyData(handler);
         }
     }
 
-    private void showCompanyData(Iu handler) {
+    private void showCompanyData(Iu handler) throws Exception {
         Portfolio masterPortfolio = handler.getMasterPortfolio();
 
         handler.getSc().nextLine();
         System.out.println("Enter stock symbol: ");
         String stockSym = handler.getSc().nextLine();
 
-        try {
-            //company base data:
-            Company comp = new Company(stockSym);
-            System.out.println(comp);
+        //company base data:
+        Company comp = new Company(stockSym);
+        System.out.println(comp);
 
-        } catch (Exception e) {
-            System.out.println("Stock information not available.");
-        }
     }
 
 }

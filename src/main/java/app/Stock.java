@@ -79,7 +79,7 @@ public class Stock extends IEXdata {
 
     //For creation of stocks bases on JSON Object (used for both creating a single stock,
     //as well as for batch creation of stocks for MasterPortfolio (the latter is used in
-    // Portfolio lass):
+    // Portfolio class):
     public void createStockFromJson(JsonObject rootobj) {
         currentPrice = rootobj.getAsJsonObject("quote").get("latestPrice").getAsDouble(); //168.38
         previousClose = rootobj.getAsJsonObject("quote").get("previousClose").getAsDouble();

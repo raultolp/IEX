@@ -17,11 +17,11 @@ public class ShowGameTopList implements CommandHandler {
     @Override
     public void handle(Integer command, Iu handler) {
         if (command == 15) {
-            ShowPortfoliosProgress(handler);
+            showPortfoliosProgress(handler);
         }
     }
 
-    public void ShowPortfoliosProgress(Iu handler) {
+    public void showPortfoliosProgress(Iu handler) {
         List<User> userList = handler.getUserList();
         for (User user : userList) {
             user.setPortfolioTotalValue();
