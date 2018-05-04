@@ -15,7 +15,7 @@ public class UpdatingPrices implements Runnable {
 
     @Override
     public void run() {
-        int timeToSleep = 15000; // in milliseconds
+        int timeToSleep = 10000; // in milliseconds
 
         //TODO: check if ok (vb olla peaks portfliost vastava meetodi hoopis siia tõstma
         //Downloading price information from IEX at regular time intervals:

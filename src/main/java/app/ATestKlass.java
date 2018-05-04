@@ -52,9 +52,9 @@ public class ATestKlass implements Comparator<String> {
         }*/
         //-------------------------------------------------
 
-        //GETTING STOCK FUNDAMENTAL DATA:
+/*        //GETTING STOCK FUNDAMENTAL DATA:
         Stock stock = masterPortfolio.getStock("AAPL");
-        System.out.println(stock);
+        System.out.println(stock);*/
 /*        Thread.sleep(5000);
         masterPortfolio.updatePrices();
         System.out.println(stock);*/
@@ -121,36 +121,21 @@ public class ATestKlass implements Comparator<String> {
             if (i > 0) {
                 masterPortfolio.updatePrices(userList);
             }
-            for (String s : availableSt) {
-                System.out.print(s + "\t");
-            }
-            System.out.println("");
-
-/*            for (int j = 0; j < availableSt.length; j++) {
-                String symb=availableSt[j];
-                System.out.print(portfolioStocks.get(symb).getCurrentPrice()+"\t");
-            }
-            for (int j = 0; j < port.getPortfolioStocks().size(); j++) {
-                System.out.print(port.getTotalValueOfPositions()+", ");
-            }*/
 
             for (String symbol : positions.keySet()) {
                 Position pos = positions.get(symbol);
                 Stock stock1 = masterPortfolio.getPortfolioStocks().get(symbol);
-                System.out.print(symbol + "- PETS: " + pos.getCurrentValue());
-                System.out.println(", ACTUAL: " + stock1.getCurrentPrice() * pos.getVolume());
+                System.out.print(symbol + "- PETS CURR.VAL.: " + pos.getCurrentValue() + ", PRICE: " + pos.getPrice());
+                System.out.println(", ACTUAL CURR.VAL:: " + stock1.getCurrentPrice() * pos.getVolume() + ", PRICE: " + stock1.getCurrentPrice());
             }
+            System.out.println("Pets's portf: " + pets.getPortfolio().getTotalValueOfPortfolio());
+            System.out.println(port); //Portfolio's toString
 
-            System.out.println("\n");
             int timeToSleep = 7000;
             System.out.print("Now Sleeping for " + timeToSleep / 1000 + " seconds... ");
             Thread.sleep(timeToSleep);  // in seconds
             System.out.println("Woke up!");
 
-            System.out.println("Pets's portf: " + pets.getPortfolio().getTotalValueOfPortfolio());
-            for (String s : positions.keySet()) {
-                System.out.println(s + ": " + positions.get(s).getCurrentValue());
-            }
 
         }
 

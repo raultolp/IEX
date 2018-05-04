@@ -321,7 +321,6 @@ public class Portfolio extends IEXdata {
             if (positions.get(symbol).isOpen()) { // only open positions are shown when viewing in portfolio
                 info += positions.get(symbol).toStringForPortfolio();
                 positionsEmpty = false;
-                System.out.println("NOT EMPTY!");
             }
         }
         if (positionsEmpty == true) {

@@ -27,8 +27,8 @@ public class Position {
         this.price = price;
         this.volume = volume;
         this.averagePrice = price + transaction.getTransactionFee();  //transaction.getTransactionAmount()/volume;
-        this.profit = 0 - transaction.getTransactionFees();
-        this.unrealisedProfit = 0.0;
+        this.profit = 0.0;
+        this.unrealisedProfit = 0.0 - transaction.getTransactionFees();
         this.currentValue = price * volume;
         this.open = true;
         transaction.setAveragePurchasePrice(averagePrice);
@@ -116,7 +116,7 @@ public class Position {
         String info = String.format("%-5s %8d %10.2f %12.2f %16.2f %14.2f\n",
                         symbol, volume, price, currentValue, unrealisedProfit, profit);
         //NB! Average purchase price ('averagePrice') currently not shown in portfolio.
-
+        //System.out.println(info);  //TESTIMISEKS
         return info;
     }
 
@@ -151,6 +151,11 @@ public class Position {
     public boolean isOpen() {
         return open;
     }
+
+    public double getPrice() {
+        return price;
+    }
+
     //TODO: (PRIORITY 2) - ADD SHORT POSITIONS
 
 }

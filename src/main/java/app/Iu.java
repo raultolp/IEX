@@ -68,13 +68,8 @@ public class Iu {
         //HANDLE COMMANDS
         handler.runInteractive(handler);
 
-        // QUIT PROGRAM
-        if (handler.activeGame != null)
-            handler.getDataCollector().interrupt();
-        //app.actions.SaveData.saveData(handler);  //võib-olla ei taha salvestada
-        handler.sc.close();
-
-        MyUtils.colorPrintYellow("Bye-bye!");
+        // QUIT PROGRAM  - implemented under Quit command
+        //if (handler.activeGame != null)
 
     }
 

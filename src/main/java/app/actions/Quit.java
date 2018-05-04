@@ -3,6 +3,9 @@ package app.actions;
 import app.CommandHandler;
 import app.Iu;
 
+import static app.StaticData.ANSI_RESET;
+import static app.StaticData.ANSI_YELLOW;
+
 //Quit
 
 public class Quit implements CommandHandler {
@@ -11,10 +14,11 @@ public class Quit implements CommandHandler {
     public void handle(Integer command, Iu handler) {
         if (command == 18) {
             System.out.println("Quiting...");
-            //handler.getDataCollector().interrupt(); //pandud IU-sse - et rakenduks nii Quit valimisel kui ka mistahes muul juhul
+            handler.getDataCollector().interrupt();
+            handler.getSc().close();
+            //app.actions.SaveData.saveData(handler);  //võib-olla ei taha salvestada?
 
-            // Praegu ei tee midagi, kuid huljem võib olla vaja asjade sulgemiseks või mida iganes
-            // QUIT toimub Iu-s hetkel
+            System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
         }
     }
 }
