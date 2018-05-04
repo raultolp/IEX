@@ -33,7 +33,7 @@ public final class MyUtils {
         System.out.println(ANSI_RED + text + ANSI_RESET);
     }
 
-    public void colorPrintBlue(String text) {
+    public static void colorPrintBlue(String text) {
         System.out.println(ANSI_BLUE + text + ANSI_RESET);
     }
 

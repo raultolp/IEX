@@ -1,11 +1,12 @@
 package app;
 
 import app.actions.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+
 import static app.StaticData.*;
-import app.actions.SaveData;
 
 
 public class Iu {
@@ -60,7 +61,9 @@ public class Iu {
         handler.dataCollector.start();
 
         //START PROGRAM
-        System.out.println(mainTitle);
+        MyUtils.colorPrintBlue(mainTitle);
+        MyUtils.colorPrintYellow(subTitle);
+        System.out.println(additionalInformation);
 
         //HANDLE COMMANDS
         handler.runInteractive(handler);
@@ -71,7 +74,7 @@ public class Iu {
         //app.actions.SaveData.saveData(handler);  //võib-olla ei taha salvestada
         handler.sc.close();
 
-        System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
+        MyUtils.colorPrintYellow("Bye-bye!");
 
     }
 
@@ -84,7 +87,7 @@ public class Iu {
             activeUser = admin;
             masterPortfolio = admin.getPortfolio();
         } catch (IOException e) {
-            System.out.println("Connection to IEX failed. Try again (Y/N)?");
+            MyUtils.colorPrintRed("Connection to IEX failed. Try again (Y/N)?");
             String answer = sc.nextLine().trim().toUpperCase();
             while (true) {
                 if (!answer.equals("N") && !answer.equals("Y")) {
@@ -170,7 +173,7 @@ public class Iu {
                     break;
 
             } catch (InputMismatchException e) {
-                System.out.println("Wrong input: " + sc.nextLine());
+                MyUtils.colorPrintRed("Wrong input: " + sc.nextLine());
             }
         }
     }
