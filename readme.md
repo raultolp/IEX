@@ -1,3 +1,125 @@
+
+##IMPLEMENTING SERVER-CLIENT:
+
+###MUUDATUSED KLASSIDES:
+
+###SERVER:
+
+-Lisatud on kliendiga suhtlemiseks klassid ***Server, ThreadForClientCommands*** ja ***ThreadForDataUpdates***.
+
+-Peaklassi Iu on üsna palju muudetud ja osa sellest on tõstetud klassi Server.
+
+-Kõigis klassides on muudetud I/O. Täpsemalt on igale poole, kus varem kasutati skännerit ja 
+väljaprintimist, lisatud tingimus, et kui kasutajaks on admin, siis prindib ja skännib, aga kui 
+kasutajaks on klient, siis saadetakse väljund DataOutputStreami /loetakse sisend DataInputStreamist.
+ 
+-Pisem muudatus: Klassi Portfolio alt on hindade update’imisega tegelevad meetodid tõstetud ümber 
+klassi UpdatingPrices, et kogu update’imise loogika oleks ühes kohas koos.
+
+
+
+###CLIENT:
+
+-Lisatud on Serveriga suhtlemisega tegelevad klassid ***Client, ReceivingFromServer*** ja 
+***SendingUserInput***.
+
+-Ülejäänud klassid (st Portfolio/Transaction/Position...) on võetud varasemast, et FX saaks kasutada
+ sisendina sama struktuuriga andmeid mis varem. Alternatiivina saaks FX (kui see ikka tuleb) võtta 
+ portfellide andmed otse JSON stringidest ja teha nendega mida iganes vaja (st mitte luua/uuendada 
+ vahepeal Portfolio jm isendeid, vaid otse oma andmetabeleid). Mõnes neist klassidest on tehtud 
+ väikseid muutusi (nt Portfoliost kustutatud Buy/Sell meetod ja ülejäänutest muid meetodeid, mida 
+ kliendil vaja ei ole). 
+ 
+-UpdatingPrices klassi (samuti vajalik vaid FX jaoks) on kliendi puhul rohkem muudetud, sest see 
+peab tegelema Serverilt JSON stringina saadud MasterPortfolio hinna update’ide ja kasutaja portfelli 
+update’ide põhjal mõlema portfelli uuendamisega. (Kasutaja portfelli update’imise osa on sealt hetkel 
+veel puudu. Käsurea versiooni jaoks ei ole seda ka vaja, sest kasutaja saab serverilt info oma 
+portfelli kohta väljatrükkidena niigi.) 
+
+
+
+###SERVER-KLIENT LOOGIKA – LÕIMED jm:
+
+###SERVER
+ Serveris luuakse hulk lõimesid. 
+ 
+-Kõigepealt luuakse lõim ***DataCollector*** (UpdatingPrices isend), mis tegeleb teatud intervalli 
+(nt 10 sek) tagant IEX APIst andmete allalaadimisega ja portfellide uuendamisega, et uusi turuhindu
+ arvesse võtta. 
+ 
+-Siis luuakse admini (serveri haldaja ja ühtlasi endiselt ka kasutaja, kellele kuulub MasterPortfolio)
+ jaoks lõim ***adminThread*** ja antakse adminile tema käskude haldamiseks kasutada Iu isend masterHandler.
+  Adminil on sama menüü nagu enne (menüüpunktide järjestust on veidi muudetud), v.a lisatud on 
+  menüüpunkt “Accept Client Connections” (vastav klass (“AcceptClientConnections”) on lisatud ka 
+  “actions” kausta ja vastav väli (“acceptConnections”) Iu-sse).  
+  
+-Seejärel hakatakse vastu võtma klientide ühendusi – sellega tegeleb lõim ***UserThreadFactory***. Iga 
+kliendi jaoks luuakse kaks lõime:
+
+b) ***ThreadForClientCommands*** kliendi käskude haldamiseks. Selles lõimes tuvastatakse kasutajanimi, 
+luuakse kas uus kasutaja või tuvastatakse olemasolev, luuakse kliendile tema käskude haldamiseks 
+Iu isend handler ning saadetakse talle JSONina tema portfell ja masterportfolio (hiljem 
+ThreadForClientUpdates saadab kliendile vaid masterportfolio aktsiahindasid, mitte kogu infot). 
+Seejärel hakkab see thread kliendi handleri kaudu antud käskusid haldama.
+
+
+a) ***ThreadForDataUpdates*** kliendile regulaarsete portfolio ja hinna update’ide saatmiseks (saadetakse 
+json stringidena). See lõim kontrollib 1 sek tagant, kas kasutaja portfell on muutunud (kas 
+ostude/müükide tõttu või IEX-ist allalaetud hinnauuenduste tulemusel). Kasutaja portfelli muutuse 
+kontrollimiseks on Portfoliosse lisatud väli “portfolioHasChanged” – kui see on “true”, siis 
+saadetakse kasutajale korraga JSON stringina nii tema enda portfell kui ka masterPortfolio 
+hinnauuendused ning muudetakse “portfolioHasChanged” tagasi false’iks. Märkus: Uuenduste saatmine 
+kliendile ei ole käsurea versiooni jaoks tegelikult vajalik, sest selle puhul saab klient oma 
+portfelli seisu teada serverilt saadava ShowUserPortfolio väljatrükina.
+
+- Kuna mõlemad threadid kasutavad sama socketit, siis selleks, et nende vahel konflikte ei tekiks,
+ on ühele antud suurem prioriteet.
+ 
+-Kõigile klientidele loodud threadid pannakse listidesse, et neid oleks võimalik korraga sulgeda. 
+
+-Kliendi ühenduse loomisel antakse kliendile clientId, et ThreadForDataUpdates saaks selle järgi 
+(pärast seda, kui kliendile vastav User on loodud/olemasolev tuvastatud) kindlaks teha, millise 
+kliendi isendiga ta seotud on. (Selleks on Iu-sse lisatud vastavad mapid “clientThreads” ja 
+“clientIds”.) 
+
+###KLIENT: 
+Klassis Client luuakse kaks lõime, millest üks ***(ReceivingFromServer)*** tegeleb serveri väljundi 
+vastuvõtmisega ja teine ***(SendingUserInput)*** serverile sisendi saatmisega. Kogu andmevahetus käib 
+ainult stringidega. Sisendi vastuvõtmisel kontrollitakse, kas tegu on hinnauuenduse stringiga (JSON 
+string algab “{“-ga), menüü trükkimise stringiga (sel juhul trükib klient endale ise menüü, et 
+säilitada selle viisakas vormistus), väljumist tähistava stringiga (“Quit...”) – sel juhul lõpetab 
+lõim oma tegevuse, või muu stringiga. Vaid juhul kui tegu on muu stringiga, prindib klient selle 
+endale välja nii nagu ta selle serverilt sai. 
+
+//-------------------------------------
+
+###TODOs: Server ega Client ei sulgu praegu korrektselt... 
+
+_Veel todo-sid:_
+
+_-Lisama peaks kliendi ühenduste lõpetamise loogika, kui klient valib “Quit”, või kui admin valib “Quit”._
+ 
+_-Kliendi kustutamine ei toimi endiselt korrektselt (see probleem oli ka enne). _
+
+_-Serverisse peaks lisama tingimuse, et kui masterHandleril on väli “acceptConnections” false, siis 
+ei võtaks ühendusi vastu._
+
+_-Võiks lisada menüüpunkti “Stop accepting client connections”._
+
+_-Kui teeme ka FX-i, siis tuleks lisada kliendi UpdatingPrices klassi kasutaja portfelli update’imise 
+osa, mis sealt hetkel on veel puudu. (Käsurea versiooni jaoks ei ole seda ka vaja, sest kasutaja saab 
+serverilt info oma portfelli kohta väljatrükkidena niigi.)_
+
+
+
+
+
+
+
+
+
+##---------------------------------------------------------------------------
+
 draft
 # IEX Stock Exchange Game for Beginners  
 _Authors: Raul Tölp, Õie Renata Siimon and Helena Rebane_
