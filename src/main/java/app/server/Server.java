@@ -10,11 +10,13 @@ import java.util.List;
 
 import static app.server.StaticData.*;
 
+
 public class Server {
 
     private Socket socket;
     private InputStream in;
     private OutputStream out;
+    private Thread userThreadFactory;
 
     public Server(Socket socket) throws IOException {
         this.socket = socket;
@@ -61,12 +63,12 @@ public class Server {
             List<Thread> updateThreads = new ArrayList<>();
 
             //}
+
             Thread userThreadFactory = new Thread(() -> {
                 int clientId = 0;  //clientId is assigned when client connects (at that point, its identity
                 // as user is not verified yet), and communicated to the user. After user has verified
                 // his identity and a handler has been created for him, the user's update thread is attached
                 // to this user for receiveing price updates.
-
                 try {
                     while (true) {
                         Server socket = new Server(ss.accept());  //Listens for a connection to be made to this socket and accepts it.
@@ -80,6 +82,7 @@ public class Server {
                         t.start();
                         t2.start();
                         clientId++;
+
                     }
                 } catch (IOException e) {
                     for (Thread thread : updateThreads) {
@@ -91,10 +94,12 @@ public class Server {
                         //thread.join();  // ?
                     }
                 }
+
             });
 
 
-            userThreadFactory.start();  //TODO: Kuidas peatada userThreadFactory ?
+            userThreadFactory.start();
+            //TODO: Kuidas peatada userThreadFactory ?
 
 
             // QUIT PROGRAM
@@ -112,6 +117,7 @@ public class Server {
         }
     }
 
+
     public InputStream getIn() {
         return in;
     }
@@ -123,6 +129,7 @@ public class Server {
     public Socket getSocket() {
         return socket;
     }
+
 }
 
 

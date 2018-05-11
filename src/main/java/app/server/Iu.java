@@ -19,7 +19,7 @@ public class Iu {
     private Iu masterHandler; //handler of admin
     private File activeGame;
     private boolean isRunning = true;
-    private boolean acceptConnections = false;
+    private boolean acceptConnections;
 
     //User, Portfolio, Stocks
     private User admin;  // has masterPortfolio
@@ -50,6 +50,7 @@ public class Iu {
         this.commandHandlers = loadCommandHandlers();
         this.masterHandler = this;
         this.activeGame = null;
+        this.acceptConnections = true;
 
         //User, Portfolio, Stocks
         this.admin = new User("admin", 1000000, availableStocks);
@@ -153,6 +154,7 @@ public class Iu {
                 new DeleteUser(),
                 new Quit(),
                 new AcceptClientConnections(),
+                new StopAcceptingClientConnections(),
                 new AddUser(),
                 new ShowUsersList(),
                 new SetActiveUser(),
@@ -185,7 +187,7 @@ public class Iu {
                 }
 
                 //Quit
-                if (isRunning == false) {  // isRunning is set to "false" in Menu item "Quit"
+                if (!isRunning) {  // isRunning is set to "false" in Menu item "Quit"
                     break;
                 }
 

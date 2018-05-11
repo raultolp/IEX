@@ -18,7 +18,7 @@ public class LoadData implements CommandHandler {
 
     @Override
     public void handle(Integer command, Iu handler) throws Exception {
-        if (command == 18) {
+        if (command == 19) {
             boolean isAdmin = handler.isAdmin();
             if (isAdmin) {
                 loadData(handler);

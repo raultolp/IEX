@@ -35,7 +35,7 @@ public class ShowGameTopList implements CommandHandler {
         DataOutputStream out = handler.getOut();
 
         if (isAdmin) {
-            System.out.println("\nTOP LIST:");
+            System.out.println("\nTOP LIST:\n");
             System.out.println(MyUtils.createHeader(String.format("%-5s%-15s%16s%30s",
                     "RANK", "USER", "PORTFOLIO VALUE", "INCREASE IN VALUE")));
         } else {

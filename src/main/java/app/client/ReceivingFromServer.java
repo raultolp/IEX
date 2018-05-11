@@ -5,10 +5,11 @@ import com.google.gson.Gson;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class ReceivingFromServer extends Client implements Runnable {
+public class ReceivingFromServer implements Runnable {
 
-    DataInputStream in;
-    String[] menu = {
+    private Client client;
+    private DataInputStream in;
+    private String[] menu = {
             "Buy stock",
             "Sell stock",
             "View user portfolio",
@@ -23,13 +24,16 @@ public class ReceivingFromServer extends Client implements Runnable {
             "Delete user",
             "Quit"
     };
+
+    //TODO
     //boolean isRunning=true;
     Portfolio masterPortfolio;
     Portfolio userPortfolio;
 
 
-    public ReceivingFromServer(DataInputStream in) {
+    public ReceivingFromServer(DataInputStream in, Client client) {
         this.in = in;
+        this.client = client;
     }
 
     @Override
@@ -41,18 +45,17 @@ public class ReceivingFromServer extends Client implements Runnable {
 
         while (true) {
             try {
-                if (!super.isRunning()) {
+                if (!client.isRunning()) {
                     return;
                 }
                 String receivedString = in.readUTF();
                 //System.out.println("received " + receivedString);
 
                 //Quitting:
-                if (receivedString.endsWith("Quiting...")) {
+                if (receivedString.endsWith("Quitting...")) {
                     System.out.println(receivedString);
-                    super.setRunning(false);
-                    break;
-                    //break; //thread stops
+                    client.setRunning(false);
+                    break; //thread stops
 
                     //Printing menu:
                 } else if (receivedString.trim().equals("MENU")) {
@@ -67,7 +70,7 @@ public class ReceivingFromServer extends Client implements Runnable {
                     String masterAsString = splitted[1];
 
                     //Initiating masterPortfolio and user portfolio at the beginning of the game:
-                    if (initiated == false) {
+                    if (!initiated) {
                         //System.out.println("MASTER: "+masterAsString);
                         //System.out.println("USER"+userAsString);
                         masterPortfolio = new Gson().fromJson(masterAsString, Portfolio.class);
@@ -92,7 +95,6 @@ public class ReceivingFromServer extends Client implements Runnable {
                 throw new RuntimeException();
             }
         }
-        return;
     }
 
     private void printMenu() {

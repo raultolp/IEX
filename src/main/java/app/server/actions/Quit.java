@@ -17,14 +17,14 @@ public class Quit implements CommandHandler {
             //app.server.actions.SaveData.saveData(handler);  //KAS VAJA ALATI SALVESTADA?
 
             if (isAdmin) {
-                System.out.println("Quiting...");
+                System.out.println("Quitting...");
                 //handler.getDataCollector().interrupt();
                 handler.getSc().close();
+                System.exit(0);
             } else {
-                handler.getOut().writeUTF("Quiting...");
+                handler.getOut().writeUTF("Quitting...");
                 handler.getIn().close();
                 handler.getOut().close();
-
             }
 
             handler.setRunning(false);

@@ -15,7 +15,7 @@ public class AddUser implements CommandHandler {
 
     @Override
     public void handle(Integer command, Iu handler) throws Exception {
-        if (command == 15) {
+        if (command == 16) {
             boolean isAdmin = handler.isAdmin();
 
             if (isAdmin) {

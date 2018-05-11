@@ -47,6 +47,7 @@ public class StaticData {
             "Delete user",
             "Quit",
             "Accept clients' connections (ADMIN)",
+            "Stop accepting clients' connections (ADMIN)",
             "Add user (ADMIN)",
             "List users (ADMIN)",
             "Set active user (ADMIN)",

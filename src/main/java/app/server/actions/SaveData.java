@@ -17,7 +17,7 @@ public class SaveData implements CommandHandler {
 
     @Override
     public void handle(Integer command, Iu handler) throws Exception {
-        if (command == 19) {
+        if (command == 20) {
             boolean isAdmin = handler.isAdmin();
             if (isAdmin) {
                 saveData(handler);

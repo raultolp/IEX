@@ -83,7 +83,6 @@ public class ThreadForClientCommands implements Runnable {
                 handler.runInteractive(handler);
             } catch (InterruptedException e) {
                 out.writeUTF("Server stopped...");
-                return;
             } finally {
                 in.close();
                 out.close();
