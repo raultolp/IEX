@@ -1,7 +1,5 @@
 package app.client;
 
-import com.google.gson.Gson;
-
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -27,8 +25,8 @@ public class ReceivingFromServer implements Runnable {
 
     //TODO
     //boolean isRunning=true;
-    Portfolio masterPortfolio;
-    Portfolio userPortfolio;
+    //Portfolio masterPortfolio;
+    //Portfolio userPortfolio;
 
 
     public ReceivingFromServer(DataInputStream in, Client client) {
@@ -70,7 +68,7 @@ public class ReceivingFromServer implements Runnable {
                     String masterAsString = splitted[1];
 
                     //Initiating masterPortfolio and user portfolio at the beginning of the game:
-                    if (!initiated) {
+                   /* if (!initiated) {
                         //System.out.println("MASTER: "+masterAsString);
                         //System.out.println("USER"+userAsString);
                         masterPortfolio = new Gson().fromJson(masterAsString, Portfolio.class);
@@ -86,7 +84,7 @@ public class ReceivingFromServer implements Runnable {
                         //System.out.println(masterPortfolio.getStock("AAPL").getCurrentPrice());   // ok
                         userPortfolio = new Gson().fromJson(masterAsString, Portfolio.class);
                         //app.client.UpdatingPrices.updatePrices(masterPortfolio, userPortfolio, masterAsString, userAsString);
-                    }
+                    }*/
                 } else {
                     System.out.println(receivedString);
                 }
