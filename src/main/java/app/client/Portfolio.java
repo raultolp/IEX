@@ -1,5 +1,6 @@
 package app.client;
 
+import app.server.MyUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
