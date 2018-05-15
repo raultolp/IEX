@@ -34,30 +34,23 @@ public class ThreadForClientCommands implements Runnable {
             //LOGIN AND CREATION OF IU FOR USER:
             out.writeUTF(mainTitle);
             File activeGame = masterHandler.getActiveGame();
+            List<User> userList = masterHandler.getUserList();
             out.writeUTF("Username:");
             String username = in.readUTF();
             //System.out.println(username);
             User user = new User(username, 1000000);
 
-            //New game, new user:
-            if (activeGame == null) {
-                out.writeUTF("New user has been created. Welcome to the game!");
-            }
 
-            //Existing game, existing user:
-            else {
-                List<User> userList = masterHandler.getUserList();
-                boolean newUser = true;
-                for (User userInList : userList) {
-                    if (userInList.getUserName().equals(username)) {
-                        user = userInList;
-                        out.writeUTF("Welcome back!");
-                        newUser = false;
-                        break;
-                    }
+            for (User userInList : userList) {
+                if (userInList.getUserName().equals(username)) {
+                    user = userInList;
+                    out.writeUTF("Welcome back!");
+
+                    break;
                 }
+
                 //Existing game, new user:
-                if (newUser == true) {
+                if (!(userList.contains(user))) {
                     out.writeUTF("New user has been created. Welcome to the game!");
                 }
             }
@@ -79,13 +72,11 @@ public class ThreadForClientCommands implements Runnable {
 
 
             //PLAYING THE GAME:
-            try {
+            try ( in; out ) {
                 handler.runInteractive(handler);
             } catch (InterruptedException e) {
                 out.writeUTF("Server stopped...");
             } finally {
-                in.close();
-                out.close();
                 socket.getSocket().close();
             }
         } catch (Exception e) {

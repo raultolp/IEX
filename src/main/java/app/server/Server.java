@@ -16,7 +16,6 @@ public class Server {
     private Socket socket;
     private InputStream in;
     private OutputStream out;
-    private Thread userThreadFactory;
 
     public Server(Socket socket) throws IOException {
         this.socket = socket;

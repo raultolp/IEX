@@ -52,7 +52,7 @@ public final class MyUtils {
                 else if (nameInList(name, handler.getUserList()) > -1 && newUser)
                     colorPrintRed("Name already exists!");
                 else if (nameInList(name, handler.getUserList()) == -1 && !newUser)
-                    colorPrintRed("Name does not exists!");
+                    colorPrintRed("Name does not exist!");
             } else {
                 DataOutputStream out = handler.getOut();
                 DataInputStream in = handler.getIn();
@@ -64,7 +64,7 @@ public final class MyUtils {
                 else if (nameInList(name, handler.getUserList()) > -1 && newUser)
                     out.writeUTF("Name already exists!");
                 else if (nameInList(name, handler.getUserList()) == -1 && !newUser)
-                    out.writeUTF("Name does not exists!");
+                    out.writeUTF("Name does not exist!");
             }
 
             if (name.length() == 0)

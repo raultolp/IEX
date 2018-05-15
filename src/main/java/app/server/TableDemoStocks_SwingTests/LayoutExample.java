@@ -16,7 +16,7 @@ public class LayoutExample extends JFrame
     private JButton resetButton;
     private static int gridSize = 4;
 
-    public LayoutExample()
+    private LayoutExample()
     {
         super("Layout Example");
     }
@@ -36,14 +36,7 @@ public class LayoutExample extends JFrame
         positionLabel = new JLabel(INITIAL_TEXT, JLabel.CENTER);
         JPanel buttonLeftPanel = new JPanel();
         resetButton = new JButton("Reset");
-        resetButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent ae)
-            {
-                positionLabel.setText(INITIAL_TEXT);
-            }
-        });
+        resetButton.addActionListener(ae -> positionLabel.setText(INITIAL_TEXT));
         labelPanel.add(positionLabel);
         buttonLeftPanel.add(resetButton);
         leftPanel.add(labelPanel);
@@ -59,15 +52,10 @@ public class LayoutExample extends JFrame
             {
                 JButton button = new JButton("(" + i + ", " + j + ")");
                 button.setActionCommand("(" + i + ", " + j + ")");
-                button.addActionListener(new ActionListener()
-                {
-                    @Override
-                    public void actionPerformed(ActionEvent ae)
-                    {
-                        JButton but = (JButton) ae.getSource();
-                        positionLabel.setText(
-                                but.getActionCommand() + ADDED_TEXT);
-                    }
+                button.addActionListener(ae -> {
+                    JButton but = (JButton) ae.getSource();
+                    positionLabel.setText(
+                            but.getActionCommand() + ADDED_TEXT);
                 });
                 buttonPanel.add(button);
             }
@@ -86,13 +74,6 @@ public class LayoutExample extends JFrame
         {
             gridSize = Integer.parseInt(args[0]);
         }
-        SwingUtilities.invokeLater(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                new LayoutExample().createAndDisplayGUI();
-            }
-        });
+        SwingUtilities.invokeLater(() -> new LayoutExample().createAndDisplayGUI());
     }
 }
