@@ -40,12 +40,10 @@ public class ThreadForClientCommands implements Runnable {
             //System.out.println(username);
             User user = new User(username, 1000000);
 
-
             for (User userInList : userList) {
                 if (userInList.getUserName().equals(username)) {
                     user = userInList;
                     out.writeUTF("Welcome back!");
-
                     break;
                 }
 

@@ -243,6 +243,10 @@ public class Iu {
         this.priceUpdateForClients = priceUpdateForClients;
     }
 
+    public User getAdmin() {
+        return admin;
+    }
+
     public User getActiveUser() {
         return this.activeUser;
     }

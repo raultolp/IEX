@@ -90,7 +90,7 @@ public class ReceivingFromServer implements Runnable {
                 }
             } catch (IOException e) {
                 //return;
-                throw new RuntimeException();
+                client.setRunning(false);
             }
         }
     }

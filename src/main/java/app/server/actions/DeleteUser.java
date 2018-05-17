@@ -18,8 +18,10 @@ public class DeleteUser implements CommandHandler {
             }
             String name = MyUtils.enterUserName(handler, false);
             Integer index = MyUtils.nameInList(name, handler.getUserList());
-            if (index > -1) {
-                handler.getUserList().remove(index); //TODO ???
+            if (index > -1 && (isAdmin || handler.getActiveUser().getUserName().equals(name))) {
+                handler.getUserList().remove(handler.getUserList().get(index)); //TODO ???
+
+                handler.setActiveUser(handler.getAdmin());
 
                 if (isAdmin) {
                     MyUtils.colorPrintYellow("User " + name + " has been deleted.");
