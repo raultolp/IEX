@@ -20,6 +20,7 @@ public class Quit implements CommandHandler {
             if (isAdmin) {
                 System.out.println("Quitting...");
                 //handler.getDataCollector().interrupt();
+                SaveData.saveData(handler, io);
                 io.getSc().close();
                 System.exit(0);
             } else {

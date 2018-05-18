@@ -32,12 +32,10 @@ public class LoadData implements CommandHandler {
 
     public void loadData(Iu handler, IO io) throws IOException {
 
-        //Scanner sc=handler.getSc();
-        File currentDir = new File(".");
+        File currentDir = new File("Games");
         List<String> fileNames = Arrays.asList(Objects.requireNonNull(currentDir.list()));
 
         MyUtils.listFiles(handler, io);
-        io.getln();
         System.out.print("Enter filename: ");
         String name = io.getln();
 

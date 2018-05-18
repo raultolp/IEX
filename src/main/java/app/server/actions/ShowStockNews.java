@@ -28,9 +28,9 @@ public class ShowStockNews implements CommandHandler {
                     stocknews.append(n).append("\n\n");
                 }
                 io.println(stocknews.toString());
+            } else {
+                io.println("This stock is not available.");
             }
-            io.println("This stock is not available.");
-
         }
     }
 }

@@ -23,7 +23,7 @@ public class AddUser implements CommandHandler {
     }
 
     public static void addUser(Iu handler, IO io) throws IOException {
-        List<User> newUserList = new ArrayList<>();//TODO viga?
+        List<User> newUserList = new ArrayList<>();
 
         String name = MyUtils.enterUserName(handler, true, io);
 
@@ -32,7 +32,6 @@ public class AddUser implements CommandHandler {
             newUserList.add(new User(name, 100000));
             io.println("Created user: " + name);
         }
-
 
         handler.setUserList(newUserList);
     }

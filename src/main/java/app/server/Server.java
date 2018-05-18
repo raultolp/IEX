@@ -38,7 +38,8 @@ public class Server {
                     "(viewing a user's portfolio, buying/selling stocks as a user, etc.), you must first activate that user\n" +
                     "by choosing the Menu item 'Set active user'.");
 
-            Iu masterHandler = new Iu(new AdminIO()); //for creating Iu (handlers, masterportfolio) for admin
+            IO io = new AdminIO();
+            Iu masterHandler = new Iu(io); //for creating Iu (handlers, masterportfolio) for admin
 
             //RUN IEX DATA COLLECTOR AS THREAD
             Thread dataCollector = new Thread(new UpdatingPrices(masterHandler));
@@ -71,7 +72,7 @@ public class Server {
                 while (true) {
                     Server socket = new Server(ss.accept());  //Listens for a connection to be made to this socket and accepts it.
                     Thread t = new Thread(new ThreadForClientCommands(socket, masterHandler, clientId));
-                    Thread t2 = new Thread(new ThreadForDataUpdates(socket, masterHandler, clientId));
+                    Thread t2 = new Thread(new ThreadForDataUpdates(socket, masterHandler, clientId, io));
                     commandthreads.add(t);
                     updateThreads.add(t2);
                     masterHandler.addClientUpdateThread(clientId, t2);

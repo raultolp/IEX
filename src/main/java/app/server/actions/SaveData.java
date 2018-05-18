@@ -31,26 +31,34 @@ public class SaveData implements CommandHandler {
     public static void saveData(Iu handler, IO io) throws IOException {
         File file;
         List<User> userlist = handler.getUserList();
+        String filename;
 
-        io.println("\n");
+        File directory = new File("Games");
+        if (!directory.exists())
+            directory.mkdir();
+
 
         //Determining file name:
         if (handler.getActiveGame() == null) {
             System.out.print("Enter filename to save data: ");
-            String filename = io.getln();
-
-            if (!filename.endsWith(".game")) {
-                filename += ".game";
-            }
-            file = new File(filename);
+            filename = io.getln();
         } else {
-            file = handler.getActiveGame();
+            filename = handler.getActiveGame().getName();
         }
+        if (filename.length() < 2)
+            filename = "newSavedGame";
+        if (!filename.endsWith(".game"))
+            filename += ".game";
+
+        file = new File(directory, filename);
 
         //Converting userlist, with all users, their portfolios, positions and
         // transactions into one JSON object:
         JsonObject gameObj = new JsonObject();  //kõik kasutajad
-        for (User user : userlist) {
+        for (
+                User user : userlist)
+
+        {
             JsonObject userObj = user.covertToJson();
             String username = user.getUserName();
             gameObj.add(username, userObj);
@@ -64,6 +72,8 @@ public class SaveData implements CommandHandler {
         writer.write(gameAsString);
         writer.close();
         handler.setActiveGame(file);
-        System.out.println(ANSI_YELLOW + handler.getActiveGame().getName() + " file saved." + ANSI_RESET);
+        System.out.println(ANSI_YELLOW + handler.getActiveGame().
+
+                getName() + " file saved." + ANSI_RESET);
     }
 }

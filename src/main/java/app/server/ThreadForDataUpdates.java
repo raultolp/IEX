@@ -13,15 +13,17 @@ public class ThreadForDataUpdates implements Runnable {
     private Server socket;
     private Iu masterHandler;
     private int clientId;
+    private IO io; //TODO viga?
     //private boolean masterHasChanged = false; //for price updates in master portfolio (this ususally also brings along changes in user portf.)
     //private boolean userHasChanged = false; //for changes in user portfolio (also adding stocks, changes in values etc.)
     //private JsonObject updatedUserPortfolio;
     //private JsonObject priceUpdateForClients;
 
-    public ThreadForDataUpdates(Server socket, Iu masterHandler, int clientId) {
+    public ThreadForDataUpdates(Server socket, Iu masterHandler, int clientId, IO io) {
         this.socket = socket;
         this.masterHandler = masterHandler;
         this.clientId = clientId;
+        this.io = io;
     }
 
 
@@ -53,7 +55,7 @@ public class ThreadForDataUpdates implements Runnable {
 
                 //Sending updated user portfolio if it has changed (either because of
                 // global price update or because of buys/sells):
-                if (userPortfolio.isPortfolioChanged() == true) {
+                if (userPortfolio.isPortfolioChanged()) {
                     JsonObject userAsJson = userPortfolio.covertToJson();
                     userPortfolio.setPortfolioHasChanged(false);
 
@@ -67,8 +69,12 @@ public class ThreadForDataUpdates implements Runnable {
             }
 
         } catch (InterruptedException e) {
-            //out.writeUTF("Server stopped...");
-            return;
+            try {
+                io.println("Server stopped...");
+            } catch (IOException e1) {
+                throw new RuntimeException();
+            }
+
         } catch (IOException e) {
             throw new RuntimeException();
         }

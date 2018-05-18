@@ -1,7 +1,5 @@
 package app.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.InputMismatchException;
@@ -74,9 +72,10 @@ public final class MyUtils {
         do {
             io.println("Enter stock name: ");
             name = io.getln().trim();
-            if (name.length() < 1 || name.length() > 5 || !isAlpha(name)){
+            if (name.length() < 1 || name.length() > 5 || !isAlpha(name)) {
                 tv = true;
-                io.println("Choose right stock name.");}
+                io.println("Choose correct stock name.");
+            }
         } while (tv);
 
         return Objects.requireNonNull(name).toUpperCase();
@@ -97,26 +96,18 @@ public final class MyUtils {
     }
 
 
-    //TODO streams, path?
     public static void listFiles(Iu handler, IO io) throws IOException {
-        File folder = new File(".");
+        File folder = new File("Games");
         File[] files = folder.listFiles();
-        int i = 1;
-        boolean isAdmin = handler.isAdmin();
+        // int i = 1;
+        //boolean isAdmin = handler.isAdmin();
 
+        io.println("Available files: " + '\n');
         for (File file : Objects.requireNonNull(files)) {
-            if (file.getName().endsWith(".game")) {
-
-                if (!isAdmin) {
-                    if (i++ % 4 == 0) {
-                        io.println(file.getName() + "\n");
-                    } else {
-                        System.out.printf("%15s%s", file.getName(), i++ % 4 == 0 ? "\n" : " ");
-                    }
-                }
-                io.println("\n");
-            }
+            if (!(file.getName().startsWith(".")))
+                io.println(file.getName());
         }
+        io.println("\n");
     }
 
     public static String createHeader(String header) {

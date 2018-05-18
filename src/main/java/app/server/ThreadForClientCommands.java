@@ -5,10 +5,13 @@ import com.google.gson.Gson;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static app.server.StaticData.mainTitle;
+import static app.server.StaticData.*;
+import static app.server.StaticData.ANSI_GREEN;
+import static app.server.StaticData.ANSI_RESET;
 
 public class ThreadForClientCommands implements Runnable {
 
@@ -76,11 +79,14 @@ public class ThreadForClientCommands implements Runnable {
             try ( in; out ) {
                 handler.runInteractive(io);
                 System.out.println(in.readUTF());
-            } catch (InterruptedException e) {
-                out.writeUTF("Server stopped...");
             } finally {
                 socket.getSocket().close();
             }
+        } catch (SocketException e1) {
+            System.out.println("client disconnected.");
+            System.out.print((masterHandler.getActiveGame() != null ? ANSI_BLUE + masterHandler.getActiveGame().getName() + ANSI_RESET :
+                    ANSI_RED + "(not saved)" + ANSI_RESET) +
+                    " / Active user:" + ANSI_GREEN + masterHandler.getActiveUser().getUserName() + ANSI_RESET + "> ");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
