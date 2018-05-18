@@ -1,6 +1,7 @@
 package app.server.actions;
 
 import app.server.CommandHandler;
+import app.server.IO;
 import app.server.Iu;
 
 import java.io.IOException;
@@ -12,15 +13,9 @@ import java.io.IOException;
 public class ShowStockListBaseData implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler) throws IOException {
+    public void handle(Integer command, Iu handler, IO io) throws IOException {
         if (command == 6) {
-            boolean isAdmin = handler.isAdmin();
-            if (isAdmin) {
-                System.out.println("Tuleb hiljem");
-            } else {
-                handler.getOut().writeUTF("Tuleb hiljem");
-            }
-
+            io.println("Tuleb hiljem");
         }
     }
 }

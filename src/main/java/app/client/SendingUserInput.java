@@ -19,7 +19,7 @@ public class SendingUserInput implements Runnable {
     @Override
     public void run() {
         try {
-            while (client.isRunning()) {  //When the other thread (receiving from Server) receives keyword "Quiting...",
+            while (client.isRunning()) {  //When the other thread (receiving from Server) receives keyword "Quitting...",
                 //it's 'isRunning' becomes 'false'- which is also the signal for the other thread to stop.
                 String userInput = sc.nextLine();
                 try {

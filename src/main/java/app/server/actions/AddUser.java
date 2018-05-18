@@ -1,9 +1,6 @@
 package app.server.actions;
 
-import app.server.CommandHandler;
-import app.server.Iu;
-import app.server.MyUtils;
-import app.server.User;
+import app.server.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,37 +11,29 @@ import java.util.List;
 public class AddUser implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler) throws Exception {
+    public void handle(Integer command, Iu handler, IO io) throws Exception {
         if (command == 16) {
             boolean isAdmin = handler.isAdmin();
-
             if (isAdmin) {
-                addUser(handler);
+                addUser(handler, io);
             } else {
-                handler.getOut().writeUTF("Wrong input.");
+                io.println("Wrong input.");
             }
         }
     }
 
-    public static void addUser(Iu handler) throws IOException {
-        List<User> newUserList = new ArrayList<>();
-        boolean isAdmin = handler.isAdmin();
+    public static void addUser(Iu handler, IO io) throws IOException {
+        List<User> newUserList = new ArrayList<>();//TODO viga?
 
-        if (isAdmin) {
-            handler.getSc().nextLine();
-        }
-        String name = MyUtils.enterUserName(handler, true);
+        String name = MyUtils.enterUserName(handler, true, io);
 
         if (name != null) {
             newUserList = handler.getUserList();
             newUserList.add(new User(name, 100000));
-            if (isAdmin) {
-                MyUtils.colorPrintYellow("Created user: " + name);
-            } else {
-                handler.getOut().writeUTF("Created user: " + name);
-            }
-
+            io.println("Created user: " + name);
         }
+
+
         handler.setUserList(newUserList);
     }
 }

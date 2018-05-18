@@ -23,10 +23,10 @@ public class Company extends IEXdata {
 
     //-----------------------------------------
     //Company information is loaded from IEX only if it is not yet stored in file:
-    public Company(String symbol, Iu handler) throws Exception {
+    public Company(String symbol, Iu handler, IO io) throws Exception {
         this.symbol = symbol.toUpperCase();
-        if (loadFromFile(handler) == false) {
-            loadDataFromWeb(handler);
+        if (!loadFromFile(handler)) {
+            loadDataFromWeb(handler, io);
         }
     }
 
@@ -35,7 +35,7 @@ public class Company extends IEXdata {
     public boolean loadFromFile(Iu handler) throws IOException {
         File fail = new File("CompanyInfo.txt");
 
-        try (Scanner sc = new Scanner(fail, "UTF-8")) {  //try-with-resources
+        try ( Scanner sc = new Scanner(fail, "UTF-8") ) {  //try-with-resources
             while (sc.hasNextLine()) {
                 String row = sc.nextLine();
                 String[] pieces = row.split("////");
@@ -60,7 +60,7 @@ public class Company extends IEXdata {
 
     //-----------------------------------------
     //Loading Company info from web:
-    public void loadDataFromWeb(Iu handler) throws IOException {  //äkki peaks tegema booleaniks - kui õnnestub, on true
+    public void loadDataFromWeb(Iu handler, IO io) throws IOException {  //äkki peaks tegema booleaniks - kui õnnestub, on true
         String URL = "https://api.iextrading.com/1.0/stock/" + symbol + "/company";
         boolean isAdmin = handler.isAdmin();
 
@@ -85,8 +85,8 @@ public class Company extends IEXdata {
 
             //-----------------------------------------
             //Saving downloaded data to file:
-            try (OutputStream out = new FileOutputStream("CompanyInfo.txt", true); //true- lisamine faili lõppu
-                 OutputStreamWriter texToWrite = new OutputStreamWriter(out, "UTF-8");) {
+            try ( OutputStream out = new FileOutputStream("CompanyInfo.txt", true); //true- lisamine faili lõppu
+                  OutputStreamWriter texToWrite = new OutputStreamWriter(out, "UTF-8"); ) {
                 texToWrite.write(symbol + "////" + companyName + "////" + sector + "////" + industry + "////"
                         + description + "////" + CEO + "////" + website + "\n");
             } catch (IOException e) {
@@ -97,18 +97,14 @@ public class Company extends IEXdata {
             }
 
         } catch (IOException e) {
-            if (isAdmin) {
-                System.out.println("Connection to IEX failed. Please try again.");
-            } else {
-                handler.getOut().writeUTF("Connection to IEX failed. Please try again.");
-            }
-
+            io.println("Connection to IEX failed. Please try again.");
         }
 
     }
 
+
     //Getting latest news on the company:
-    public ArrayList<String> getCompanyNews(Iu handler) throws IOException {
+    public ArrayList<String> getCompanyNews(Iu handler, IO io) throws IOException {
 
         ArrayList<String> newsItems = new ArrayList<>();
         String URL = "https://api.iextrading.com/1.0/stock/" + symbol + "/news";
@@ -132,11 +128,7 @@ public class Company extends IEXdata {
             }
 
         } catch (IOException e) {
-            if (handler.isAdmin()) {
-                System.out.println("Connection to IEX failed. Please try again.");
-            } else {
-                handler.getOut().writeUTF("Connection to IEX failed. Please try again.");
-            }
+            io.println("Connection to IEX failed. Please try again.");
         }
         return newsItems;
     }

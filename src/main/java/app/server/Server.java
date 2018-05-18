@@ -38,7 +38,7 @@ public class Server {
                     "(viewing a user's portfolio, buying/selling stocks as a user, etc.), you must first activate that user\n" +
                     "by choosing the Menu item 'Set active user'.");
 
-            Iu masterHandler = new Iu(); //for creating Iu (handlers, masterportfolio) for admin
+            Iu masterHandler = new Iu(new AdminIO()); //for creating Iu (handlers, masterportfolio) for admin
 
             //RUN IEX DATA COLLECTOR AS THREAD
             Thread dataCollector = new Thread(new UpdatingPrices(masterHandler));
@@ -48,7 +48,7 @@ public class Server {
 
             Thread adminThread = new Thread(() -> {
                 try {
-                    masterHandler.runInteractive(masterHandler);
+                    masterHandler.runInteractive(new AdminIO());
                 } catch (InterruptedException ignored) {
                 } catch (Exception e) {
                     throw new RuntimeException();
@@ -57,60 +57,46 @@ public class Server {
 
             adminThread.start();
 
-            //THREAD FOR CREATING NEW THREADS FOR USERS:
+            //USER THREADS:
             List<Thread> commandthreads = new ArrayList<>();
             List<Thread> updateThreads = new ArrayList<>();
 
             //}
 
-            Thread userThreadFactory = new Thread(() -> {
-                int clientId = 0;  //clientId is assigned when client connects (at that point, its identity
-                // as user is not verified yet), and communicated to the user. After user has verified
-                // his identity and a handler has been created for him, the user's update thread is attached
-                // to this user for receiveing price updates.
-                try {
-                    while (true) {
-                        Server socket = new Server(ss.accept());  //Listens for a connection to be made to this socket and accepts it.
-                        Thread t = new Thread(new ThreadForClientCommands(socket, masterHandler, clientId));
-                        Thread t2 = new Thread(new ThreadForDataUpdates(socket, masterHandler, clientId));
-                        t.setPriority(Thread.MAX_PRIORITY);
-                        t2.setPriority(Thread.MIN_PRIORITY);  // et üksteist ei segaks
-                        commandthreads.add(t);
-                        updateThreads.add(t2);
-                        masterHandler.addClientUpdateThread(clientId, t2);
-                        t.start();
-                        t2.start();
-                        clientId++;
+            int clientId = 0;  //clientId is assigned when client connects (at that point, its identity
+            // as user is not verified yet), and communicated to the user. After user has verified
+            // his identity and a handler has been created for him, the user's update thread is attached
+            // to this user for receiveing price updates.
+            try {
+                while (true) {
+                    Server socket = new Server(ss.accept());  //Listens for a connection to be made to this socket and accepts it.
+                    Thread t = new Thread(new ThreadForClientCommands(socket, masterHandler, clientId));
+                    Thread t2 = new Thread(new ThreadForDataUpdates(socket, masterHandler, clientId));
+                    commandthreads.add(t);
+                    updateThreads.add(t2);
+                    masterHandler.addClientUpdateThread(clientId, t2);
+                    t.start();
+                    t2.start();
+                    clientId++;
 
-                    }
-                } catch (IOException e) {
-                    for (Thread thread : updateThreads) {
-                        thread.interrupt();
-                        //thread.join();  // ?
-                    }
-                    for (Thread thread : commandthreads) {
-                        thread.interrupt();
-                        //thread.join();  // ?
+                    // QUIT PROGRAM
+                    if (!masterHandler.isRunning()) {
+                        dataCollector.interrupt();
+                        if (adminThread.isAlive()) {
+                            adminThread.interrupt();
+
+                        }
+                        System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
+                        break;
                     }
                 }
 
-            });
-
-
-            userThreadFactory.start();
-            //TODO: Kuidas peatada userThreadFactory ?
-
-
-            // QUIT PROGRAM
-            while (true) {
-                if (!masterHandler.isRunning()) {
-                    dataCollector.interrupt();
-                    userThreadFactory.interrupt();
-                    if (adminThread.isAlive()) {
-                        adminThread.interrupt();
-                    }
-                    System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
-                    break;
+            } catch (IOException e) {
+                for (Thread thread : updateThreads) {
+                    thread.interrupt(); //join?
+                }
+                for (Thread thread : commandthreads) {
+                    thread.interrupt();
                 }
             }
         }

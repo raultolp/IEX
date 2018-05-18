@@ -1,6 +1,7 @@
 package app.server.actions;
 
 import app.server.CommandHandler;
+import app.server.IO;
 import app.server.Iu;
 import app.server.User;
 
@@ -14,17 +15,15 @@ import java.util.List;
 public class ShowUserPortfolio implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler) throws IOException {
+    public void handle(Integer command, Iu handler, IO io) throws IOException {
         if (command == 3) {
-            showUserPortfolio(handler);
+            showUserPortfolio(handler, io);
         }
     }
 
-    private static void showUserPortfolio(Iu handler) throws IOException {
+    private static void showUserPortfolio(Iu handler, IO io) throws IOException {
         User user = handler.getActiveUser();
         String username = user.getUserName();
-        boolean isAdmin = handler.isAdmin();
-        DataOutputStream out = handler.getOut();
 
         //Info from Portfolio:
         String userPortf = "\n" + username.toUpperCase() + "'s PORTFOLIO: \n";
@@ -42,11 +41,7 @@ public class ShowUserPortfolio implements CommandHandler {
         int ranking = userList.indexOf(user) + 1;
         userPortf += username + "'s ranking in game: " + ranking + "\n";
 
-        if (isAdmin) {
-            System.out.println(userPortf);
-        } else {
-            out.writeUTF(userPortf);
-        }
+        io.println(userPortf);
 
     }
 

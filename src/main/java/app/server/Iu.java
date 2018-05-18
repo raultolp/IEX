@@ -3,8 +3,6 @@ package app.server;
 import app.server.actions.*;
 import com.google.gson.JsonObject;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -21,6 +19,7 @@ public class Iu {
     private boolean isRunning = true;
     private boolean acceptConnections;
 
+
     //User, Portfolio, Stocks
     private User admin;  // has masterPortfolio
     private User activeUser;
@@ -30,9 +29,7 @@ public class Iu {
     private JsonObject priceUpdateForClients = null;  //masterPortfolio priceUpdate'i objekt- väärtustab UpdateingPrices,
     // kasutab ThreadForDataUpdates
     // I/O
-    private Scanner sc;
-    private DataInputStream in;
-    private DataOutputStream out;
+    private IO io;
 
     //Userlist and list of user priceUpdate threads
     private List<User> userList;
@@ -44,7 +41,7 @@ public class Iu {
 
     /***** CONSTRUCTOR FOR ADMIN *****/
 
-    public Iu() throws IOException {
+    public Iu(IO io) throws IOException {
 
         //Command handler and game
         this.commandHandlers = loadCommandHandlers();
@@ -52,14 +49,15 @@ public class Iu {
         this.activeGame = null;
         this.acceptConnections = true;
 
+        //I/O streams
+        this.io = io;
+
         //User, Portfolio, Stocks
         this.admin = new User("admin", 1000000, availableStocks);
         this.activeUser = admin;
         this.isAdmin = true;
         this.masterPortfolio = admin.getPortfolio();
 
-        // One and Only - my precious
-        this.sc = new Scanner(System.in);
 
         //Userlist and list of user price update threads
         this.userList = new ArrayList<>();
@@ -69,7 +67,8 @@ public class Iu {
 
     /***** CONSTRUCTOR FOR USER *****/
 
-    public Iu(DataInputStream in, DataOutputStream out, Iu masterHandler, User user, Integer clientId) throws IOException {
+    //TODO delete?
+    public Iu(IO io, Iu masterHandler, User user, Integer clientId) {
 
         //Game
         this.commandHandlers = loadCommandHandlers();
@@ -85,8 +84,7 @@ public class Iu {
         clientThreads.put(userUpdateThread, user);
 
         // I/O: DataInputStream and DataOutputStream
-        this.in = in;
-        this.out = out;
+        this.io = io;
 
         //Userlist - masterHandler's userlist is updated when new user is created
         //this.userList=masterHandler.getUserList(); //või siis võiks listi ainult selle ühe kliendi panna?
@@ -102,19 +100,19 @@ public class Iu {
 
     /***** MAIN MENU *****/
 
-    private void printMenu(String[] menu) throws IOException {  //for admin
+    private void printMenu() throws IOException {  //for admin
         if (isAdmin) {
             System.out.println();
-            for (int i = 0; i < menu.length / 2 + menu.length % 2; i++) {
-                int next = menu.length / 2 + i + menu.length % 2;
-                System.out.printf("%2d) %-30s ", i + 1, menu[i]);
-                if (next < menu.length)
-                    System.out.printf("%2d) %-30s\n", next + 1, menu[next]);
+            for (int i = 0; i < StaticData.mainMenu.length / 2 + StaticData.mainMenu.length % 2; i++) {
+                int next = StaticData.mainMenu.length / 2 + i + StaticData.mainMenu.length % 2;
+                System.out.printf("%2d) %-30s ", i + 1, StaticData.mainMenu[i]);
+                if (next < StaticData.mainMenu.length)
+                    System.out.printf("%2d) %-30s\n", next + 1, StaticData.mainMenu[next]);
                 else
                     System.out.println();
             }
         } else {
-            out.writeUTF("\nMENU"); // Et menüü saaks ilusti prinditud, prindib klient seda endale ise.
+            io.println("\nMENU"); // Et menüü saaks ilusti prinditud, prindib klient seda endale ise.
         }
 
         commandPrompt();
@@ -131,7 +129,7 @@ public class Iu {
                 commandPromtAsString += activeGame.getName() + "(not saved)";
             }
             commandPromtAsString += " / Active user:" + activeUser.getUserName() + "> ";
-            out.writeUTF(commandPromtAsString);
+            io.println(commandPromtAsString);
         }
     }
 
@@ -167,23 +165,17 @@ public class Iu {
 
     /***** RUN HANDLER, RUN *****/
 
-    public void runInteractive(Iu handler) throws Exception {
-
-        //TODO runInteractive
+    public void runInteractive(IO io) throws Exception {
 
         while (true) {
-            printMenu(mainMenu);
+            printMenu();
 
             try {
                 Integer command;
-                if (isAdmin) {
-                    command = sc.nextInt();
-                } else {
-                    command = Integer.valueOf(in.readUTF());
-                }
+                command = Integer.valueOf(io.getln());
 
                 for (CommandHandler commandHandler : commandHandlers) {
-                    commandHandler.handle(command, handler);
+                    commandHandler.handle(command, this, io);
                 }
 
                 //Quit
@@ -192,15 +184,11 @@ public class Iu {
                 }
 
             } catch (InputMismatchException e) {
-                if (isAdmin) {
-                    System.out.println("Wrong input: " + sc.nextLine());
-
-                } else {
-                    out.writeUTF("Wrong input.");
-                }
+                io.println("Wrong input.");
             }
         }
     }
+
 
     public String[] getAvailableStocks() {
         if (isAdmin) {
@@ -267,16 +255,8 @@ public class Iu {
         return this.masterPortfolio;
     }
 
-    public Scanner getSc() {
-        return this.sc;
-    }
-
-    public DataOutputStream getOut() {
-        return out;
-    }
-
-    public DataInputStream getIn() {
-        return in;
+    public IO getIo() {
+        return io;
     }
 
     public boolean isRunning() {

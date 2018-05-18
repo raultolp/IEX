@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Objects;
 
 import static app.server.StaticData.*;
 
@@ -39,34 +40,18 @@ public final class MyUtils {
         System.out.println(ANSI_BLUE + text + ANSI_RESET);
     }
 
-    public static String enterUserName(Iu handler, boolean newUser) throws IOException {
+    public static String enterUserName(Iu handler, boolean newUser, IO io) throws IOException {
         String name;
-        boolean isAdmin = handler.getActiveUser().getUserName().equals("admin");
         do {
-            if (isAdmin) {
-                System.out.print("Enter user name: ");
-                name = handler.getSc().nextLine().trim();
+            io.println("Enter user name: ");
+            name = io.getln();
 
-                if (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name))
-                    colorPrintRed("Use name with 3..12 characters and numbers.");
-                else if (nameInList(name, handler.getUserList()) > -1 && newUser)
-                    colorPrintRed("Name already exists!");
-                else if (nameInList(name, handler.getUserList()) == -1 && !newUser)
-                    colorPrintRed("Name does not exist!");
-            } else {
-                DataOutputStream out = handler.getOut();
-                DataInputStream in = handler.getIn();
-                out.writeUTF("Enter user name: ");
-                name = in.readUTF().trim();
-
-                if (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name))
-                    out.writeUTF("Use name with 3..12 characters and numbers.");
-                else if (nameInList(name, handler.getUserList()) > -1 && newUser)
-                    out.writeUTF("Name already exists!");
-                else if (nameInList(name, handler.getUserList()) == -1 && !newUser)
-                    out.writeUTF("Name does not exist!");
-            }
-
+            if (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name))
+                colorPrintRed("Use name with 3..12 characters and numbers.");
+            else if (nameInList(name, handler.getUserList()) > -1 && newUser)
+                colorPrintRed("Name already exists!");
+            else if (nameInList(name, handler.getUserList()) == -1 && !newUser)
+                colorPrintRed("Name does not exist!");
             if (name.length() == 0)
                 return null;
         } while (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name));
@@ -82,93 +67,55 @@ public final class MyUtils {
         return -1;
     }
 
-    public static String enterStockName(Iu handler) throws IOException {
+    public static String enterStockName(Iu handler, IO io) throws IOException {
         String name;
-        boolean isAdmin = handler.isAdmin();
+        boolean tv = false;
 
-        if (isAdmin) {
-            handler.getSc().nextLine();
-            do {
-                System.out.print("Enter stock name: ");
-                name = handler.getSc().next().trim();
-                if (name.length() < 1 || name.length() > 5 || !isAlpha(name))
-                    colorPrintRed("Choose right stock name.");
-                if (name.length() == 0)
-                    return null;
-            } while (name.length() > 5 || !isAlpha(name));
-        } else {
-            DataOutputStream out = handler.getOut();
-            DataInputStream in = handler.getIn();
-            do {
-                out.writeUTF("Enter stock name: ");
-                name = in.readUTF().trim();
-                if (name.length() < 1 || name.length() > 5 || !isAlpha(name))
-                    out.writeUTF("Choose right stock name.");
-                if (name.length() == 0)
-                    return null;
-            } while (name.length() > 5 || !isAlpha(name));
-        }
+        do {
+            io.println("Enter stock name: ");
+            name = io.getln().trim();
+            if (name.length() < 1 || name.length() > 5 || !isAlpha(name)){
+                tv = true;
+                io.println("Choose right stock name.");}
+        } while (tv);
 
-        return name.toUpperCase();
+        return Objects.requireNonNull(name).toUpperCase();
     }
 
-    public static int enterQty(Iu handler) throws IOException {
+    public static int enterQty(IO io) throws IOException {
         int qty = 0;
-        boolean isAdmin = handler.isAdmin();
 
-        if (isAdmin) {
-            handler.getSc().nextLine();
-
-            do {
-                System.out.print("Enter quantity [1-1000]: ");
-                try {
-                    qty = handler.getSc().nextInt();
-                } catch (InputMismatchException e) {
-                    colorPrintRed("Wrong input: " + handler.getSc().nextLine());
-                }
-            } while (qty < 1 || qty > 1000);
-        } else {
-            DataOutputStream out = handler.getOut();
-            DataInputStream in = handler.getIn();
-
-            do {
-                out.writeUTF("Enter quantity [1-1000]: ");
-                try {
-                    qty = Integer.valueOf(in.readUTF());
-                } catch (InputMismatchException e) {
-                    out.writeUTF("Wrong input. ");
-                }
-            } while (qty < 1 || qty > 1000);
-        }
-
+        do {
+            io.println("Enter quantity [1-1000]: ");
+            try {
+                qty = Integer.parseInt(io.getln());
+            } catch (InputMismatchException e) {
+                io.println("Wrong input: " + ('\n'));
+            }
+        } while (qty < 1 || qty > 1000);
         return qty;
     }
 
-    public static void listFiles(Iu handler) throws IOException {
+
+    //TODO streams, path?
+    public static void listFiles(Iu handler, IO io) throws IOException {
         File folder = new File(".");
         File[] files = folder.listFiles();
         int i = 1;
         boolean isAdmin = handler.isAdmin();
 
-        for (File file : files) {
+        for (File file : Objects.requireNonNull(files)) {
             if (file.getName().endsWith(".game")) {
 
                 if (!isAdmin) {
                     if (i++ % 4 == 0) {
-                        handler.getOut().writeUTF(file.getName() + "\n");
+                        io.println(file.getName() + "\n");
                     } else {
-                        handler.getOut().writeUTF(file.getName() + " ");
+                        System.out.printf("%15s%s", file.getName(), i++ % 4 == 0 ? "\n" : " ");
                     }
-                } else {
-                    System.out.printf("%15s%s", file.getName(), i++ % 4 == 0 ? "\n" : " ");
                 }
+                io.println("\n");
             }
-
-        }
-        if (!isAdmin && (i - 1) % 4 != 0)
-            handler.getOut().writeUTF("\n");
-        else if (isAdmin && (i - 1) % 4 != 0) {
-            System.out.println();
         }
     }
 
@@ -180,3 +127,4 @@ public final class MyUtils {
         return String.format("%0" + length + "d", 0).replace('0', '-') + '\n';
     }
 }
+

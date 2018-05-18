@@ -1,6 +1,7 @@
 package app.server.actions;
 
 import app.server.CommandHandler;
+import app.server.IO;
 import app.server.Iu;
 
 import java.io.DataOutputStream;
@@ -12,15 +13,14 @@ import java.util.Arrays;
 public class ShowStockList implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler) throws IOException {
+    public void handle(Integer command, Iu handler, IO io) throws IOException {
         if (command == 5) {
-            showStockList(handler);
+            showStockList(handler, io);
         }
     }
 
-    public static void showStockList(Iu handler) throws IOException {
+    public static void showStockList(Iu handler, IO io) throws IOException {
         boolean isAdmin = handler.isAdmin();
-        DataOutputStream out = handler.getOut();
         Arrays.sort(handler.getAvailableStocks());
         int i;
 
@@ -33,10 +33,8 @@ public class ShowStockList implements CommandHandler {
                 System.out.println();
         } else {
             String stocksAsString = "Avilable stocks: " + String.join(", ", handler.getAvailableStocks());
-            out.writeUTF(stocksAsString);
-
+            io.println(stocksAsString);
 
         }
-
     }
 }

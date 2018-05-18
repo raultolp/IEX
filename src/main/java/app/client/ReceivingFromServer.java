@@ -37,9 +37,6 @@ public class ReceivingFromServer implements Runnable {
     @Override
     public void run() {
 
-        boolean initiated = false; // entire masterportfolio as source of stock info (incl. all ratios, etc.)
-        // is loaded only at the beginning of the game
-        boolean masterIsNext = false;
 
         while (true) {
             try {

@@ -2,6 +2,7 @@ package app.server.actions;
 
 import app.server.CommandHandler;
 import app.server.Company;
+import app.server.IO;
 import app.server.Iu;
 
 //View company base data
@@ -9,35 +10,29 @@ import app.server.Iu;
 public class ShowCompanyData implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler) throws Exception {
+    public void handle(Integer command, Iu handler, IO io) throws Exception {
         if (command == 7) {
-            showCompanyData(handler);
+            showCompanyData(handler, io);
         }
     }
 
-    private void showCompanyData(Iu handler) throws Exception {
+    private void showCompanyData(Iu handler, IO io) throws Exception {
         //Portfolio masterPortfolio = handler.getMasterPortfolio();
         String stockSym;
-        boolean isAdmin = handler.isAdmin();
+        //boolean isAdmin = handler.isAdmin();
 
-        if (isAdmin) {
+        /*if (isAdmin) {
             handler.getSc().nextLine();
             System.out.println("Enter stock symbol: ");
             stockSym = handler.getSc().nextLine();
-        } else {
-            handler.getOut().writeUTF("Enter stock symbol: ");
-            stockSym = handler.getIn().readUTF();
-        }
+        } else {*/
+        io.println("Enter stock symbol: ");
+        stockSym = io.getln();
 
         //company base data:
-        Company comp = new Company(stockSym, handler);
+        Company comp = new Company(stockSym, handler, io);
 
-        if (isAdmin) {
-            System.out.println(comp);
-        } else {
-            handler.getOut().writeUTF(comp.toString());
-        }
-
+        io.println(comp.toString());
 
     }
 

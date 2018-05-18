@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static app.server.StaticData.ANSI_RESET;
 import static app.server.StaticData.ANSI_YELLOW;
@@ -17,28 +18,28 @@ import static app.server.StaticData.ANSI_YELLOW;
 public class LoadData implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler) throws Exception {
+    public void handle(Integer command, Iu handler, IO io) throws Exception {
         if (command == 19) {
             boolean isAdmin = handler.isAdmin();
             if (isAdmin) {
-                loadData(handler);
+                loadData(handler, io);
             } else {
-                handler.getOut().writeUTF("Wrong input.");
+                io.println("Wrong input.");
             }
 
         }
     }
 
-    public void loadData(Iu handler) throws IOException {
+    public void loadData(Iu handler, IO io) throws IOException {
 
         //Scanner sc=handler.getSc();
         File currentDir = new File(".");
-        List<String> fileNames = Arrays.asList(currentDir.list());
+        List<String> fileNames = Arrays.asList(Objects.requireNonNull(currentDir.list()));
 
-        MyUtils.listFiles(handler);
-        handler.getSc().nextLine();
+        MyUtils.listFiles(handler, io);
+        io.getln();
         System.out.print("Enter filename: ");
-        String name = handler.getSc().nextLine();
+        String name = io.getln();
 
         if (!name.endsWith(".game")) {
             name += ".game";
@@ -74,7 +75,7 @@ public class LoadData implements CommandHandler {
 
             } finally {
                 handler.setActiveGame(file);
-                System.out.println(ANSI_YELLOW + handler.getActiveGame().getName() + " file loaded." + ANSI_RESET);
+                io.println(ANSI_YELLOW + handler.getActiveGame().getName() + " file loaded." + ANSI_RESET);
             }
         }
     }

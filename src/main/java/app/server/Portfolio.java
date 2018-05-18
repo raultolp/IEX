@@ -78,7 +78,7 @@ public class Portfolio extends IEXdata {
     //-----------------------------------------------
     //BUYING STOCK:
 
-    public void buyStock(String symbol, int volume, Iu handler) throws IOException {
+    public void buyStock(String symbol, int volume, Iu handler, IO io) throws IOException {
         double price;
         String transactionType = "buy";
         boolean newStock = !portfolioStocks.containsKey(symbol);  // if stock already included in portfolio
@@ -104,7 +104,7 @@ public class Portfolio extends IEXdata {
             if (isAdmin) {
                 System.out.println(transactionConfirmation);
             } else {
-                handler.getOut().writeUTF(transactionConfirmation);
+                io.println(transactionConfirmation);
             }
             if (newStock) {
                 portfolioStocks.put(symbol, stock);
@@ -125,23 +125,18 @@ public class Portfolio extends IEXdata {
 
     //checking if stock is present in portfolio is already included in main class
 
-    public void sellStock(String symbol, int volume, Iu handler) throws IOException {
+    public void sellStock(String symbol, int volume, Iu handler, IO io) throws IOException {
 
         String transactionType = "sell";
         Position position = positions.get(symbol);
         LocalDateTime transactionTime = LocalDateTime.now();
-        boolean isAdmin = handler.isAdmin();
 
         //If user tries to sell more stocks than included in portfolio, only the
         //stocks included in portfolio will be sold (negative number of stocks not allowed):
         if (position.getVolume() < volume) { //max number of shares to be sold is their number in portfolio
-            if (isAdmin) {
-                System.out.println("Portfolio only contains " + volume + " stocks. Now selling them all...");
-            } else {
-                handler.getOut().writeUTF("Portfolio only contains " + volume + " stocks. Now selling them all...");
-            }
-
-            volume = position.getVolume(); //if user tries to sell more, only the max number is sold
+            volume = position.getVolume();
+            io.println("Portfolio only contains " + volume + " stocks. Now selling them all...");
+             //if user tries to sell more, only the max number is sold
         }
 
         Stock stock = portfolioStocks.get(symbol);
@@ -154,11 +149,8 @@ public class Portfolio extends IEXdata {
 
         profit += volume * (price - position.getAveragePrice()) - transaction.getTransactionFees();
         String transactionConfirmation = transaction.reportTransaction();
-        if (isAdmin) {
-            System.out.println(transactionConfirmation);
-        } else {
-            handler.getOut().writeUTF(transactionConfirmation);
-        }
+        io.println(transactionConfirmation);
+
 
         position.decreasePosition(transaction, price, volume);
         calculateTotals();
@@ -194,35 +186,34 @@ public class Portfolio extends IEXdata {
     //GET/PRINT TRANSACTIONS REPORT:
     public String getTransactionsReport(Iu handler) {
         boolean isAdmin = handler.isAdmin();
-        String report = MyUtils.createHeader("TRANSACTIONS REPORT");
+        StringBuilder report = new StringBuilder(MyUtils.createHeader("TRANSACTIONS REPORT"));
 
         double totalProfit = 0.0;
         for (String symb : positions.keySet()) {
             double positionProfit = 0.0;
             if (isAdmin) {
-                report += ANSI_YELLOW + ">>> " + symb + ANSI_RESET + '\n';
+                report.append(ANSI_YELLOW + ">>> ").append(symb).append(ANSI_RESET).append('\n');
             } else {
-                report += ">>> " + symb + '\n';
+                report.append(">>> ").append(symb).append('\n');
             }
 
-            report += "TYPE   DATE       TIME       VOLUME      PRICE    FEES   PAID/RECEIVED     PROFIT\n";
+            report.append("TYPE   DATE       TIME       VOLUME      PRICE    FEES   PAID/RECEIVED     PROFIT\n");
             Position position = positions.get(symb);
             List<Transaction> transactions = position.getTransactions();
 
             for (Transaction t : transactions) {
-                report += t.toStringForReport() + "\n";
+                report.append(t.toStringForReport()).append("\n");
                 positionProfit += t.getProfitFromSell();
             }
 
-            report += "POSITION PROFIT(" + symb + "): " + String.format("%.2f", positionProfit) + " USD";
+            report.append("POSITION PROFIT(").append(symb).append("): ").append(String.format("%.2f", positionProfit)).append(" USD");
             totalProfit += positionProfit;
-            report += "\n\n";
+            report.append("\n\n");
         }
-        report += "TOTAL PROFIT: " + String.format("%.2f", totalProfit) + " USD";
+        report.append("TOTAL PROFIT: ").append(String.format("%.2f", totalProfit)).append(" USD");
         //System.out.println(report);
-        return report;
+        return report.toString();
     }
-
 
 
     //-----------------------------------------------
@@ -287,30 +278,30 @@ public class Portfolio extends IEXdata {
 
         //Information on positsions:
         String header = "STOCK   VOLUME   CURRENT PRICE   VALUE      UNREALIZED P/L   AVG.PURCHASE PRICE  REALIZED P/L";
-        String info = MyUtils.createHeader(header);
+        StringBuilder info = new StringBuilder(MyUtils.createHeader(header));
 
         boolean positionsEmpty = true;
         for (String symbol : positions.keySet()) {
             if (positions.get(symbol).isOpen()) { // only open positions are shown when viewing in portfolio
-                info += positions.get(symbol).toStringForPortfolio();
+                info.append(positions.get(symbol).toStringForPortfolio());
                 positionsEmpty = false;
             }
         }
-        if (positionsEmpty == true) {
-            info += "Portfolio contains no open positions...\n";
+        if (positionsEmpty) {
+            info.append("Portfolio contains no open positions...\n");
         }
 
         //Information on portfolio totals:
-        info += MyUtils.createSeparator(header.length());
-        info += "PORTFOLIO TOTAL VALUE: " + String.format("%.2f", getTotalValueOfPortfolio()) + " USD\n";
-        info += "  - incl. OPEN POSITIONS: " + String.format("%.2f", totalValueOfPositions) + " USD\n";
-        info += "    - of which: TOTAL ACQUISITION PRICE (INCL. TRANSACTION FEES): " + String.format("%.2f", totalValueOfPositions - unrealisedProfit) + " USD\n";
-        info += "    - of which: INCERASE IN VALUE (UNREALIZED PROFIT): " + String.format("%.2f", unrealisedProfit) + " USD\n";
-        info += "  - incl. CASH: " + String.format("%.2f", availableFunds) + " USD\n";
-        info += MyUtils.createSeparator(header.length());
-        info += "REALIZED PROFIT (FROM SALES): " + String.format("%.2f", profit) + " USD";
+        info.append(MyUtils.createSeparator(header.length()));
+        info.append("PORTFOLIO TOTAL VALUE: ").append(String.format("%.2f", getTotalValueOfPortfolio())).append(" USD\n");
+        info.append("  - incl. OPEN POSITIONS: ").append(String.format("%.2f", totalValueOfPositions)).append(" USD\n");
+        info.append("    - of which: TOTAL ACQUISITION PRICE (INCL. TRANSACTION FEES): ").append(String.format("%.2f", totalValueOfPositions - unrealisedProfit)).append(" USD\n");
+        info.append("    - of which: INCERASE IN VALUE (UNREALIZED PROFIT): ").append(String.format("%.2f", unrealisedProfit)).append(" USD\n");
+        info.append("  - incl. CASH: ").append(String.format("%.2f", availableFunds)).append(" USD\n");
+        info.append(MyUtils.createSeparator(header.length()));
+        info.append("REALIZED PROFIT (FROM SALES): ").append(String.format("%.2f", profit)).append(" USD");
 
-        return info;
+        return info.toString();
     }
 
     public void setPortfolioHasChanged(boolean portfolioHasChanged) {

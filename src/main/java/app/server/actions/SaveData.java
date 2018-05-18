@@ -1,6 +1,7 @@
 package app.server.actions;
 
 import app.server.CommandHandler;
+import app.server.IO;
 import app.server.Iu;
 import app.server.User;
 import com.google.gson.JsonObject;
@@ -16,27 +17,27 @@ import static app.server.StaticData.ANSI_YELLOW;
 public class SaveData implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler) throws Exception {
+    public void handle(Integer command, Iu handler, IO io) throws Exception {
         if (command == 20) {
             boolean isAdmin = handler.isAdmin();
             if (isAdmin) {
-                saveData(handler);
+                saveData(handler, io);
             } else {
-                handler.getOut().writeUTF("Wrong input.");
+                io.println("Wrong input.");
             }
         }
     }
 
-    public static void saveData(Iu handler) throws IOException {
+    public static void saveData(Iu handler, IO io) throws IOException {
         File file;
         List<User> userlist = handler.getUserList();
 
-        handler.getSc().nextLine();
+        io.println("\n");
 
         //Determining file name:
         if (handler.getActiveGame() == null) {
             System.out.print("Enter filename to save data: ");
-            String filename = handler.getSc().nextLine();
+            String filename = io.getln();
 
             if (!filename.endsWith(".game")) {
                 filename += ".game";

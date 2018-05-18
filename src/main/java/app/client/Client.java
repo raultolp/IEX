@@ -9,16 +9,19 @@ import java.net.Socket;
 public class Client {
 
     private boolean isRunning = true;
-    Client client;
+    private final Client client;
+    private DataOutputStream out;
+    private DataInputStream in;
+
 
     public Client() {
         this.client = this;
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-
-        System.out.println("connecting to server");
         Client client = new Client();
+        System.out.println("connecting to server");
+
 
         try ( Socket socket = new Socket("localhost", 1337) ) {
 

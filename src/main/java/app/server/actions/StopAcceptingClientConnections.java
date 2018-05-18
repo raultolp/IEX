@@ -1,11 +1,12 @@
 package app.server.actions;
 
 import app.server.CommandHandler;
+import app.server.IO;
 import app.server.Iu;
 
 public class StopAcceptingClientConnections implements CommandHandler {
     @Override
-    public void handle(Integer command, Iu handler) throws Exception {
+    public void handle(Integer command, Iu handler, IO io) throws Exception {
         if (command == 15) {
             boolean isAdmin = handler.isAdmin();
 
@@ -19,7 +20,7 @@ public class StopAcceptingClientConnections implements CommandHandler {
                 }
 
             } else {
-                handler.getOut().writeUTF("Wrong input.");
+               io.println("Wrong input.");
             }
         }
     }

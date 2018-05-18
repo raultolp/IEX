@@ -1,9 +1,6 @@
 package app.server.actions;
 
-import app.server.CommandHandler;
-import app.server.Iu;
-import app.server.MyUtils;
-import app.server.User;
+import app.server.*;
 
 import static app.server.StaticData.ANSI_RESET;
 import static app.server.StaticData.ANSI_YELLOW;
@@ -14,24 +11,22 @@ import static app.server.actions.ShowUsersList.showUsersList;
 public class SetActiveUser implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler) throws Exception {
+    public void handle(Integer command, Iu handler, IO io) throws Exception {
         if (command == 18) {
             boolean isAdmin = handler.isAdmin();
             if (isAdmin) {
-                showUsersList(handler);
+                showUsersList(handler, io);
 
-                handler.getSc().nextLine();
-
-                String name = MyUtils.enterUserName(handler, false);
+                String name = MyUtils.enterUserName(handler, false, io);
                 Integer index = MyUtils.nameInList(name, handler.getUserList());
 
                 if (index > -1) {
                     User activeUser = handler.getUserList().get(index);
                     handler.setActiveUser(activeUser);
-                    System.out.println(ANSI_YELLOW + "User " + name + " is now active." + ANSI_RESET);
+                    io.println(ANSI_YELLOW + "User " + name + " is now active." + ANSI_RESET);
                 }
             } else {
-                handler.getOut().writeUTF("Wrong input.");
+               io.println("Wrong input.");
             }
         }
     }

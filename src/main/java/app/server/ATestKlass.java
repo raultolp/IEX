@@ -10,7 +10,7 @@ import java.util.Comparator;
 public class ATestKlass implements Comparator<String> {
 
     public static void main(String[] args) throws Exception {
-        Iu handler = new Iu();
+        Iu handler = new Iu(new AdminIO());
 
         Portfolio masterPortfolio = handler.getMasterPortfolio();
         //System.out.println(masterPortfolio.getStock("AAPL").getCurrentPrice());

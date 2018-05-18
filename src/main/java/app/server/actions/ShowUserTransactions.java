@@ -1,9 +1,6 @@
 package app.server.actions;
 
-import app.server.CommandHandler;
-import app.server.Iu;
-import app.server.MyUtils;
-import app.server.Portfolio;
+import app.server.*;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -13,11 +10,10 @@ import java.io.IOException;
 public class ShowUserTransactions implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler) throws IOException {
+    public void handle(Integer command, Iu handler, IO io) throws IOException {
 
         if (command == 4) {
             boolean isAdmin = handler.isAdmin();
-            DataOutputStream out = handler.getOut();
 
             Portfolio portfolio;
             if (isAdmin) {
@@ -29,19 +25,10 @@ public class ShowUserTransactions implements CommandHandler {
 
             if (portfolio != null) {
                 String report = portfolio.getTransactionsReport(handler);
-                if (isAdmin) {
-                    System.out.println(report);
-                } else {
-                    out.writeUTF(report);
-                }
-
-            } else {
-                if (isAdmin) {
-                    MyUtils.colorPrintYellow("No transactions have been made yet.");
-                } else {
-                    out.writeUTF("No transactions have been made yet.");
-                }
+                io.println(report);
             }
+            io.println("No transactions have been made yet.");
         }
+
     }
 }

@@ -1,9 +1,6 @@
 package app.server.actions;
 
-import app.server.CommandHandler;
-import app.server.Iu;
-import app.server.MyUtils;
-import app.server.Portfolio;
+import app.server.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -14,45 +11,33 @@ import java.io.IOException;
 public class ShowStockBaseData implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler) throws IOException {
+    public void handle(Integer command, Iu handler, IO io) throws IOException {
         if (command == 8) {
-            showStockBaseData(handler);
+            showStockBaseData(handler, io);
         }
     }
 
-    private void showStockBaseData(Iu handler) throws IOException {
+    private void showStockBaseData(Iu handler, IO io) throws IOException {
         Portfolio masterPortfolio = handler.getMasterPortfolio();
-        boolean isAdmin = handler.isAdmin();
-        DataInputStream in = handler.getIn();
-        DataOutputStream out = handler.getOut();
         String stockSym;
 
-        if (isAdmin) {
+
+        //TODO ?
+       /* if (isAdmin) {
             handler.getSc().nextLine();
             System.out.println("Enter stock symbol: ");
             stockSym = handler.getSc().nextLine().toUpperCase();
-        } else {
-            out.writeUTF("Enter stock symbol: ");
-            stockSym = in.readUTF().toUpperCase();
-        }
+        } else {*/
+            io.println("Enter stock symbol: ");
+            stockSym = io.getln().toUpperCase();
+
 
         try {
             //stock fundamentals:
-            if (isAdmin) {
-                System.out.println(masterPortfolio.getStock(stockSym));
-            } else {
-                out.writeUTF(masterPortfolio.getStock(stockSym).toString());
-            }
-
+            io.println(masterPortfolio.getStock(stockSym).toString());
         } catch (Exception e) {
-            if (isAdmin) {
-                MyUtils.colorPrintYellow("Stock information not available.");
-            } else {
-                out.writeUTF("Stock information not available.");
-            }
-
-
+            io.println("Stock information not available.");
         }
     }
-
 }
+
