@@ -53,13 +53,10 @@ public class ThreadForClientCommands implements Runnable {
 
             }
             if (!(userList.contains(user))) {
-                io.println(userList.toString());
                 io.println("New user has been created. Welcome to the game!");
 
             }
-            System.out.println("Siinus");
             Iu handler = new Iu(io, masterHandler, user, clientId); //Command handler for user
-            masterHandler.setActiveUser(user);
 
             //SENDING MASTERPORTFOLIO AS SOURCE OF STOCK INFORMATION (ONLY SENT ONCE):
             Portfolio masterPortfolio = masterHandler.getMasterPortfolio();
