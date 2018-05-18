@@ -24,7 +24,7 @@ public class UpdatingPrices implements Runnable {
 
     @Override
     public void run() {
-        int timeToSleep = 60000; // in milliseconds
+        int timeToSleep = 10000; // in milliseconds
 
         while (true) {
             updatePrices(userList, masterPortfolio, handler);
