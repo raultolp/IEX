@@ -4,14 +4,12 @@ import com.google.gson.Gson;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static app.server.MyUtils.createHeader;
 import static app.server.StaticData.*;
-import static app.server.StaticData.ANSI_GREEN;
-import static app.server.StaticData.ANSI_RESET;
 
 public class ThreadForClientCommands implements Runnable {
 
@@ -35,22 +33,22 @@ public class ThreadForClientCommands implements Runnable {
             DataInputStream in = new DataInputStream(socket.getIn());
             DataOutputStream out = new DataOutputStream(socket.getOut());
 
-
-            //LOGIN AND CREATION OF IU FOR USER:
-            out.writeUTF(mainTitle);
+            RemoteClientIO io = new RemoteClientIO(out, in);
             List<User> users = masterHandler.getUserList();
             List<User> userList = new ArrayList<>(users);
-            out.writeUTF("Username:");
-            String username = in.readUTF();
-            User user = new User(username, 1000000);
-            RemoteClientIO io = new RemoteClientIO(out, in);
 
+            //LOGIN AND CREATION OF IU FOR USER:
+            io.println("\n" + ANSI_YELLOW + createHeader(mainTitle) + ANSI_RESET);
+            io.println(ANSI_BLUE + subTitle + ANSI_RESET);
+            io.print("Username: ");
+            String username = io.getln();
+            User user = new User(username, 1000000);
 
             //Existing game, new user:
             for (User userInList : userList) {
                 if (userInList.getUserName().equals(username)) {
                     user = userInList;
-                    io.println("Welcome back!");
+                    io.println(ANSI_YELLOW + "Welcome back!" + ANSI_RESET);
                     break;
                 }
 

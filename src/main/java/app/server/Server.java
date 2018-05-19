@@ -1,3 +1,8 @@
+/**
+ +++ IEX Stock Exchange Game for Beginner Level Traders - Version 1.0 +++
+ (C) 2018 Renata Siimon, Helena Rebane, Raul Tölp. All rights reserved.
+**/
+
 package app.server;
 
 import java.io.IOException;
@@ -8,6 +13,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import static app.server.MyUtils.createHeader;
 import static app.server.StaticData.*;
 
 
@@ -31,7 +37,9 @@ public class Server {
             System.out.println("now listening on port: 1337");
 
             //START IU FOR SERVER (ADMIN)
-            System.out.println(mainTitle);
+            MyUtils.colorPrintBlue(createHeader(mainTitle));
+            MyUtils.colorPrintYellow(subTitle);
+
             System.out.println("RUNNING GAME AS ADMIN: For running an existing game, first load the game, then choose to accept\n" +
                     "client connections. For running a new game, just choose to accept client connections.\n" +
                     "You can also at any time use any of the other Menu items. Before actions taken as any of the users\n" +

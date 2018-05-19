@@ -1,3 +1,8 @@
+/**
++++ IEX Stock Exchange Game for Beginner Level Traders - Version 1.0 +++
+(C) 2018 Renata Siimon, Helena Rebane, Raul Tölp. All rights reserved.
+**/
+
 package app.server;
 
 public class StaticData {
@@ -30,7 +35,9 @@ public class StaticData {
 //            "SYMC", "TGT", "TIF", "TRIP", "TSLA", "TWTR", "TXN", "UA", "UAL", "V", "VMW", "VNET",
 //            "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
 
-    public static final String mainTitle = "\n+++ BÖRSIMÄNG +++\n\nLoading stock data from web ...\n";
+    public static final String mainTitle = "+++ IEX Stock Exchange Game for Beginner Level Traders - Version 1.0 +++";
+    public static final String subTitle = "(C) 2018 Renata Siimon, Helena Rebane, Raul Tölp. All rights reserved.\n\n";
+
 
     public static final String[] mainMenu = {
             "Buy stock",

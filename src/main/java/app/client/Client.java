@@ -1,3 +1,8 @@
+/**
+ +++ IEX Stock Exchange Game for Beginner Level Traders - Version 1.0 +++
+ (C) 2018 Renata Siimon, Helena Rebane, Raul Tölp. All rights reserved.
+**/
+
 package app.client;
 
 import java.io.DataInputStream;
@@ -5,6 +10,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import static app.server.MyUtils.colorPrintRed;
+import static app.server.MyUtils.colorPrintYellow;
+import static app.server.MyUtils.createHeader;
 
 public class Client {
 
@@ -52,10 +60,13 @@ public class Client {
                         break;
                     }
                 }
-
             }
+        } catch (IOException e) {
+            colorPrintRed(createHeader("Server connection failed!"));
         }
-        System.out.println("See you soon!");
+
+
+        colorPrintYellow("See you soon!");
         System.exit(0);
     }
 
