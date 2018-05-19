@@ -6,14 +6,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
-public class ThreadForDataUpdates implements Runnable {
+class ThreadForDataUpdates implements Runnable {
 
     //FOR UPDATING USERPOTRFOLIO (BOTH PRICES AND OTHER ELEMENTS) AND PRICES OF MASTERPORTFOLIO
 
-    private Server socket;
-    private Iu masterHandler;
-    private int clientId;
-    private IO io; //TODO viga?
+    private final Server socket;
+    private final Iu masterHandler;
+    private final IO io; //TODO viga?
     //private boolean masterHasChanged = false; //for price updates in master portfolio (this ususally also brings along changes in user portf.)
     //private boolean userHasChanged = false; //for changes in user portfolio (also adding stocks, changes in values etc.)
     //private JsonObject updatedUserPortfolio;
@@ -22,7 +21,6 @@ public class ThreadForDataUpdates implements Runnable {
     public ThreadForDataUpdates(Server socket, Iu masterHandler, int clientId, IO io) {
         this.socket = socket;
         this.masterHandler = masterHandler;
-        this.clientId = clientId;
         this.io = io;
     }
 
@@ -31,7 +29,7 @@ public class ThreadForDataUpdates implements Runnable {
     public void run() {
 
         Portfolio userPortfolio;
-        Portfolio masterPortfolio = masterHandler.getMasterPortfolio();
+//        Portfolio masterPortfolio = masterHandler.getMasterPortfolio();
 
         //Getting userPortfolio (possible after User has been created for client- until then, just wait
         // and check again regularily):
@@ -51,7 +49,7 @@ public class ThreadForDataUpdates implements Runnable {
         }
         try (DataOutputStream out = new DataOutputStream(socket.getOut())) {
 
-            while (true) {
+            while (true) { //TODO cannot complete wihtout throwing exception
 
                 //Sending updated user portfolio if it has changed (either because of
                 // global price update or because of buys/sells):

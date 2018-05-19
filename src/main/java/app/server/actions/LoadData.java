@@ -30,7 +30,7 @@ public class LoadData implements CommandHandler {
         }
     }
 
-    public void loadData(Iu handler, IO io) throws IOException {
+    private void loadData(Iu handler, IO io) throws IOException {
 
         File currentDir = new File("Games");
         List<String> fileNames = Arrays.asList(Objects.requireNonNull(currentDir.list()));

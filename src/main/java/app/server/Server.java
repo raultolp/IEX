@@ -1,7 +1,7 @@
-/**
+/*
  +++ IEX Stock Exchange Game for Beginner Level Traders - Version 1.0 +++
  (C) 2018 Renata Siimon, Helena Rebane, Raul Tölp. All rights reserved.
-**/
+*/
 
 package app.server;
 
@@ -17,13 +17,13 @@ import static app.server.MyUtils.createHeader;
 import static app.server.StaticData.*;
 
 
-public class Server {
+class Server {
 
-    private Socket socket;
+    private final Socket socket;
     private InputStream in;
     private OutputStream out;
 
-    public Server(Socket socket) throws IOException {
+    private Server(Socket socket) throws IOException {
         this.socket = socket;
         this.in = socket.getInputStream();
         this.out = socket.getOutputStream();
@@ -33,8 +33,8 @@ public class Server {
     public static void main(String[] args) throws Exception {
 
         //START SERVER
-        try ( ServerSocket ss = new ServerSocket(1337) ) {
-            System.out.println("now listening on port: 1337");
+        try ( ServerSocket ss = new ServerSocket(serverPort) ) {
+            System.out.println("now listening on port: " + serverPort);
 
             //START IU FOR SERVER (ADMIN)
             MyUtils.colorPrintBlue(createHeader(mainTitle));

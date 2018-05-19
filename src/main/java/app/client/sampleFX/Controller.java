@@ -1,6 +1,6 @@
 package app.client.sampleFX;
 
-public class Controller {  //implements Initializable
+class Controller {  //implements Initializable
 
     public void loginButtonClicked() {
         System.out.println("User logged in...");

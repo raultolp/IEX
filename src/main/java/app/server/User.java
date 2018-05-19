@@ -6,13 +6,13 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 
 public class User implements Comparable<User> {
-    private String userName;
+    private final String userName;
     private Portfolio portfolio;
-    private double initialFunds;
+    private final double initialFunds;
     private double portfolioTotalValue;
 
     //Creating normal users:
-    public User(String userName, double availableFunds) throws IOException {
+    public User(String userName, double availableFunds) {
         this.userName = userName;
         this.portfolioTotalValue = availableFunds;
         this.initialFunds = availableFunds;
@@ -61,9 +61,11 @@ public class User implements Comparable<User> {
         return portfolio;
     }
 
-    public double getAvailableFunds() {  //kas vajalik?
-        return portfolio.getAvailableFunds();
-    }
+// --Commented out by Inspection START (19.05.2018 6:48):
+//    public double getAvailableFunds() {  //kas vajalik?
+//        return portfolio.getAvailableFunds();
+//    }
+// --Commented out by Inspection STOP (19.05.2018 6:48)
 
     public String getUserName() {
         return userName;

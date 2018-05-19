@@ -7,7 +7,7 @@ import java.util.Comparator;
 
 //import static app.Iu.masterPortfolio;
 
-public class ATestKlass implements Comparator<String> {
+class ATestKlass implements Comparator<String> {
 
     public static void main(String[] args) throws Exception {
         Iu handler = new Iu(new AdminIO());

@@ -4,11 +4,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class SendingUserInput implements Runnable {
+class SendingUserInput implements Runnable {
 
-    DataOutputStream out;
-    Scanner sc;
-    Client client;
+    private final DataOutputStream out;
+    private final Scanner sc;
+    private final Client client;
 
     SendingUserInput(DataOutputStream out, Client client) {
         this.out = out;

@@ -4,7 +4,7 @@ import app.server.User;
 
 import java.util.List;
 
-public class ProcessingMaster implements Runnable {
+class ProcessingMaster implements Runnable {
 
     int timeToSleep = 8900; // in milliseconds
 

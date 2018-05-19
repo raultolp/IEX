@@ -6,11 +6,11 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Position {
+class Position {
 
     //private String posType;  //"long" or "short"
     private boolean open; //true if open (still stocks in portfolio), false if closed (all stocks already sold)
-    private String symbol;
+    private final String symbol;
     private double price; //current price
     private int volume; //number of stocks
     private double averagePrice; ////average purchase price (includes transaction fees) -
@@ -20,7 +20,7 @@ public class Position {
     private double unrealisedProfit; // profit/loss that would be gained if stocks held were sold
     // at current market price (does not include transaction fee)
     private double currentValue;  // volume*current price, i.e. current value of stock in portfolio
-    private List<Transaction> transactions = new ArrayList<>();
+    private final List<Transaction> transactions = new ArrayList<>();
 
 
     public Position(Transaction transaction, String symbol, double price, int volume) {
@@ -114,10 +114,9 @@ public class Position {
 
     //For printing out position info when viewing User's portfolio:
     public String toStringForPortfolio() {
-        String info = String.format("%-5s %8d %10.2f %12.2f %16.2f %16.2f %18.2f\n",
-                symbol, volume, price, currentValue, unrealisedProfit, averagePrice, profit);
 
-        return info;
+        return String.format("%-5s %8d %10.2f %12.2f %16.2f %16.2f %18.2f\n",
+                symbol, volume, price, currentValue, unrealisedProfit, averagePrice, profit);
     }
 
     public int getVolume() {

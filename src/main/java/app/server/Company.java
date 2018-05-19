@@ -32,7 +32,7 @@ public class Company extends IEXdata {
 
     //-----------------------------------------
     //Loading Company info from file:
-    public boolean loadFromFile(Iu handler) throws IOException {
+    private boolean loadFromFile(Iu handler) throws IOException {
         File fail = new File("CompanyInfo.txt");
 
         try ( Scanner sc = new Scanner(fail, "UTF-8") ) {  //try-with-resources
@@ -60,7 +60,7 @@ public class Company extends IEXdata {
 
     //-----------------------------------------
     //Loading Company info from web:
-    public void loadDataFromWeb(Iu handler, IO io) throws IOException {  //äkki peaks tegema booleaniks - kui õnnestub, on true
+    private void loadDataFromWeb(Iu handler, IO io) throws IOException {  //äkki peaks tegema booleaniks - kui õnnestub, on true
         String URL = "https://api.iextrading.com/1.0/stock/" + symbol + "/company";
         boolean isAdmin = handler.isAdmin();
 
@@ -86,7 +86,7 @@ public class Company extends IEXdata {
             //-----------------------------------------
             //Saving downloaded data to file:
             try ( OutputStream out = new FileOutputStream("CompanyInfo.txt", true); //true- lisamine faili lõppu
-                  OutputStreamWriter texToWrite = new OutputStreamWriter(out, "UTF-8"); ) {
+                  OutputStreamWriter texToWrite = new OutputStreamWriter(out, "UTF-8")) {
                 texToWrite.write(symbol + "////" + companyName + "////" + sector + "////" + industry + "////"
                         + description + "////" + CEO + "////" + website + "\n");
             } catch (IOException e) {

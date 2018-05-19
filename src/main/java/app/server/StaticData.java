@@ -1,11 +1,14 @@
-/**
+/*
 +++ IEX Stock Exchange Game for Beginner Level Traders - Version 1.0 +++
 (C) 2018 Renata Siimon, Helena Rebane, Raul Tölp. All rights reserved.
-**/
+*/
 
 package app.server;
 
 public class StaticData {
+    public static final String serverHost = "localhost";
+    public static final int serverPort = 1337;
+
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_YELLOW = "\u001B[33m";

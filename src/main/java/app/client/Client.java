@@ -1,7 +1,7 @@
-/**
+/*
  +++ IEX Stock Exchange Game for Beginner Level Traders - Version 1.0 +++
  (C) 2018 Renata Siimon, Helena Rebane, Raul Tölp. All rights reserved.
-**/
+*/
 
 package app.client;
 
@@ -13,25 +13,25 @@ import java.net.Socket;
 import static app.server.MyUtils.colorPrintRed;
 import static app.server.MyUtils.colorPrintYellow;
 import static app.server.MyUtils.createHeader;
+import static app.server.StaticData.serverHost;
+import static app.server.StaticData.serverPort;
 
-public class Client {
+class Client {
 
     private boolean isRunning = true;
-    private final Client client;
     private DataOutputStream out;
     private DataInputStream in;
 
 
-    public Client() {
-        this.client = this;
+    private Client() {
+        Client client = this;
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         Client client = new Client();
-        System.out.println("connecting to server");
+        System.out.println("connecting to server: <" + serverHost + ":" + serverPort + ">");
 
-
-        try ( Socket socket = new Socket("localhost", 1337) ) {
+        try ( Socket socket = new Socket(serverHost, serverPort) ) {
 
             try ( DataOutputStream out = new DataOutputStream(socket.getOutputStream());
                   DataInputStream in = new DataInputStream(socket.getInputStream()) ) {
@@ -65,8 +65,7 @@ public class Client {
             colorPrintRed(createHeader("Server connection failed!"));
         }
 
-
-        colorPrintYellow("See you soon!");
+        colorPrintYellow("See you soon!"); // TODO PRIORITY 0 .. numbri asemel teksti sisestades ei tule mitte Wrong input vaid See ya ja server panges
         System.exit(0);
     }
 

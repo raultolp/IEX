@@ -14,7 +14,7 @@ public class Iu {
 
     //Command handler and game
     private final List<CommandHandler> commandHandlers;
-    private Iu masterHandler; //handler of admin
+    private final Iu masterHandler; //handler of admin
     private File activeGame;
     private boolean isRunning = true;
     private boolean acceptConnections;
@@ -25,17 +25,16 @@ public class Iu {
     private User activeUser;
     private boolean isAdmin;
     private Portfolio masterPortfolio;
-    private int clientId;  //for connecting users to their respective updateThreads
     private JsonObject priceUpdateForClients = null;  //masterPortfolio priceUpdate'i objekt- väärtustab UpdateingPrices,
     // kasutab ThreadForDataUpdates
     // I/O
-    private IO io;
+    private final IO io;
 
     //Userlist and list of user priceUpdate threads
     private List<User> userList;
     //ArrayList<Thread> priceUpdateThreadList;
-    Map<Thread, User> clientThreads = new HashMap<>(); //clientId (assigned when connects to server) and client update thread
-    Map<Integer, Thread> clientIds = new HashMap<>();  //clientId is assigned when user connects (its identity
+    private final Map<Thread, User> clientThreads = new HashMap<>(); //clientId (assigned when connects to server) and client update thread
+    private final Map<Integer, Thread> clientIds = new HashMap<>();  //clientId is assigned when user connects (its identity
     // is not verified at this point yet, so it needs a temporary id
 
 
@@ -79,7 +78,8 @@ public class Iu {
         this.activeUser = user;
         this.isAdmin = false;
         this.masterPortfolio = masterHandler.getMasterPortfolio();  //admin's portfolio
-        this.clientId = clientId;
+        //for connecting users to their respective updateThreads
+//        int clientId1 = clientId;
         Thread userUpdateThread = clientIds.get(clientId);
         clientThreads.put(userUpdateThread, user);
 
@@ -118,7 +118,7 @@ public class Iu {
         commandPrompt();
     }
 
-    public void commandPrompt() throws IOException {
+    private void commandPrompt() throws IOException {
         if (isAdmin) {
             System.out.print((activeGame != null ? ANSI_BLUE + activeGame.getName() + ANSI_RESET :
                     ANSI_RED + "(not saved)" + ANSI_RESET) +
@@ -126,9 +126,9 @@ public class Iu {
         } else {
             String commandPromtAsString = "";
             if (activeGame != null) {
-                commandPromtAsString += activeGame.getName() + "(not saved)";
+                commandPromtAsString += activeGame.getName() + "(not saved) / Active user:";
             }
-            commandPromtAsString += " / Active user:" + activeUser.getUserName() + "> ";
+            commandPromtAsString += ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ";
             io.println(commandPromtAsString);
         }
     }

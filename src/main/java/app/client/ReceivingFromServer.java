@@ -3,11 +3,11 @@ package app.client;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class ReceivingFromServer implements Runnable {
+class ReceivingFromServer implements Runnable {
 
-    private Client client;
-    private DataInputStream in;
-    private String[] menu = {
+    private final Client client;
+    private final DataInputStream in;
+    private final String[] menu = {
             "Buy stock",
             "Sell stock",
             "View user portfolio",
@@ -60,9 +60,9 @@ public class ReceivingFromServer implements Runnable {
                     // All updates can be distinguished from other data flow by charAt(0)='{'
                     // (marks beginning of json string).
                 } else if (receivedString.charAt(0) == '{') {
-                    String[] splitted = receivedString.split("@");
-                    String userAsString = splitted[0];
-                    String masterAsString = splitted[1];
+//                    String[] splitted = receivedString.split("@");
+//                    String userAsString = splitted[0];
+//                    String masterAsString = splitted[1];
 
                     //Initiating masterPortfolio and user portfolio at the beginning of the game:
                    /* if (!initiated) {

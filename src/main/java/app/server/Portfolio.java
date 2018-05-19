@@ -16,8 +16,8 @@ import static app.server.StaticData.ANSI_YELLOW;
 public class Portfolio extends IEXdata {
 
     private double availableFunds;
-    private Map<String, Stock> portfolioStocks;
-    private Map<String, Position> positions;
+    private final Map<String, Stock> portfolioStocks;
+    private final Map<String, Position> positions;
     private double totalValueOfPositions = 0.0; //sum of all totals (i.e. sum of all current positions)
     private double profit = 0.0; //realised profit (from closed positions (sold stocks))
     private double unrealisedProfit = 0.0; //gains/losses in value of stocks in portfolio (i.e of stocks not sold yet)

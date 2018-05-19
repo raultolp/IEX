@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class UpdatingPrices implements Runnable {
-    private Iu handler;
-    private Portfolio masterPortfolio;
-    private List<User> userList;
+class UpdatingPrices implements Runnable {
+    private final Iu handler;
+    private final Portfolio masterPortfolio;
+    private final List<User> userList;
 
 
     public UpdatingPrices(Iu handler) {
@@ -34,7 +34,6 @@ public class UpdatingPrices implements Runnable {
                 Thread.sleep(timeToSleep);
             } catch (InterruptedException e) {
                 System.out.println("PRICE UPDATE STOPPED!");
-                ;
                 return;  //thread is terminated
             }
         }
@@ -45,7 +44,7 @@ public class UpdatingPrices implements Runnable {
     //TÕSTETUD PORTFELLI ALT SIIA, ET KOGU UPDATE'IMISE LOOGIKA OLEKS ÜHES KOHAS:
 
     //UPDATE CURRENT PRICES FOR ALL STOCKS IN MASTER PORTFOLIO AND USER PORTFOLIOS:
-    public void updatePrices(List<User> userList, Portfolio masterPortfolio, Iu handler) {
+    private void updatePrices(List<User> userList, Portfolio masterPortfolio, Iu handler) {
 
         Map<String, Position> positions = masterPortfolio.getPositions();
         Map<String, Stock> portfolioStocks = masterPortfolio.getPortfolioStocks();
@@ -94,7 +93,7 @@ public class UpdatingPrices implements Runnable {
     }
 
     //Updating positions of MasterPortfolio and all Users' portfolios:
-    public void updatePositions(Map<String, Position> userPositions, Portfolio masterPortfolio) {
+    private void updatePositions(Map<String, Position> userPositions, Portfolio masterPortfolio) {
         for (String stockSymb : userPositions.keySet()) {
             Position position = userPositions.get(stockSymb);
             double newprice = masterPortfolio.getStock(stockSymb).getCurrentPrice();

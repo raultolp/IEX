@@ -65,7 +65,7 @@ public class Stock extends IEXdata {
     }
 
 
-    public void loadDataFromIEX() throws IOException {
+    private void loadDataFromIEX() throws IOException {
         String URL = "https://api.iextrading.com/1.0/stock/" + symbol + "/batch?types=quote,stats"; //,news,chart&range=1m&last=10";
         JsonElement root = IEXdata.downloadData(URL);  // array or object
         JsonObject rootobj = root.getAsJsonObject();
@@ -75,7 +75,7 @@ public class Stock extends IEXdata {
     //For creation of stocks bases on JSON Object (used for both creating a single stock,
     //as well as for batch creation of stocks for MasterPortfolio (the latter is used in
     // Portfolio class):
-    public void createStockFromJson(JsonObject rootobj) {
+    private void createStockFromJson(JsonObject rootobj) {
         currentPrice = rootobj.getAsJsonObject("quote").get("latestPrice").getAsDouble(); //168.38
         previousClose = rootobj.getAsJsonObject("quote").get("previousClose").getAsDouble();
         long marketCapAsLong = rootobj.getAsJsonObject("quote").get("marketCap").getAsLong();

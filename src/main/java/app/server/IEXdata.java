@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-public abstract class IEXdata {
+abstract class IEXdata {
 
     //-----------------------------------------------------------------------
     //Source for reading from url and conversion to JSON:

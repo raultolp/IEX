@@ -11,11 +11,11 @@ import java.util.List;
 import static app.server.MyUtils.createHeader;
 import static app.server.StaticData.*;
 
-public class ThreadForClientCommands implements Runnable {
+class ThreadForClientCommands implements Runnable {
 
-    private Server socket;
-    private Iu masterHandler;
-    private int clientId;
+    private final Server socket;
+    private final Iu masterHandler;
+    private final int clientId;
 
     public ThreadForClientCommands(Server socket, Iu masterHandler, int clientId) {
         this.socket = socket;
@@ -54,7 +54,7 @@ public class ThreadForClientCommands implements Runnable {
 
             }
             if (!(userList.contains(user))) {
-                io.println("New user has been created. Welcome to the game!");
+                io.println("New user " + ANSI_GREEN + user.getUserName() + ANSI_RESET + " has been created. Welcome to the game!");
 
             }
             Iu handler = new Iu(io, masterHandler, user, clientId); //Command handler for user

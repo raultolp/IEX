@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import java.io.*;
 import java.util.List;
 
+import static app.server.MyUtils.colorPrintRed;
 import static app.server.StaticData.ANSI_RESET;
 import static app.server.StaticData.ANSI_YELLOW;
 
@@ -35,8 +36,8 @@ public class SaveData implements CommandHandler {
 
         File directory = new File("Games");
         if (!directory.exists())
-            directory.mkdir();
-
+            if (!directory.mkdir())
+                colorPrintRed("Creating " + directory.getName() + " directory failed!");
 
         //Determining file name:
         if (handler.getActiveGame() == null) {

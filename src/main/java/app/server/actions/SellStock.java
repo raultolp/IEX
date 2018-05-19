@@ -22,7 +22,7 @@ public class SellStock implements CommandHandler {
             }
 
             if (portfolio != null)
-                portfolio.toString(); //TODO result ignored?
+                portfolio.toString(); //TODO result ignored?  MIKS SEDA SIIN ÜLDSE TEHAKSE? (RAUL)
             String name = MyUtils.enterStockName(handler, io);
 
             if (Objects.requireNonNull(portfolio).getPortfolioStocks().keySet().contains(name)) {

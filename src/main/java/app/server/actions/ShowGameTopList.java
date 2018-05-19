@@ -4,7 +4,6 @@ package app.server.actions;
 
 import app.server.*;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +19,7 @@ public class ShowGameTopList implements CommandHandler {
         }
     }
 
-    public void showGameTopList(Iu handler, IO io) throws IOException {
+    private void showGameTopList(Iu handler, IO io) throws IOException {
         List<User> userList = handler.getUserList();
         for (User user : userList) {
             user.setPortfolioTotalValue();

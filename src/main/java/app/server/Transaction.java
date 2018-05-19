@@ -4,11 +4,11 @@ import com.google.gson.JsonObject;
 
 import java.time.LocalDateTime;
 
-public class Transaction {
+class Transaction {
 
-    private String symbol;
-    private String type;
-    private double transactionFee = 0.1;  // 10 cents per stock
+    private final String symbol;
+    private final String type;
+    private final double transactionFee = 0.1;  // 10 cents per stock
     private double price; //current price
     private int volume; //number of stocks
     private String date;
@@ -45,12 +45,11 @@ public class Transaction {
     }
 
     public String toStringForReport() {
-        String report = String.format("%-7s%-10s %-10s %6d %10.2f %7.2f %+15.2f %10.2f",
+
+        return String.format("%-7s%-10s %-10s %6d %10.2f %7.2f %+15.2f %10.2f",
                 type, date, time, volume, price, getTransactionFees(),
                 type.equals("buy") ? -getTransactionAmount() : getTransactionAmount(),
                 type.equals("buy") ? 0 : profitFromSell);
-
-        return report;
 
     }
 
@@ -68,9 +67,8 @@ public class Transaction {
 
     public String reportTransaction() { //inform how many stocks were bought/sold at what price
         String verb = type.equals("buy") ? "bought" : "sold";
-        String transactionConfirmation = volume + " stocks of " + symbol + " " + verb + " @" + price +
+        return volume + " stocks of " + symbol + " " + verb + " @" + price +
                 " USD (total value " + String.format("%.2f", getTransactionAmount()) + " USD).";
-        return transactionConfirmation;
     }
 
     //For sending data from Server to Client, in order to initiate Client's portfolio

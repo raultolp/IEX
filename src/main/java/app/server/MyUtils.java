@@ -10,11 +10,11 @@ import static app.server.StaticData.*;
 
 public final class MyUtils {
 
-    public static boolean isAlphaNumeric(String text) {
-        return text.matches("[a-zA-Z0-9]+");
+    private static boolean isNotAlphaNumeric(String text) {
+        return !text.matches("[a-zA-Z0-9]+");
     }
 
-    public static boolean isAlpha(String text) {
+    private static boolean isAlpha(String text) {
         return text.matches("[a-zA-Z]+");
     }
 
@@ -44,7 +44,7 @@ public final class MyUtils {
             io.print("Enter user name: ");
             name = io.getln();
 
-            if (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name))
+            if (name.length() < 3 || name.length() > 12 || isNotAlphaNumeric(name))
                 colorPrintRed("Use name with 3..12 characters and numbers.");
             else if (nameInList(name, handler.getUserList()) > -1 && newUser)
                 colorPrintRed("Name already exists!");
@@ -52,7 +52,7 @@ public final class MyUtils {
                 colorPrintRed("Name does not exist!");
             if (name.length() == 0)
                 return null;
-        } while (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name));
+        } while (name.length() < 3 || name.length() > 12 || isNotAlphaNumeric(name));
 
         return name;
     }

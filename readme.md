@@ -132,7 +132,7 @@ Märt Bakhoff and Simmo Saan for their guidance.
 ## DESCRIPTION 
 
 The program is a stock-exchange game using real stock data downloaded from IEX stock exchange (US) 
-API [https://iextrading.com/developer/docs/#getting-started](url) at regular time intervals (10 sec), 
+API [https://iextrading.com/developer/docs/#getting-started] at regular time intervals (10 sec), 
 to simulate price data feed used in actual trading platforms. The players can ‘buy’ and ‘sell’ stocks 
 and see information (such as price, PE, EPS, market cap, etc.) about them, as well as information on 
 the respective companies (sector, description and news). 
