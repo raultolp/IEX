@@ -83,9 +83,9 @@ public class Stock extends IEXdata {
         dividendYield = rootobj.getAsJsonObject("stats").get("dividendYield").getAsDouble();
 
         eps = rootobj.getAsJsonObject("stats").get("latestEPS").getAsDouble();
-        change1Year = rootobj.getAsJsonObject("stats").get("year1ChangePercent").getAsDouble();
-        change1Month = rootobj.getAsJsonObject("stats").get("day30ChangePercent").getAsDouble();
-        change3Month = rootobj.getAsJsonObject("stats").get("month3ChangePercent").getAsDouble();
+        change1Year = rootobj.getAsJsonObject("stats").get("year1ChangePercent").getAsDouble() * 100;
+        change1Month = rootobj.getAsJsonObject("stats").get("day30ChangePercent").getAsDouble() * 100;
+        change3Month = rootobj.getAsJsonObject("stats").get("month3ChangePercent").getAsDouble() * 100;
         shortRatio = rootobj.getAsJsonObject("stats").get("shortRatio").getAsDouble();
 
         //For ETFs, PE ratio is not provided (is null):

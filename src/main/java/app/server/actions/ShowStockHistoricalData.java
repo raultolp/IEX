@@ -2,8 +2,6 @@ package app.server.actions;
 
 import app.server.*;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 
@@ -21,7 +19,7 @@ public class ShowStockHistoricalData implements CommandHandler {
     private void showStockHistoricalData(Iu handler, IO io) throws IOException {
 
         Portfolio masterPortfolio = handler.getMasterPortfolio();
-        String header = MyUtils.createHeader("Stock price change (%)");
+        String header = MyUtils.createHeader("Stock price change");
         String stockSym;
 
         //TODO: add option to choose time period
@@ -33,9 +31,10 @@ public class ShowStockHistoricalData implements CommandHandler {
         try {
             Stock stock = masterPortfolio.getStock(stockSym);
 
-            io.println("\nOne month    : " + stock.getChange1Month() * 100 + "\n" +
-                    "Three months : " + stock.getChange3Month() * 100 + "\n" +
-                    "One Year     : " + stock.getChange1Year() * 100 + "\n");
+            io.println(String.format("\nOne month    : %5.2f %%\nThree months : %5.2f %%\nOne Year     : %5.2f %%\n",
+                    stock.getChange1Month(),
+                    stock.getChange3Month(),
+                    stock.getChange1Year()));
         } catch (Exception e) {
            io.println("Stock info not available.");
         }
