@@ -10,9 +10,5 @@ public interface IO {
 
     String getln() throws IOException;
 
-     DataOutputStream getOut();
-
-     DataInputStream getIn();
-
-     Scanner getSc();
+     void close() throws IOException;
 }
