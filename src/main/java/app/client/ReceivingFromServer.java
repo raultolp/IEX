@@ -59,7 +59,7 @@ class ReceivingFromServer implements Runnable {
                     //Receiving JSON:
                     // All updates can be distinguished from other data flow by charAt(0)='{'
                     // (marks beginning of json string).
-                } else if (receivedString.charAt(0) == '{') {
+//                } else if (receivedString.charAt(0) == '{') {
 //                    String[] splitted = receivedString.split("@");
 //                    String userAsString = splitted[0];
 //                    String masterAsString = splitted[1];

@@ -1,124 +1,55 @@
-2. etapi mõtted
+TODO LIST
+-----------
+1. Priority
+-----------
+- kliendil võimalik args -host=serverhost:port parameetriga server host ja port määrata
 
-- Graafikaliides ?
-- Klient-server, multithreading - kas mitu serverit jookseb samaaegselt ühes serverprogrammis?
-  kleint graafiline, server jääb kas ainult serveriks v
-- Praegune tekstmenüü peaks jääma vaid serveri poolele?
-- Menüü peaks ehk laiali lõhkuma MenuItem Interface-ks ja sealt hakkama eraldi kõiki asju küsima
-  tekib mmingi 20 lisaklassi .. suht crazy
-- kas tuua sisse Margin = 2x resurss + intress selle kasutamisel?
-- kas tuua sisse Short Selling: samuti intress?
-- peaks lisama ka mõned ETFd siiski, need käivad aktsiate juurde
-- Kasutaja juhend - mingi pisike
-- kasutajate lisamine ka mitme kaupa komadega eraldatud
-- tehingute nimistu koos tehingutasudega, kuupäeva jms
+-----------
+2. Priority
+-----------
+- kasutaja juhend ja viited kasulikule infole
+- serveris kõikide logimist vajavate tegevuste logimine ühte faili
+- menüü süsteem lugeda failist (JSON vms)
+- aktsiate nimekiri lugeda failist
 
-------
+-----------
+3. Priority
+-----------
+- serveri ja kliendi settings fail (host, port ja vbl midagi veel)
+- Menüü valik: Stock technical analysis
 
-etapp1 tagasiside
+--------
+TESTIDA:
+--------
+- Kasutajanimeks sobib tühik
+- Kui käsuks panna numbri asemel tühik, jookseb client kokku.
+- View Company name data, kui panna sinna vale nimi, siis viskab automaatselt algusesse, aga võiks olla proovi uuesti (lisaks “kas te mõtlesite…”).
+- Peale kasutaja kustutamist, ei kustu kasutaja ära.
+- Väike asi, mis häirib: kui ma vajutasin, et tahan näiteks aktsiat osta, aga mõtlen ümber, siis mingi käsuga võiks saada tagasi minna.
+- Hetkel on võimalik luua mitu sama nimega kasutajat jooksutades korraga mitut klienti enne mängu salvestamist, kusjuures mängu uuesti laadimisel on jäetud sama nimega kasutajatest alles vaid see, kellel on kõige vähem raha (võis olla juhuste kokkusattumus, et alati see mul alles jäi :( )
+  Mingi meetod juba on olemas selleks, aga kasutamata, nii et tundub, et sellele probleemile on ka juba peaaegu lahendus olemas. Serverist mängides on see meetod kasutusel ka juba
 
-* Iu klassis on palju hirmsaid static fielde. static fielde peaks ainult konstantide jaoks kasutama.
-  Lisaks on sinna kuhjatud kõiksugu abimeetodeid, mis omavahel pole seotud. Neid võiks paremini eri
-  klassidesse organiseerida.
-* programm läheb forever käima. võiks startup kiiremaks teha, laadida alles siis andmeid, kui neid
-  vaja on või andmeid failidesse cache’da
-* Iu klassis on mingi mega-switch, mis sisaldab koodi kõigi toimingute jaoks terves programmis.
-  peaks selle juppideks jaotama, nii et iga tegevus oleks vähemalt eraldi meetodis, võibolla
-  keerulisemad toimingud eraldi klassis
-* Portfolio klassis tundub et hoitakse vastavaid andmeid listide vastavatel indeksitel ja neid
-  aetakse indeksite järgi sealt taga. OOP-ilik lahendus oleks see, et kokku kuuluvad andmed on
-  omaette klassi objektide väljades, kus saab neile ligi ilma, et peaks seitsmest listist neid
+-----------
+Code Review
+-----------
+1. versiooni code review: https://docs.google.com/document/d/1V0i4ERb-X_gyJ2nOwEq_U6HcQoKT2cRasGIIky2rlv4/edit
 
-  ise teadma õigest kohast otsida.
-* Stock klassis on samuti väga palju fielde, millest osa saaks grupeerida nt eraldi Company klassi
-  vms. Suur osa andmetest on üleüldse hetkel kasutamata ja pole selge, kas neid üldse ka hiljem vaja
-  oleks. Niisama kõike salvestada, mis API-st kätte saab pole ka päris mõtet.
+--------------------------
+Lisaideed edasiarneduseks:
+--------------------------
 
-  põhifunktsionaalsusega on tööd tehtud ja mitmed asjad toimivad. kõik on tööd teinud.
-  võiks varem alustada asjadega ja mitte viimasele nädalavahetusele jätta, siis on vähem merge conflicte ka
-
-------
-
-1. etapi mõtted
-
-User
-    - Name
-    - Liquid funds (MONEY)
-    - Portfolio ->
-
-Portfolio
-    - Stock name
-    - Purchase price
-    - Purchase date
-    - Qty
-
-Stocks
-    - Name
-    - Short name
-    - Sector
-    - Additional description
-    - Bid
-    - Ask
-    - P/E
-    - EPS
-    - Volatility
-    - Dividend yield
-    - 1yr estimated growth?
-    - Historical info ->
-
-Historical info
-    - Close price (1Y/1D close)
-
-Views
-    - Stock historical price (1Y/1D)
-    - Portfolios Comparison
-
-
-TODO:
-Data from IEX - JSON read
-Graph views
-Graph menu selector design
-Files save/read
-ALL OTHER STUFF - NO SLEEP and other stuff .. hard coding only
-
-
-Menu
-    - add user
-    - buy stock to user (transaction fee)
-    - sell stock from user (transaction fee)
-    - view user portfolio status
-    - view portfolios comparison
-    - view stock base data
-    - view stock historical data
-    - refresh button
-
--------------------------------------------
-
-OOP projektiplaan
-Edasijõudnute rühma projektiplaan.
-https://courses.cs.ut.ee/2018/OOP/spring/Main/AdvancedProjects
-
-"Plaanitav funktsionaalsus" alla kirjuta ideed, mis kõigi etappide peale kokku võiks valmis saada.
-Ideid peab olema piisavalt, et kõigil rühma liikmetel jätkuks kõigiks etappideks piisavalt tööd.
-Ideid võiks olla pigem varuga - kõike ei pea valmis jõudma.
-Iga idee pane kirja lühidalt, nt "kasutaja saab valitud kuupäeva kohta ilmateadet küsida".
-
-"Etapp #1 funktsionaalsus" alla kirjuta funktsionaalsus, mis te tahaks etapp#1 lõpuks valmis saada.
-Pikka juttu pole vaja. Eesmärk on tagada, et projektid on mõistlikud, realistlikud ja sobiva mahuga.
-Kahtluse korral aruta oma ideed praksijuhendajaga.
-
-Projekti kokkuvõte (üks lause) *
-
-Teeme börsimängu, kus kasutajad saavad valida oma portfelli aktsiaid ja võidab see,
-kelle portfelli väärtus on kõige rohkem kasvanud.
-Plaanitav funktsionaalsus
-Funktsionaalsusteks on: kasutajate loomine, autentimine, portfellide loomine,
-kuhu kasutajad aktsiaid saavad lisada, aktsiate lisamine, portfelli seisu arvutamine ja vaatamine,
-selle iga aktsia kohta detailse info (sh aktsia graafik, ettevõtte finantsandmed ja lühikirjeldus) vaatamine,
-kõigi erinevate portfellide võrdlemine ja neist edetabeli koostamine ja mängu võitja tuvastamine.
-Aktsiate ja ettevõtete kohta info saamiseks kasutame IEX börsi (USA) API-t.
-
-Etapp #1
-Soovime valmis saada põhifunktsionaalsused. Peamised klassid, andmete hankimine ja töötlemine JSON formaadist.
-Valida sobivad andmed suurest baasist läbi API.
-Põhifunktsioonid: kasutaja-portfelli loomine, andmete lisamine portfelli ja salvestamine.
+1. Kliendi UI:
+    - 0. variant - Retro tekst versioon .. vähemalt toimib :)
+    - 1. variant - Java FX - katsetatud, keerukas, ilus, seni parim lahendus
+    - 2. variant - Swing - katsetatud, lihtsam tabeleid teha, kuid vaan ja kole ja ei sooovitata kasutada, Java FX-ga sidumine keerukas - jääb ära
+    - 3. variant - sügisel aine veebirakenduste loomine, saaks teha veebibrauseri põhise lahenduse, nõuab HTML, XML, CSS, JavaScript, PHP jne tundmist
+2. Aktsiatega kauplemine:
+    - Päevakauplemine Margin = 2x vaba raha + intress margini kasutamise eest.
+    - Short selling + päeva intress selle eest
+    - Aktsiate nimekirja pikendada, tuua sisse ka peamised ETF-d (SPY jne) ja mitmekordse võimendusega ETF-d, ETN-d
+    - ostu-müügitehinuge põhjalikum analüüs, kust raha tuli/kadus ja kui suured on tehingutasud, intressid
+    - portfelli võrdlus keskmise aktsaituru ja erinevate sektrorite indeksite võrdluses
+    - LMT BUY - kasutaja annab buy orderi sisse ja määrab max hinna. kui aktsia hetkehind on kõrgemal, kui max, siis programm kontrollib pärast iga hindade uuendust, kas hind on sobilikuks langenud ja ostab alles siis.
+    - LMT SELL - võib lisada sama asja aktsia müümiseks. kui hind tõuseb, siis müüakse.
+    - TECHNICAL ANAlYSIS: aktsia kohta näitajate küsimine. aktsiatega spekuleerijatel on terve hunnik matemaatilisi näitajaid, mille põhjal nad oma tehinguid teevad (moving average jms). google "stock technical analysis" aitab täpseid valemeid leida. võib programmi nende arvutamise lisada.
+    - TECHINCAL ANALYSIS 2: kui mingi näitaja väärtus jõuab sellisele tasemele, siis osta mulle aktsiaid / saada mulle email vms

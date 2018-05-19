@@ -1,0 +1,104 @@
+2. etapi mõtted
+
+- Graafikaliides ?
+- Klient-server, multithreading - kas mitu serverit jookseb samaaegselt ühes serverprogrammis?
+  kleint graafiline, server jääb kas ainult serveriks v
+- Praegune tekstmenüü peaks jääma vaid serveri poolele?
+- Menüü peaks ehk laiali lõhkuma MenuItem Interface-ks ja sealt hakkama eraldi kõiki asju küsima
+  tekib mmingi 20 lisaklassi .. suht crazy
+- kas tuua sisse Margin = 2x resurss + intress selle kasutamisel?
+- kas tuua sisse Short Selling: samuti intress?
+- peaks lisama ka mõned ETFd siiski, need käivad aktsiate juurde
+- Kasutaja juhend - mingi pisike
+- kasutajate lisamine ka mitme kaupa komadega eraldatud
+- tehingute nimistu koos tehingutasudega, kuupäeva jms
+
+------
+
+etapp1 tagasiside
+
+* Iu klassis on palju hirmsaid static fielde. static fielde peaks ainult konstantide jaoks kasutama.
+  Lisaks on sinna kuhjatud kõiksugu abimeetodeid, mis omavahel pole seotud. Neid võiks paremini eri
+  klassidesse organiseerida.
+* programm läheb forever käima. võiks startup kiiremaks teha, laadida alles siis andmeid, kui neid
+  vaja on või andmeid failidesse cache’da
+* Iu klassis on mingi mega-switch, mis sisaldab koodi kõigi toimingute jaoks terves programmis.
+  peaks selle juppideks jaotama, nii et iga tegevus oleks vähemalt eraldi meetodis, võibolla
+  keerulisemad toimingud eraldi klassis
+* Portfolio klassis tundub et hoitakse vastavaid andmeid listide vastavatel indeksitel ja neid
+  aetakse indeksite järgi sealt taga. OOP-ilik lahendus oleks see, et kokku kuuluvad andmed on
+  omaette klassi objektide väljades, kus saab neile ligi ilma, et peaks seitsmest listist neid
+
+  ise teadma õigest kohast otsida.
+* Stock klassis on samuti väga palju fielde, millest osa saaks grupeerida nt eraldi Company klassi
+  vms. Suur osa andmetest on üleüldse hetkel kasutamata ja pole selge, kas neid üldse ka hiljem vaja
+  oleks. Niisama kõike salvestada, mis API-st kätte saab pole ka päris mõtet.
+
+  põhifunktsionaalsusega on tööd tehtud ja mitmed asjad toimivad. kõik on tööd teinud.
+  võiks varem alustada asjadega ja mitte viimasele nädalavahetusele jätta, siis on vähem merge conflicte ka
+
+------
+
+1. etapi mõtted
+
+User
+    - Name
+    - Liquid funds (MONEY)
+    - Portfolio ->
+
+Portfolio
+    - Stock name
+    - Purchase price
+    - Purchase date
+    - Qty
+
+Stocks
+    - Name
+    - Short name
+    - Sector
+    - Additional description
+    - Bid
+    - Ask
+    - P/E
+    - EPS
+    - Volatility
+    - Dividend yield
+    - 1yr estimated growth?
+    - Historical info ->
+
+Historical info
+    - Close price (1Y/1D close)
+
+Views
+    - Stock historical price (1Y/1D)
+    - Portfolios Comparison
+
+Menu
+    - add user
+    - buy stock to user (transaction fee)
+    - sell stock from user (transaction fee)
+    - view user portfolio status
+    - view portfolios comparison
+    - view stock base data
+    - view stock historical data
+    - refresh button
+
+-------------------------------------------
+
+OOP projektiplaan
+Edasijõudnute rühma projektiplaan.
+https://courses.cs.ut.ee/2018/OOP/spring/Main/AdvancedProjects
+
+Teeme börsimängu, kus kasutajad saavad valida oma portfelli aktsiaid ja võidab see,
+kelle portfelli väärtus on kõige rohkem kasvanud.
+Plaanitav funktsionaalsus
+Funktsionaalsusteks on: kasutajate loomine, autentimine, portfellide loomine,
+kuhu kasutajad aktsiaid saavad lisada, aktsiate lisamine, portfelli seisu arvutamine ja vaatamine,
+selle iga aktsia kohta detailse info (sh aktsia graafik, ettevõtte finantsandmed ja lühikirjeldus) vaatamine,
+kõigi erinevate portfellide võrdlemine ja neist edetabeli koostamine ja mängu võitja tuvastamine.
+Aktsiate ja ettevõtete kohta info saamiseks kasutame IEX börsi (USA) API-t.
+
+Etapp #1
+Soovime valmis saada põhifunktsionaalsused. Peamised klassid, andmete hankimine ja töötlemine JSON formaadist.
+Valida sobivad andmed suurest baasist läbi API.
+Põhifunktsioonid: kasutaja-portfelli loomine, andmete lisamine portfelli ja salvestamine.
