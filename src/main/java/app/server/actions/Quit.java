@@ -6,7 +6,7 @@ import app.server.Iu;
 
 import java.io.IOException;
 
-//Quit
+//QUIT
 
 public class Quit implements CommandHandler {
 
@@ -15,18 +15,15 @@ public class Quit implements CommandHandler {
         if (command == 13) {
             boolean isAdmin = handler.isAdmin();
 
-            //app.server.actions.SaveData.saveData(handler);  //KAS VAJA ALATI SALVESTADA?
-
             if (isAdmin) {
                 System.out.println("Quitting...");
                 //handler.getDataCollector().interrupt();
                 SaveData.saveData(handler, io);
-                io.getSc().close();
+                io.close();
                 System.exit(0);
             } else {
                 io.println("Quitting...");
-                io.getIn().close();
-                io.getOut().close();
+                io.close();
             }
 
             handler.setRunning(false);

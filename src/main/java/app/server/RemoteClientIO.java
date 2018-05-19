@@ -29,15 +29,9 @@ public class RemoteClientIO implements IO {
         return in.readUTF();
     }
 
-    public DataOutputStream getOut() {
-        return out;
-    }
-
-    public DataInputStream getIn() {
-        return in;
-    }
-
-    public Scanner getSc() {
-        return null;
+    @Override
+    public void close() throws IOException {
+        out.close();
+        in.close();
     }
 }

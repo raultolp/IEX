@@ -1,7 +1,5 @@
 package app.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.util.Scanner;
 
 public class AdminIO implements IO {
@@ -23,17 +21,7 @@ public class AdminIO implements IO {
     }
 
     @Override
-    public Scanner getSc() {
-        return sc;
-    }
-
-    @Override
-    public DataOutputStream getOut() {
-        return null;
-    }
-
-    @Override
-    public DataInputStream getIn() {
-        return null;
+    public void close(){
+        sc.close();
     }
 }
