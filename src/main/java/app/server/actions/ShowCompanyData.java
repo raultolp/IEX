@@ -10,8 +10,8 @@ import app.server.Iu;
 public class ShowCompanyData implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws Exception {
-        if (command == 7) {
+    public void handle(String command, Iu handler, IO io) throws Exception {
+        if (command.equals("7")) {
             showCompanyData(handler, io);
         }
     }

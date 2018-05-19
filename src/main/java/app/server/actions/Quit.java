@@ -11,8 +11,8 @@ import java.io.IOException;
 public class Quit implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws IOException {
-        if (command == 13) {
+    public void handle(String command, Iu handler, IO io) throws IOException {
+        if (command.equals("13")) {
             boolean isAdmin = handler.isAdmin();
 
             if (isAdmin) {

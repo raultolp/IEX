@@ -9,8 +9,8 @@ import java.util.Objects;
 public class SellStock implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws Exception {
-        if (command == 2) {
+    public void handle(String command, Iu handler, IO io) throws Exception {
+        if (command.equals("2")) {
             boolean isAdmin = handler.isAdmin();
 
             Portfolio portfolio;
@@ -21,9 +21,7 @@ public class SellStock implements CommandHandler {
                 portfolio = handler.getUserList().get(userIndex).getPortfolio();
             }
 
-            if (portfolio != null)
-                portfolio.toString(); //TODO result ignored?  MIKS SEDA SIIN ÜLDSE TEHAKSE? (RAUL)
-            String name = MyUtils.enterStockName(handler, io);
+            String name = MyUtils.enterStockName(io);
 
             if (Objects.requireNonNull(portfolio).getPortfolioStocks().keySet().contains(name)) {
                 Integer qty = MyUtils.enterQty(io);

@@ -10,5 +10,5 @@ public interface IO {
 
     String getln() throws IOException;
 
-     void close() throws IOException;
+    void close() throws IOException;
 }

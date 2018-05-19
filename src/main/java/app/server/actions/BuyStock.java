@@ -12,11 +12,11 @@ import static app.server.actions.ShowStockList.showStockList;
 public class BuyStock implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws IOException {
-        if (command == 1) {
+    public void handle(String command, Iu handler, IO io) throws IOException {
+        if (command.equals("1")) {
             boolean isAdmin = handler.isAdmin();
             showStockList(handler, io);
-            String name = MyUtils.enterStockName(handler, io);
+            String name = MyUtils.enterStockName(io);
 
             if (Arrays.asList(handler.getAvailableStocks()).contains(name)) {
                 Integer qty = MyUtils.enterQty(io);
@@ -32,7 +32,6 @@ public class BuyStock implements CommandHandler {
                     portfolio.buyStock(name, qty, handler, io);
                 } catch (RuntimeException e) { //if not enough funds
                     io.println("Exception while buying stocks.");
-
                 }
             } else {
                 io.println("This stock is not available.");

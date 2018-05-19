@@ -11,8 +11,8 @@ import static app.server.actions.ShowUsersList.showUsersList;
 public class SetActiveUser implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws Exception {
-        if (command == 18) {
+    public void handle(String command, Iu handler, IO io) throws Exception {
+        if (command.equals("18")) {
             boolean isAdmin = handler.isAdmin();
             if (isAdmin) {
                 showUsersList(handler, io);

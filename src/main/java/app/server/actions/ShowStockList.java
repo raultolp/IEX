@@ -12,8 +12,8 @@ import java.util.Arrays;
 public class ShowStockList implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws IOException {
-        if (command == 5) {
+    public void handle(String command, Iu handler, IO io) throws IOException {
+        if (command.equals("5")) {
             showStockList(handler, io);
         }
     }

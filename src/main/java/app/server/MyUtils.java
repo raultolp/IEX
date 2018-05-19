@@ -14,11 +14,11 @@ public final class MyUtils {
         return !text.matches("[a-zA-Z0-9]+");
     }
 
-    private static boolean isAlpha(String text) {
+    public static boolean isAlpha(String text) {
         return text.matches("[a-zA-Z]+");
     }
 
-    public boolean isNumeric(String text) {
+    public static boolean isNumeric(String text) {
         return text.matches("[0-9]+");
     }
 
@@ -65,19 +65,17 @@ public final class MyUtils {
         return -1;
     }
 
-    public static String enterStockName(Iu handler, IO io) throws IOException {
+    public static String enterStockName(IO io) throws IOException {
         String name;
-        boolean tv = false;
 
         do {
             io.print("Enter stock name: ");
             name = io.getln().trim();
-            if (name.length() < 1 || name.length() > 5 || !isAlpha(name)) {
-                tv = true;
+            if (name.length() > 5 || !isAlpha(name))
                 io.println("Choose correct stock name.");
-            }
-        } while (tv);
-
+            if (name.length() == 0)
+                return null;
+        } while (name.length() > 5 || !isAlpha(name));
         return Objects.requireNonNull(name).toUpperCase();
     }
 

@@ -13,8 +13,8 @@ import java.util.List;
 public class ShowUsersList implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws IOException {
-        if (command == 17) {
+    public void handle(String command, Iu handler, IO io) throws IOException {
+        if (command.equals("17")) {
             boolean isAdmin = handler.isAdmin();
 
             if (isAdmin) {

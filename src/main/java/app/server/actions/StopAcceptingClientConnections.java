@@ -6,8 +6,8 @@ import app.server.Iu;
 
 public class StopAcceptingClientConnections implements CommandHandler {
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws Exception {
-        if (command == 15) {
+    public void handle(String command, Iu handler, IO io) throws Exception {
+        if (command.equals("15")) {
             boolean isAdmin = handler.isAdmin();
 
             if (isAdmin) {

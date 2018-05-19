@@ -171,8 +171,8 @@ public class Iu {
             printMenu();
 
             try {
-                Integer command;
-                command = Integer.valueOf(io.getln());
+                String command;
+                command = io.getln();
 
                 for (CommandHandler commandHandler : commandHandlers) {
                     commandHandler.handle(command, this, io);

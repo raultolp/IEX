@@ -11,8 +11,8 @@ import java.util.List;
 public class AddUser implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws Exception {
-        if (command == 16) {
+    public void handle(String command, Iu handler, IO io) throws Exception {
+        if (command .equals("16")) {
             boolean isAdmin = handler.isAdmin();
             if (isAdmin) {
                 addUser(handler, io);

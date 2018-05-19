@@ -18,8 +18,8 @@ import static app.server.StaticData.ANSI_YELLOW;
 public class SaveData implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws Exception {
-        if (command == 20) {
+    public void handle(String command, Iu handler, IO io) throws Exception {
+        if (command.equals("20")) {
             boolean isAdmin = handler.isAdmin();
             if (isAdmin) {
                 saveData(handler, io);

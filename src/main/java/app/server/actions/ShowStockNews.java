@@ -13,10 +13,10 @@ import static app.server.actions.ShowStockList.showStockList;
 public class ShowStockNews implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws Exception {
-        if (command == 10) {
+    public void handle(String command, Iu handler, IO io) throws Exception {
+        if (command.equals("10")) {
             showStockList(handler, io);
-            String name = MyUtils.enterStockName(handler, io); //TODO?
+            String name = MyUtils.enterStockName(io);
 
             if (Arrays.asList(handler.getAvailableStocks()).contains(name)) {
                 Company company = new Company(Objects.requireNonNull(name), handler, io);

@@ -18,8 +18,8 @@ import static app.server.StaticData.ANSI_YELLOW;
 public class LoadData implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws Exception {
-        if (command == 19) {
+    public void handle(String command, Iu handler, IO io) throws Exception {
+        if (command.equals("19")) {
             boolean isAdmin = handler.isAdmin();
             if (isAdmin) {
                 loadData(handler, io);

@@ -14,8 +14,8 @@ import java.util.List;
 public class ShowUserPortfolio implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws IOException {
-        if (command == 3) {
+    public void handle(String command, Iu handler, IO io) throws IOException {
+        if (command.equals("3")) {
             showUserPortfolio(handler, io);
         }
     }

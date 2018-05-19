@@ -12,8 +12,8 @@ import java.io.IOException;
 public class ShowStockBaseData implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws IOException {
-        if (command == 8) {
+    public void handle(String command, Iu handler, IO io) throws IOException {
+        if (command.equals("8")) {
             showStockBaseData(handler, io);
         }
     }

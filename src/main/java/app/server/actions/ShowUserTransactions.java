@@ -9,9 +9,9 @@ import java.io.IOException;
 public class ShowUserTransactions implements CommandHandler {
 
     @Override
-    public void handle(Integer command, Iu handler, IO io) throws IOException {
+    public void handle(String command, Iu handler, IO io) throws IOException {
 
-        if (command == 4) {
+        if (command.equals("4")) {
             boolean isAdmin = handler.isAdmin();
 
             Portfolio portfolio;

@@ -58,9 +58,8 @@ class Server {
             Thread adminThread = new Thread(() -> {
                 try {
                     masterHandler.runInteractive(new AdminIO());
-                } catch (InterruptedException ignored) {
-                } catch (Exception e) {
-                    throw new RuntimeException();
+                } catch (Exception ignored) {
+                    //TODO?
                 }
             });
 
