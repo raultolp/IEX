@@ -20,6 +20,11 @@ public class RemoteClientIO implements IO {
     }
 
     @Override
+    public void print(String message) throws IOException {
+        out.writeUTF(message);
+    }
+
+    @Override
     public String getln() throws IOException {
         return in.readUTF();
     }

@@ -24,7 +24,7 @@ public class ShowStockHistoricalData implements CommandHandler {
 
         //TODO: add option to choose time period
 
-        io.println("Enter stock symbol: ");
+        io.print("Enter stock symbol: ");
         stockSym = io.getln().toUpperCase();
         io.println(header.substring(0, header.length() - 1));
 

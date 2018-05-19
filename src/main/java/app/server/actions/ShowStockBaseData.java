@@ -1,9 +1,10 @@
 package app.server.actions;
 
-import app.server.*;
+import app.server.CommandHandler;
+import app.server.IO;
+import app.server.Iu;
+import app.server.Portfolio;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 //View stock base data
@@ -28,7 +29,7 @@ public class ShowStockBaseData implements CommandHandler {
             System.out.println("Enter stock symbol: ");
             stockSym = handler.getSc().nextLine().toUpperCase();
         } else {*/
-            io.println("Enter stock symbol: ");
+            io.print("Enter stock symbol: ");
             stockSym = io.getln().toUpperCase();
 
 

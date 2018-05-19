@@ -8,6 +8,8 @@ import java.util.Scanner;
 public interface IO {
     void println(String message) throws IOException;
 
+    void print(String message) throws IOException;
+
     String getln() throws IOException;
 
      DataOutputStream getOut();

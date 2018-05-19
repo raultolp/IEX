@@ -41,7 +41,7 @@ public final class MyUtils {
     public static String enterUserName(Iu handler, boolean newUser, IO io) throws IOException {
         String name;
         do {
-            io.println("Enter user name: ");
+            io.print("Enter user name: ");
             name = io.getln();
 
             if (name.length() < 3 || name.length() > 12 || !isAlphaNumeric(name))
@@ -70,7 +70,7 @@ public final class MyUtils {
         boolean tv = false;
 
         do {
-            io.println("Enter stock name: ");
+            io.print("Enter stock name: ");
             name = io.getln().trim();
             if (name.length() < 1 || name.length() > 5 || !isAlpha(name)) {
                 tv = true;
@@ -85,7 +85,7 @@ public final class MyUtils {
         int qty = 0;
 
         do {
-            io.println("Enter quantity [1-1000]: ");
+            io.print("Enter quantity [1-1000]: ");
             try {
                 qty = Integer.parseInt(io.getln());
             } catch (InputMismatchException e) {

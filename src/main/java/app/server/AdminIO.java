@@ -13,6 +13,11 @@ public class AdminIO implements IO {
     }
 
     @Override
+    public void print(String message) {
+        System.out.print(message);
+    }
+
+    @Override
     public String getln() {
         return sc.nextLine();
     }

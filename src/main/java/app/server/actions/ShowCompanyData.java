@@ -26,7 +26,7 @@ public class ShowCompanyData implements CommandHandler {
             System.out.println("Enter stock symbol: ");
             stockSym = handler.getSc().nextLine();
         } else {*/
-        io.println("Enter stock symbol: ");
+        io.print("Enter stock symbol: ");
         stockSym = io.getln();
 
         //company base data:
