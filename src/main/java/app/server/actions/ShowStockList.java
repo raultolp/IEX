@@ -7,6 +7,8 @@ import app.server.Iu;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static app.server.MyUtils.createHeader;
+
 //View available stock list - showStockList
 
 public class ShowStockList implements CommandHandler {
@@ -24,7 +26,7 @@ public class ShowStockList implements CommandHandler {
         int i;
 
         if (isAdmin) {
-            System.out.println("Avilable stocks:");
+            System.out.println(createHeader("Avilable stocks:"));
             for (i = 0; i < handler.getAvailableStocks().length; i++) {
                 System.out.printf("%-5s%s", handler.getAvailableStocks()[i], (i + 1) % 10 == 0 ? "\n" : " ");
             }

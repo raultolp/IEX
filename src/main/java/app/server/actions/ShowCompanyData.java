@@ -1,9 +1,6 @@
 package app.server.actions;
 
-import app.server.CommandHandler;
-import app.server.Company;
-import app.server.IO;
-import app.server.Iu;
+import app.server.*;
 
 //View company base data
 
@@ -33,6 +30,8 @@ public class ShowCompanyData implements CommandHandler {
         Company comp = new Company(stockSym, handler, io);
 
         io.println(comp.toString());
+
+        io.println(MyUtils.externalLinks(stockSym));
 
     }
 

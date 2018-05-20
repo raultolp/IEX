@@ -35,6 +35,7 @@ public class ShowStockHistoricalData implements CommandHandler {
                     stock.getChange1Month(),
                     stock.getChange3Month(),
                     stock.getChange1Year()));
+            io.println(MyUtils.externalLinks(stockSym));
         } catch (Exception e) {
            io.println("Stock info not available.");
         }

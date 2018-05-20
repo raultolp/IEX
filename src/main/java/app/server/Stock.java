@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 
 import java.io.IOException;
 
+import static app.server.MyUtils.createHeader;
+
 public class Stock {
 
     private final String symbol; //aktsia sümbol
@@ -199,7 +201,7 @@ public class Stock {
 
     @Override
     public String toString() {
-        return "INFORMATION ON " + symbol + " STOCK:\n" +
+        return createHeader("INFORMATION ON " + symbol + " STOCK:") +
                 "Market cap: " + marketCap + " million USD\n" +
                 "Dividend yield: " + String.format("%.2f", dividendYield) + '\n' +
                 "EPS: " + eps + '\n' +

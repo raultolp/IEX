@@ -115,5 +115,11 @@ public final class MyUtils {
     public static String createSeparator(int length) {
         return String.format("%0" + length + "d", 0).replace('0', '-') + '\n';
     }
+
+    public static String externalLinks(String stockSym) {
+        return ANSI_GREEN + "More information:\n" + ANSI_RESET +
+                "Yahoo finance summary : https://finance.yahoo.com/quote/" + stockSym + "?p=" + stockSym + "\n" +
+                "Yahoo finance charts  : https://finance.yahoo.com/quote/AAPL/chart?p=" + stockSym + "\n";
+    }
 }
 

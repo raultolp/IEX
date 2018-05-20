@@ -8,6 +8,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static app.server.MyUtils.createHeader;
+
 public class Company {
 
     private final String symbol; //aktsia sümbol
@@ -135,7 +137,7 @@ public class Company {
 
     @Override
     public String toString() {
-        return "\nCOMPANY INFORMATION FOR " + symbol + ": \n" +
+        return createHeader("COMPANY INFORMATION FOR " + symbol + ":") +
                 "Company name: " + companyName + "(" + website + ")\n" +
                 "CEO: " + CEO + "\n" +
                 "Sector: " + sector + " (" + industry + "),\n\n" +

@@ -1,9 +1,6 @@
 package app.server.actions;
 
-import app.server.CommandHandler;
-import app.server.IO;
-import app.server.Iu;
-import app.server.Portfolio;
+import app.server.*;
 
 import java.io.IOException;
 
@@ -36,6 +33,7 @@ public class ShowStockBaseData implements CommandHandler {
         try {
             //stock fundamentals:
             io.println(masterPortfolio.getStock(stockSym).toString());
+            io.println(MyUtils.externalLinks(stockSym));
         } catch (Exception e) {
             io.println("Stock information not available.");
         }
