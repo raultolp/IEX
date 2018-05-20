@@ -2,7 +2,6 @@ TODO LIST
 -----------
 1. Priority
 -----------
-- kliendil võimalik args -host=serverhost:port parameetriga server host ja port määrata
 
 -----------
 2. Priority
@@ -49,7 +48,9 @@ Lisaideed edasiarneduseks:
     - Aktsiate nimekirja pikendada, tuua sisse ka peamised ETF-d (SPY jne) ja mitmekordse võimendusega ETF-d, ETN-d
     - ostu-müügitehinuge põhjalikum analüüs, kust raha tuli/kadus ja kui suured on tehingutasud, intressid
     - portfelli võrdlus keskmise aktsaituru ja erinevate sektrorite indeksite võrdluses
-    - LMT BUY - kasutaja annab buy orderi sisse ja määrab max hinna. kui aktsia hetkehind on kõrgemal, kui max, siis programm kontrollib pärast iga hindade uuendust, kas hind on sobilikuks langenud ja ostab alles siis.
-    - LMT SELL - võib lisada sama asja aktsia müümiseks. kui hind tõuseb, siis müüakse.
-    - TECHNICAL ANAlYSIS: aktsia kohta näitajate küsimine. aktsiatega spekuleerijatel on terve hunnik matemaatilisi näitajaid, mille põhjal nad oma tehinguid teevad (moving average jms). google "stock technical analysis" aitab täpseid valemeid leida. võib programmi nende arvutamise lisada.
+    - LMT BUY - osta aktsia hind mingi kindla hinnaga, mis on madalam hetkehinnast, ostuorder peaks kehtima N (kasutaja poolt määratud arvu) päevi ja süsteem peaks ise ostma kui hind on sobilik
+    - LMT SELL - samas asi kas portfellis oleva aktsia müümiseks või aktsia shortimiseks
+    - STOP SELL - kui aktsia hind langeb alla mingit hinda ja närvid täitsa läbi, siis müü automaatselt
+    - STOP BUY - sama, mis SELL, kuid toimibi aktsia Shortimisel
+    - TECHNICAL ANAlYSIS: aktsia kohta tehniliste näitajate küsimine. Näit moving average, MACD, RSI, Stoh jne. Google "stock technical analysis" aitab täpseid valemeid leida. Võib programmi nende arvutamise lisada või küsida IEX-st kui saab.
     - TECHINCAL ANALYSIS 2: kui mingi näitaja väärtus jõuab sellisele tasemele, siis osta mulle aktsiaid / saada mulle email vms

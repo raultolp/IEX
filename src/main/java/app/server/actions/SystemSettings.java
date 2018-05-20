@@ -11,8 +11,8 @@ public class SystemSettings {
                     try {
                         this.serverHost = arg.substring(arg.indexOf("=") + 1).split(":")[0];
                         this.serverPort = Integer.parseInt(arg.split(":" + 1)[1]);
-                        } catch (Exception e) {
-                            System.out.println("Wrong host parameter, use: -host=server_name:port_number");
+                    } catch (Exception e) {
+                        System.out.println("Wrong host parameter, use: -host=server_name:port_number");
                     }
                 } else if (arg.startsWith("-port=")) {
                     try {
