@@ -118,8 +118,8 @@ public final class MyUtils {
 
     public static String externalLinks(String stockSym) {
         return ANSI_GREEN + "More information:\n" + ANSI_RESET +
-                "Yahoo finance summary : https://finance.yahoo.com/quote/" + stockSym + "?p=" + stockSym + "\n" +
-                "Yahoo finance charts  : https://finance.yahoo.com/quote/AAPL/chart?p=" + stockSym + "\n";
+            "Yahoo finance summary : https://finance.yahoo.com/quote/" + stockSym.toUpperCase() + "?p=" + stockSym.toUpperCase() + "\n" +
+            "Yahoo finance charts  : https://finance.yahoo.com/quote/" + stockSym.toUpperCase() + "/chart?p=" + stockSym.toUpperCase() + "\n";
     }
 
     public static String textError(String text) {
