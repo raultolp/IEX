@@ -1,8 +1,8 @@
 package app.server;
 
 public class StaticData {
-    public static final String serverHost = "localhost";
-    public static final int serverPort = 1337;
+//    public static final String deaultServerHost = "localhost";
+//    public static final int defaultServerPort = 1337;
 
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_GREEN = "\u001B[32m";

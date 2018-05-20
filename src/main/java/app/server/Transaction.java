@@ -11,7 +11,7 @@ class Transaction {
     private final double transactionFee = 0.1;  // 10 cents per stock
     private final double price; //current price
     private final int volume; //number of stocks
-    private String date;
+    private final String date;
     private String time;
     private double profitFromSell;
     private double averagePurchasePrice;
