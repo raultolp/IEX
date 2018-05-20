@@ -6,6 +6,8 @@ import app.server.Iu;
 
 import java.io.IOException;
 
+import static app.server.MyUtils.textError;
+
 public class AcceptClientConnections implements CommandHandler {
 
     @Override
@@ -22,7 +24,7 @@ public class AcceptClientConnections implements CommandHandler {
                 }
 
             } else {
-              io.println("Wrong input.");
+              io.println(textError("Wrong input."));
             }
         }
     }

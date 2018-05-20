@@ -10,6 +10,7 @@ import java.io.*;
 import java.util.List;
 
 import static app.server.MyUtils.colorPrintRed;
+import static app.server.MyUtils.textError;
 import static app.server.StaticData.ANSI_RESET;
 import static app.server.StaticData.ANSI_YELLOW;
 
@@ -24,7 +25,7 @@ public class SaveData implements CommandHandler {
             if (isAdmin) {
                 saveData(handler, io);
             } else {
-                io.println("Wrong input.");
+                io.println(textError("Wrong input."));
             }
         }
     }

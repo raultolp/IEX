@@ -121,5 +121,9 @@ public final class MyUtils {
                 "Yahoo finance summary : https://finance.yahoo.com/quote/" + stockSym + "?p=" + stockSym + "\n" +
                 "Yahoo finance charts  : https://finance.yahoo.com/quote/AAPL/chart?p=" + stockSym + "\n";
     }
+
+    public static String textError(String text) {
+        return ANSI_RED + text + ANSI_RESET;
+    }
 }
 

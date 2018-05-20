@@ -6,7 +6,6 @@ TODO LIST
 -----------
 2. Priority
 -----------
-- kasutaja juhend ja viited kasulikule infole
 - serveris kõikide logimist vajavate tegevuste logimine ühte faili
 - menüü süsteem lugeda failist (JSON vms)
 - aktsiate nimekiri lugeda failist
@@ -14,7 +13,6 @@ TODO LIST
 -----------
 3. Priority
 -----------
-- serveri ja kliendi settings fail (host, port ja vbl midagi veel)
 - Menüü valik: Stock technical analysis
 
 --------
@@ -39,7 +37,7 @@ Lisaideed edasiarneduseks:
 
 1. Kliendi UI:
     - 0. variant - Retro tekst versioon .. vähemalt toimib :)
-    - 1. variant - Java FX - katsetatud, keerukas, ilus, seni parim lahendus
+    - 1. variant - Java FX - katsetatud, keerukas, ilus, seni parim lahendus, TabelView testitud
     - 2. variant - Swing - katsetatud, lihtsam tabeleid teha, kuid vaan ja kole ja ei sooovitata kasutada, Java FX-ga sidumine keerukas - jääb ära
     - 3. variant - sügisel aine veebirakenduste loomine, saaks teha veebibrauseri põhise lahenduse, nõuab HTML, XML, CSS, JavaScript, PHP jne tundmist
 2. Aktsiatega kauplemine:

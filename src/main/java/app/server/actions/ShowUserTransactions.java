@@ -4,6 +4,8 @@ import app.server.*;
 
 import java.io.IOException;
 
+import static app.server.MyUtils.textError;
+
 //Transactions Report
 
 public class ShowUserTransactions implements CommandHandler {
@@ -26,7 +28,7 @@ public class ShowUserTransactions implements CommandHandler {
                 String report = portfolio.getTransactionsReport(handler);
                 io.println(report);
             } else {
-                io.println("No transactions have been made yet.");
+                io.println(textError("No transactions have been made yet."));
             }
         }
 

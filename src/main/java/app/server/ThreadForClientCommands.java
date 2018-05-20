@@ -1,7 +1,5 @@
 package app.server;
 
-import com.google.gson.Gson;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.SocketException;

@@ -4,6 +4,10 @@ import app.server.*;
 
 import java.io.IOException;
 
+import static app.server.MyUtils.textError;
+import static app.server.StaticData.ANSI_RED;
+import static app.server.StaticData.ANSI_RESET;
+
 
 //View stock historical data
 
@@ -37,7 +41,7 @@ public class ShowStockHistoricalData implements CommandHandler {
                     stock.getChange1Year()));
             io.println(MyUtils.externalLinks(stockSym));
         } catch (Exception e) {
-           io.println("Stock info not available.");
+           io.println(textError("Stock info not available."));
         }
     }
 }

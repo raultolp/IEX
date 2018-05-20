@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static app.server.MyUtils.textError;
 import static app.server.StaticData.ANSI_RESET;
 import static app.server.StaticData.ANSI_YELLOW;
 
@@ -24,7 +25,7 @@ public class LoadData implements CommandHandler {
             if (isAdmin) {
                 loadData(handler, io);
             } else {
-                io.println("Wrong input.");
+                io.println(textError("Wrong input."));
             }
 
         }

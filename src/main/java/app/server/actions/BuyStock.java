@@ -5,6 +5,7 @@ import app.server.*;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static app.server.MyUtils.textError;
 import static app.server.actions.ShowStockList.showStockList;
 
 //Buy stock
@@ -34,7 +35,7 @@ public class BuyStock implements CommandHandler {
                     io.println("Exception while buying stocks.");
                 }
             } else {
-                io.println("This stock is not available.");
+                io.println(textError("This stock is not available."));
             }
         }
     }

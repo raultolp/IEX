@@ -4,6 +4,8 @@ import app.server.*;
 
 import java.util.Objects;
 
+import static app.server.MyUtils.textError;
+
 //Sell stock
 
 public class SellStock implements CommandHandler {
@@ -27,7 +29,7 @@ public class SellStock implements CommandHandler {
                 Integer qty = MyUtils.enterQty(io);
                 portfolio.sellStock(name, qty, handler, io);
             } else {
-                io.println("Stock not included in portfolio!");
+                io.println(textError("Stock not included in portfolio!"));
             }
         }
     }

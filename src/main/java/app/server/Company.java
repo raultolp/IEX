@@ -146,6 +146,18 @@ public class Company {
 
     //TODO: (PRIORITY 3) IT WOULD BE POSSIBLE TO ALSO DOWNLOAD COMPANY LOGO:
     // https://iextrading.com/developer/docs/#logo
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public String getSector() {
+        return sector;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
 }
 
 

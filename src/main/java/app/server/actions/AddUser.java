@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static app.server.MyUtils.textError;
+
 //Add user
 
 public class AddUser implements CommandHandler {
@@ -17,7 +19,7 @@ public class AddUser implements CommandHandler {
             if (isAdmin) {
                 addUser(handler, io);
             } else {
-                io.println("Wrong input.");
+                io.println(textError("Wrong input."));
             }
         }
     }

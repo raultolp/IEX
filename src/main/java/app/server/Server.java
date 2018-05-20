@@ -10,6 +10,7 @@ import java.util.List;
 
 import static app.server.MyUtils.colorPrintGreen;
 import static app.server.MyUtils.createHeader;
+import static app.server.MyUtils.textError;
 import static app.server.StaticData.*;
 
 
@@ -28,12 +29,12 @@ class Server {
 
     public static void main(String[] args) throws Exception {
         SystemSettings systemSettings = new SystemSettings(args);
+        colorPrintGreen("Starting IEX game server ...");
+        System.out.println("Command line start options: server [-port=port_number]");
+        System.out.println("Server address: " +systemSettings.getServerHost() + ":" + systemSettings.getServerPort() + "\n");
 
         //START SERVER
         try ( ServerSocket ss = new ServerSocket(systemSettings.getServerPort()) ) {
-            colorPrintGreen("Starting IEX game server ...");
-            System.out.println("Command line start options: server [-port=port_number]");
-            System.out.println("Server address: " +systemSettings.getServerHost() + ":" + systemSettings.getServerPort() + "\n");
 
             //START IU FOR SERVER (ADMIN)
             MyUtils.colorPrintBlue(createHeader(mainTitle));
@@ -106,6 +107,8 @@ class Server {
                     thread.interrupt();
                 }
             }
+        } catch (Exception e) {
+            System.out.printf(textError("Server socket already in use or not available!"));
         }
     }
 

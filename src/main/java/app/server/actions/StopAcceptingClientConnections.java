@@ -4,6 +4,8 @@ import app.server.CommandHandler;
 import app.server.IO;
 import app.server.Iu;
 
+import static app.server.MyUtils.textError;
+
 public class StopAcceptingClientConnections implements CommandHandler {
     @Override
     public void handle(String command, Iu handler, IO io) throws Exception {
@@ -20,7 +22,7 @@ public class StopAcceptingClientConnections implements CommandHandler {
                 }
 
             } else {
-               io.println("Wrong input.");
+               io.println(textError("Wrong input."));
             }
         }
     }

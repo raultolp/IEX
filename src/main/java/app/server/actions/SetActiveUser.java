@@ -2,6 +2,7 @@ package app.server.actions;
 
 import app.server.*;
 
+import static app.server.MyUtils.textError;
 import static app.server.StaticData.ANSI_RESET;
 import static app.server.StaticData.ANSI_YELLOW;
 import static app.server.actions.ShowUsersList.showUsersList;
@@ -26,7 +27,7 @@ public class SetActiveUser implements CommandHandler {
                     io.println(ANSI_YELLOW + "User " + name + " is now active." + ANSI_RESET);
                 }
             } else {
-               io.println("Wrong input.");
+               io.println(textError("Wrong input."));
             }
         }
     }

@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static app.server.MyUtils.textError;
+import static app.server.StaticData.ANSI_RED;
+import static app.server.StaticData.ANSI_RESET;
 import static app.server.actions.ShowStockList.showStockList;
 
 // News on the company (last 10 news items)
@@ -28,7 +31,7 @@ public class ShowStockNews implements CommandHandler {
                 }
                 io.println(stocknews.toString());
             } else {
-                io.println("This stock is not available.");
+                io.println(textError("This stock is not available."));
             }
         }
     }
