@@ -115,6 +115,8 @@ class Position {
     //For printing out position info when viewing User's portfolio:
     public String toStringForPortfolio() {
 
+        priceUpdate(price);
+
         return String.format("%-5s %8d %10.2f %12.2f %16.2f %16.2f %18.2f\n",
                 symbol, volume, price, currentValue, unrealisedProfit, averagePrice, profit);
     }
