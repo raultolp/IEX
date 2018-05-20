@@ -25,8 +25,9 @@ public class ShowUserTransactions implements CommandHandler {
             if (portfolio != null) {
                 String report = portfolio.getTransactionsReport(handler);
                 io.println(report);
+            } else {
+                io.println("No transactions have been made yet.");
             }
-            io.println("No transactions have been made yet.");
         }
 
     }
