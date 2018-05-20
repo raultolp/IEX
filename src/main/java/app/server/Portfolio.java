@@ -232,9 +232,9 @@ public class Portfolio {
         return portfolioStocks;
     }
 
-    public double getTotalValueOfPositions() {
-        return totalValueOfPositions;
-    }
+//    public double getTotalValueOfPositions() {
+//        return totalValueOfPositions;
+//    }
 
     public double getProfit() {
         calculateTotals();
@@ -245,13 +245,13 @@ public class Portfolio {
         return unrealisedProfit;
     }
 
-    public void setAvailableFunds(double availableFunds) {
-        this.availableFunds = availableFunds;
-    }
-
-    public double getAvailableFunds() {
-        return availableFunds;
-    }
+//    public void setAvailableFunds(double availableFunds) {
+//        this.availableFunds = availableFunds;
+//    }
+//
+//    public double getAvailableFunds() {
+//        return availableFunds;
+//    }
 
     public Map<String, Position> getPositions() {
         return positions;

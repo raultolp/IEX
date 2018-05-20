@@ -25,7 +25,7 @@ import java.io.IOException;
 
 public class TableViewSample extends Application {
 
-    private ObservableList<TableModelMaster> data = FXCollections.observableArrayList();
+    private final ObservableList<TableModelMaster> data = FXCollections.observableArrayList();
 
     public static void main(String[] args) {
         launch(args);
@@ -33,7 +33,7 @@ public class TableViewSample extends Application {
 
 
     @Override
-    public void start(Stage stage) throws InterruptedException, IOException {
+    public void start(Stage stage) throws IOException {
 
         //MasterPortfolio JSON-ina:
         Iu handler = new Iu(new AdminIO());
@@ -188,13 +188,13 @@ public class TableViewSample extends Application {
 
     }
 
-    public ObservableList<TableModelMaster> getData() {
-        return data;
-    }
+//    public ObservableList<TableModelMaster> getData() {
+//        return data;
+//    }
 
-    public void setData(ObservableList<TableModelMaster> data) {
-        this.data = data;
-    }
+//    public void setData(ObservableList<TableModelMaster> data) {
+//        this.data = data;
+//    }
 
 }
 

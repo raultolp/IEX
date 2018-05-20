@@ -7,7 +7,7 @@ import app.server.Iu;
 public class StopAcceptingClientConnections implements CommandHandler {
     @Override
     public void handle(String command, Iu handler, IO io) throws Exception {
-        if (command.equals("15")) {
+        if (command.equals("16")) {
             boolean isAdmin = handler.isAdmin();
 
             if (isAdmin) {

@@ -7,26 +7,25 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import static app.server.MyUtils.colorPrintRed;
-import static app.server.MyUtils.colorPrintYellow;
-import static app.server.MyUtils.createHeader;
+import static app.server.MyUtils.*;
 
 class Client {
 
     private boolean isRunning = true;
-    private DataOutputStream out;
-    private DataInputStream in;
+//    private DataOutputStream out;
+//    private DataInputStream in;
 
 
     private Client() {
-        Client client = this;
+//        Client client = this;
     }
 
     public static void main(String[] args) throws InterruptedException {
         SystemSettings systemSettings = new SystemSettings(args);
         Client client = new Client();
-        System.out.println("Starting IEX client: Client [-host=server_name:port_number -port=port_number]");
-        System.out.println("Connecting to server: <" + systemSettings.getServerHost() + ":" + systemSettings.getServerPort() + ">");
+        colorPrintGreen("Starting IEX client ...");
+        System.out.println("Command line start options: client [-host=server_name:port_number] [-port=port_number]");
+        System.out.println("Connecting to server: " + systemSettings.getServerHost() + ":" + systemSettings.getServerPort() + "\n");
 
         try ( Socket socket = new Socket(systemSettings.getServerHost(), systemSettings.getServerPort()) ) {
 
@@ -62,7 +61,7 @@ class Client {
             colorPrintRed(createHeader("Server connection failed!"));
         }
 
-        colorPrintYellow("See you soon!"); // TODO PRIORITY 0 .. numbri asemel teksti sisestades ei tule mitte Wrong input vaid See ya ja server panges
+        colorPrintYellow("See you soon!");
         System.exit(0);
     }
 

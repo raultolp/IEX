@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 class TableModelMaster {
 
-    private final SimpleStringProperty symbol;
+    private SimpleStringProperty symbol;
     private SimpleDoubleProperty currentPrice;
     private SimpleDoubleProperty prevClose;
     private SimpleDoubleProperty change1Y;
@@ -134,9 +134,9 @@ class TableModelMaster {
         this.currentPrice.set(currentPrice);
     }
 
-    public void setPrevClose(double prevClose) {
-        this.prevClose.set(prevClose);
-    }
+//    public void setPrevClose(double prevClose) {
+//        this.prevClose.set(prevClose);
+//    }
 
     public void setChange1Y(double change1Y) {
         this.change1Y.set(change1Y);

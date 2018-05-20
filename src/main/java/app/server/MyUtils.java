@@ -18,9 +18,9 @@ public final class MyUtils {
         return text.matches("[a-zA-Z]+");
     }
 
-    public static boolean isNumeric(String text) {
-        return text.matches("[0-9]+");
-    }
+//    public static boolean isNumeric(String text) {
+//        return text.matches("[0-9]+");
+//    }
 
     public static void colorPrintYellow(String text) {
         System.out.println(ANSI_YELLOW + text + ANSI_RESET);
@@ -30,8 +30,8 @@ public final class MyUtils {
         System.out.println(ANSI_RED + text + ANSI_RESET);
     }
 
-    public void colorPrintGreen(String text) {
-        System.out.println(ANSI_RED + text + ANSI_RESET);
+    public static void colorPrintGreen(String text) {
+        System.out.println(ANSI_GREEN + text + ANSI_RESET);
     }
 
     public static void colorPrintBlue(String text) {

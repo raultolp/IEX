@@ -12,7 +12,7 @@ public class AddUser implements CommandHandler {
 
     @Override
     public void handle(String command, Iu handler, IO io) throws Exception {
-        if (command .equals("16")) {
+        if (command .equals("17")) {
             boolean isAdmin = handler.isAdmin();
             if (isAdmin) {
                 addUser(handler, io);

@@ -12,7 +12,7 @@ public class SetActiveUser implements CommandHandler {
 
     @Override
     public void handle(String command, Iu handler, IO io) throws Exception {
-        if (command.equals("18")) {
+        if (command.equals("19")) {
             boolean isAdmin = handler.isAdmin();
             if (isAdmin) {
                 showUsersList(handler, io);

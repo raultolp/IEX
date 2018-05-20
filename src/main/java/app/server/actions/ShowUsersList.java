@@ -14,7 +14,7 @@ public class ShowUsersList implements CommandHandler {
 
     @Override
     public void handle(String command, Iu handler, IO io) throws IOException {
-        if (command.equals("17")) {
+        if (command.equals("18")) {
             boolean isAdmin = handler.isAdmin();
 
             if (isAdmin) {

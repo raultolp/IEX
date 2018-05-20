@@ -12,8 +12,8 @@ class Transaction {
     private final double price; //current price
     private final int volume; //number of stocks
     private final String date;
-    private String time;
-    private double profitFromSell;
+    private final String time;
+    private final double profitFromSell;
     private double averagePurchasePrice;
 
 

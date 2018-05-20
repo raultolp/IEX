@@ -50,6 +50,7 @@ public class StaticData {
             "View stock news",
             "View game Top List",
             "Delete user",
+            "Help",
             "Quit",
             "Accept clients' connections (ADMIN)",
             "Stop accepting clients' connections (ADMIN)",
@@ -59,6 +60,21 @@ public class StaticData {
             "Load data file (ADMIN)",
             "Save data file (ADMIN)",
     };
+
+    public static final String gameInstructions =
+            "This game is simulating stock portfolio management in US stock exchange with\n" +
+            "real online prices and stock information. If you are already here, it means\n" +
+            "your game client is connected to game server that does all the transactions\n" +
+            "and provides all the information.\n\n" +
+            "You have created a user that will have one stock portfolio where you can\n" +
+            "buy or sell stocks:\n" +
+            "   - There is limited amount of free money you can use.\n" +
+            "   - Buy/Sell will be done with current MARKET price. No other transaction\n" +
+            "     options like LIMITED or STOP etc. orders are not implemented yet.\n" +
+            "You can make your decisions based on information you can get from menu options.\n\n" +
+            "From menu you can choose Game Top List that shows who has the best performance.\n" +
+            "This game is for educational purposes only and no real money or nerves will be lost.\n" +
+            "Be smart or lucky!";
 
     public static int getMainMenuSize() {
         return mainMenu.length;

@@ -2,7 +2,7 @@ package app.server;
 
 public class SystemSettings {
     private String serverHost = "localhost";
-    int serverPort = 1337;
+    private int serverPort = 1337;
 
     public SystemSettings(String[] args) {
         if (args.length > 0) {

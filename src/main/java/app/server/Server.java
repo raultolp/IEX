@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import static app.server.MyUtils.colorPrintGreen;
 import static app.server.MyUtils.createHeader;
 import static app.server.StaticData.*;
 
@@ -30,8 +31,9 @@ class Server {
 
         //START SERVER
         try ( ServerSocket ss = new ServerSocket(systemSettings.getServerPort()) ) {
-            System.out.println("Starting IEX game server: Server [-port=port_number]");
-            System.out.println("now listening on port: " + systemSettings.getServerPort());
+            colorPrintGreen("Starting IEX game server ...");
+            System.out.println("Command line start options: server [-port=port_number]");
+            System.out.println("Server address: " +systemSettings.getServerHost() + ":" + systemSettings.getServerPort() + "\n");
 
             //START IU FOR SERVER (ADMIN)
             MyUtils.colorPrintBlue(createHeader(mainTitle));

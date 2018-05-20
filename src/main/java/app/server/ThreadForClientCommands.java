@@ -54,19 +54,21 @@ class ThreadForClientCommands implements Runnable {
 
             }
             if (!(userList.contains(user))) {
+                io.println(ANSI_GREEN + createHeader("Instructions") + ANSI_RESET);
+                io.println(gameInstructions);
                 io.println("New user " + ANSI_GREEN + user.getUserName() + ANSI_RESET + " has been created. Welcome to the game!");
 
             }
             Iu handler = new Iu(io, masterHandler, user, clientId); //Command handler for user
 
             //SENDING MASTERPORTFOLIO AS SOURCE OF STOCK INFORMATION (ONLY SENT ONCE):
-            Portfolio masterPortfolio = masterHandler.getMasterPortfolio();
-            String masterAsString = new Gson().toJson(masterPortfolio);
+//            Portfolio masterPortfolio = masterHandler.getMasterPortfolio();
+//            String masterAsString = new Gson().toJson(masterPortfolio);
             //System.out.println("SERVER: MASTERASTRING: "+masterAsString);
 
             //ALSO SENDING USER PORTFOLIO OBJECT:
-            Portfolio userPortfolio = user.getPortfolio();
-            String userAsString = new Gson().toJson(userPortfolio);
+//            Portfolio userPortfolio = user.getPortfolio();
+//            String userAsString = new Gson().toJson(userPortfolio);
             //System.out.println("SERVER: USERASTRING: "+userAsString);
 
             //System.out.println("KOOS: "+masterAsString+"@"+userAsString);

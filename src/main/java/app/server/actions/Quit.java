@@ -12,7 +12,7 @@ public class Quit implements CommandHandler {
 
     @Override
     public void handle(String command, Iu handler, IO io) throws IOException {
-        if (command.equals("13")) {
+        if (command.equals("14")) {
             boolean isAdmin = handler.isAdmin();
 
             if (isAdmin) {

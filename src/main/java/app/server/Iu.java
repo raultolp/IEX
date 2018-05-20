@@ -150,6 +150,7 @@ public class Iu {
                 new ShowStockNews(),
                 new ShowGameTopList(),
                 new DeleteUser(),
+                new Help(),
                 new Quit(),
                 new AcceptClientConnections(),
                 new StopAcceptingClientConnections(),
@@ -257,9 +258,9 @@ public class Iu {
         return this.masterPortfolio;
     }
 
-    public IO getIo() {
-        return io;
-    }
+//    public IO getIo() {
+//        return io;
+//    }
 
     public boolean isRunning() {
         return isRunning;

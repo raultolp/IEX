@@ -19,7 +19,7 @@ public class LoadData implements CommandHandler {
 
     @Override
     public void handle(String command, Iu handler, IO io) throws Exception {
-        if (command.equals("19")) {
+        if (command.equals("20")) {
             boolean isAdmin = handler.isAdmin();
             if (isAdmin) {
                 loadData(handler, io);
