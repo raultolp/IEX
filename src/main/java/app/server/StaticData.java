@@ -69,12 +69,18 @@ public class StaticData {
             "You have created a user that will have one stock portfolio where you can\n" +
             "buy or sell stocks:\n" +
             "   - There is limited amount of free money you can use.\n" +
+            "   - There is limited amount of stocks you can buy.\n" +
             "   - Buy/Sell will be done with current MARKET price. No other transaction\n" +
-            "     options like LIMITED or STOP etc. orders are not implemented yet.\n" +
+            "     methods like LIMITED or STOP etc. orders are not implemented yet.\n" +
             "You can make your decisions based on information you can get from menu options.\n\n" +
             "From menu you can choose Game Top List that shows who has the best performance.\n" +
             "This game is for educational purposes only and no real money or nerves will be lost.\n" +
-            "Be smart or lucky!";
+            "Be smart or lucky!\n";
+
+    public static final String externalResources =
+            "Investopedia  : https://www.investopedia.com\n" +
+            "Yahoo Finance : https://finance.yahoo.com\n" +
+            "IEX Trading   : https://iextrading.com\n";
 
     public static int getMainMenuSize() {
         return mainMenu.length;

@@ -7,9 +7,7 @@ import app.server.Iu;
 import java.io.IOException;
 
 import static app.server.MyUtils.createHeader;
-import static app.server.StaticData.ANSI_GREEN;
-import static app.server.StaticData.ANSI_RESET;
-import static app.server.StaticData.gameInstructions;
+import static app.server.StaticData.*;
 
 public class Help implements CommandHandler {
 
@@ -18,6 +16,9 @@ public class Help implements CommandHandler {
         if (command.equals("13")) {
             io.println(ANSI_GREEN + createHeader("Instructions") + ANSI_RESET);
             io.println(gameInstructions);
+
+            io.println(ANSI_GREEN + "External resources" + ANSI_RESET);
+            io.println(externalResources);
         }
     }
 }

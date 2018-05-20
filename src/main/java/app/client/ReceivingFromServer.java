@@ -20,6 +20,7 @@ class ReceivingFromServer implements Runnable {
             "View stock news",
             "View game Top List",
             "Delete user",
+            "Help",
             "Quit"
     };
 
