@@ -50,7 +50,7 @@ public class LoadData implements CommandHandler {
 
         //If file exists: loading data from file:
         else {
-            File file = new File(name);
+            File file = new File(currentDir, name);
             try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream
                     (file), "UTF-8"))) {
 
