@@ -80,11 +80,11 @@ public class User implements Comparable<User> {
     }
 
     public double getPercentageIncrease() { //increase in portfolio value from the beginning of the game (%)
-        return ((portfolioTotalValue - initialFunds) / initialFunds) * 100;
+        return getValueIncrease() / initialFunds;
     }
 
     public double getValueIncrease() { //increase in portfolio value from the beginning of the game (USD)
-        return portfolioTotalValue - initialFunds;
+        return portfolio.getProfit() + portfolio.getUnrealisedProfit();
     }
 
     @Override

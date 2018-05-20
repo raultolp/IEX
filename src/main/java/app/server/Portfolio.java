@@ -237,6 +237,7 @@ public class Portfolio {
     }
 
     public double getProfit() {
+        calculateTotals();
         return profit;
     }
 
