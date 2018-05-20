@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Company extends IEXdata {
+public class Company {
 
     private final String symbol; //aktsia sümbol
     private String companyName;

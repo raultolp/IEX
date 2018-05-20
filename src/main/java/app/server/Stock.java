@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Stock extends IEXdata {
+public class Stock {
 
     private final String symbol; //aktsia sümbol
 

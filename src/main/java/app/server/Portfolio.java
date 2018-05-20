@@ -13,7 +13,7 @@ import java.util.Map;
 import static app.server.StaticData.ANSI_RESET;
 import static app.server.StaticData.ANSI_YELLOW;
 
-public class Portfolio extends IEXdata {
+public class Portfolio {
 
     private double availableFunds;
     private final Map<String, Stock> portfolioStocks;

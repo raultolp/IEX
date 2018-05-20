@@ -1,6 +1,6 @@
 package app.server;
 
-class NewsItem extends IEXdata {
+class NewsItem {
     private final String time;
     private final String headline;
     private final String source;

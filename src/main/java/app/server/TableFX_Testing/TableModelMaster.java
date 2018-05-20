@@ -4,6 +4,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+//Source used as starting point for the table: https://docs.oracle.com/javase/8/javafx/user-interface-tutorial/table-view.htm
+
 class TableModelMaster {
 
     private final SimpleStringProperty symbol;

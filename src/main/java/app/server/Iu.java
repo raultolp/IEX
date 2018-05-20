@@ -27,6 +27,7 @@ public class Iu {
     private Portfolio masterPortfolio;
     private JsonObject priceUpdateForClients = null;  //masterPortfolio priceUpdate'i objekt- väärtustab UpdateingPrices,
     // kasutab ThreadForDataUpdates
+
     // I/O
     private final IO io;
 
