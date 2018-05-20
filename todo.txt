@@ -14,22 +14,7 @@ TODO LIST
 3. Priority
 -----------
 - Menüü valik: Stock technical analysis
-
---------
-TESTIDA:
---------
-- Kasutajanimeks sobib tühik
-- Kui käsuks panna numbri asemel tühik, jookseb client kokku.
-- View Company name data, kui panna sinna vale nimi, siis viskab automaatselt algusesse, aga võiks olla proovi uuesti (lisaks “kas te mõtlesite…”).
-- Peale kasutaja kustutamist, ei kustu kasutaja ära.
-- Väike asi, mis häirib: kui ma vajutasin, et tahan näiteks aktsiat osta, aga mõtlen ümber, siis mingi käsuga võiks saada tagasi minna.
-- Hetkel on võimalik luua mitu sama nimega kasutajat jooksutades korraga mitut klienti enne mängu salvestamist, kusjuures mängu uuesti laadimisel on jäetud sama nimega kasutajatest alles vaid see, kellel on kõige vähem raha (võis olla juhuste kokkusattumus, et alati see mul alles jäi :( )
-  Mingi meetod juba on olemas selleks, aga kasutamata, nii et tundub, et sellele probleemile on ka juba peaaegu lahendus olemas. Serverist mängides on see meetod kasutusel ka juba
-
------------
-Code Review
------------
-1. versiooni code review: https://docs.google.com/document/d/1V0i4ERb-X_gyJ2nOwEq_U6HcQoKT2cRasGIIky2rlv4/edit
+- Top võrdlus üldise turu indeksiga või SPY-ga
 
 --------------------------
 Lisaideed edasiarneduseks:
@@ -52,3 +37,20 @@ Lisaideed edasiarneduseks:
     - STOP BUY - sama, mis SELL, kuid toimibi aktsia Shortimisel
     - TECHNICAL ANAlYSIS: aktsia kohta tehniliste näitajate küsimine. Näit moving average, MACD, RSI, Stoh jne. Google "stock technical analysis" aitab täpseid valemeid leida. Võib programmi nende arvutamise lisada või küsida IEX-st kui saab.
     - TECHINCAL ANALYSIS 2: kui mingi näitaja väärtus jõuab sellisele tasemele, siis osta mulle aktsiaid / saada mulle email vms
+
+-----------
+Code Review
+-----------
+1. versiooni code review: https://docs.google.com/document/d/1V0i4ERb-X_gyJ2nOwEq_U6HcQoKT2cRasGIIky2rlv4/edit
+
+--------
+TESTIDA: TODO
+--------
+- Kasutajanimeks sobib tühik
+- Kui käsuks panna numbri asemel tühik, jookseb client kokku.
+- View Company name data, kui panna sinna vale nimi, siis viskab automaatselt algusesse, aga võiks olla proovi uuesti (lisaks “kas te mõtlesite…”).
+- Peale kasutaja kustutamist, ei kustu kasutaja ära.
+- Väike asi, mis häirib: kui ma vajutasin, et tahan näiteks aktsiat osta, aga mõtlen ümber, siis mingi käsuga võiks saada tagasi minna.
+- Hetkel on võimalik luua mitu sama nimega kasutajat jooksutades korraga mitut klienti enne mängu salvestamist, kusjuures mängu uuesti laadimisel on jäetud sama nimega kasutajatest alles vaid see, kellel on kõige vähem raha (võis olla juhuste kokkusattumus, et alati see mul alles jäi :( )
+  Mingi meetod juba on olemas selleks, aga kasutamata, nii et tundub, et sellele probleemile on ka juba peaaegu lahendus olemas. Serverist mängides on see meetod kasutusel ka juba
+
