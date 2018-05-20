@@ -25,8 +25,6 @@ import java.io.IOException;
 
 public class TableViewSample extends Application {
 
-    private static TableView<TableModelMaster> table; //
-
     private ObservableList<TableModelMaster> data = FXCollections.observableArrayList();
 
     public static void main(String[] args) {
@@ -111,7 +109,8 @@ public class TableViewSample extends Application {
         label.setFont(new Font("Arial", 20));
 
         //createAndShowGUI(label, scene, stage);
-        table = new TableView<>();
+        //
+        TableView<TableModelMaster> table = new TableView<>();
         table.setEditable(true);
 
 

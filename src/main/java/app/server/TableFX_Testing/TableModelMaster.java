@@ -4,9 +4,9 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class TableModelMaster {
+class TableModelMaster {
 
-    private SimpleStringProperty symbol;
+    private final SimpleStringProperty symbol;
     private SimpleDoubleProperty currentPrice;
     private SimpleDoubleProperty prevClose;
     private SimpleDoubleProperty change1Y;

@@ -1,5 +1,7 @@
 package app.client;
 
+import app.server.actions.SystemSettings;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,8 +10,6 @@ import java.net.Socket;
 import static app.server.MyUtils.colorPrintRed;
 import static app.server.MyUtils.colorPrintYellow;
 import static app.server.MyUtils.createHeader;
-import static app.server.StaticData.serverHost;
-import static app.server.StaticData.serverPort;
 
 class Client {
 
@@ -23,10 +23,12 @@ class Client {
     }
 
     public static void main(String[] args) throws InterruptedException {
+        SystemSettings systemSettings = new SystemSettings(args);
         Client client = new Client();
-        System.out.println("connecting to server: <" + serverHost + ":" + serverPort + ">");
+        System.out.println("Starting IEX client: Client [-host=server_name:port_number -port=port_number]");
+        System.out.println("Connecting to server: <" + systemSettings.getServerHost() + ":" + systemSettings.getServerPort() + ">");
 
-        try ( Socket socket = new Socket(serverHost, serverPort) ) {
+        try ( Socket socket = new Socket(systemSettings.getServerHost(), systemSettings.getServerPort()) ) {
 
             try ( DataOutputStream out = new DataOutputStream(socket.getOutputStream());
                   DataInputStream in = new DataInputStream(socket.getInputStream()) ) {
