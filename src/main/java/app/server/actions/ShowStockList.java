@@ -41,7 +41,7 @@ public class ShowStockList implements CommandHandler {
 //        }
 
         StringBuilder report = new StringBuilder(createHeader("All stocks available in this game:"));
-        final String formatText = "%-6s %-37s %-20s %-s";
+        final String formatText = "%-6s %-37s %-20s %s";
 
         try {
             report.append(createHeader(String.format(formatText,
