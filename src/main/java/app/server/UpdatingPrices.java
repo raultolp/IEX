@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-class UpdatingPrices implements Runnable {
+public class UpdatingPrices implements Runnable {
     private final Iu handler;
     private final Portfolio masterPortfolio;
     private final List<User> userList;

@@ -70,7 +70,7 @@ class ThreadForClientCommands implements Runnable {
             //System.out.println("SERVER: USERASTRING: "+userAsString);
 
             //System.out.println("KOOS: "+masterAsString+"@"+userAsString);
-            io.println(masterAsString + "@" + userAsString);
+           // io.println(masterAsString + "@" + userAsString);
 
 
             //PLAYING THE GAME:

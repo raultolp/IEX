@@ -39,7 +39,7 @@ public class StaticData {
 //            "WDX", "WFC", "WFM", "WHR", "WMT", "X", "XONE", "YELP", "ZG"};
 
     public static final String mainTitle = "+++ IEX Stock Exchange Game for Beginner Level Traders - Version 1.0 +++";
-    public static final String subTitle = "(C) 2018 Renata Siimon, Helena Rebane, Raul Tölp. All rights reserved.\n\n";
+    public static final String subTitle = "(©) 2018 Renata Siimon, Helena Rebane, Raul Tölp. All rights reserved.\n\n";
 
 
     public static final String[] mainMenu = {

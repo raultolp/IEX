@@ -12,7 +12,7 @@ class ThreadForDataUpdates implements Runnable {
 
     private final Server socket;
     private final Iu masterHandler;
-    private final IO io; //TODO viga?
+    private final IO io;
     //private boolean masterHasChanged = false; //for price updates in master portfolio (this ususally also brings along changes in user portf.)
     //private boolean userHasChanged = false; //for changes in user portfolio (also adding stocks, changes in values etc.)
     //private JsonObject updatedUserPortfolio;
@@ -29,7 +29,6 @@ class ThreadForDataUpdates implements Runnable {
     public void run() {
 
         Portfolio userPortfolio;
-//        Portfolio masterPortfolio = masterHandler.getMasterPortfolio();
 
         //Getting userPortfolio (possible after User has been created for client- until then, just wait
         // and check again regularily):
@@ -49,7 +48,7 @@ class ThreadForDataUpdates implements Runnable {
         }
         try (DataOutputStream out = new DataOutputStream(socket.getOut())) {
 
-            while (true) { //TODO cannot complete wihtout throwing exception
+            while (true) {
 
                 //Sending updated user portfolio if it has changed (either because of
                 // global price update or because of buys/sells):

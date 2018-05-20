@@ -66,7 +66,6 @@ public class Iu {
 
     /***** CONSTRUCTOR FOR USER *****/
 
-    //TODO delete?
     public Iu(IO io, Iu masterHandler, User user, Integer clientId) {
 
         //Game
@@ -230,6 +229,8 @@ public class Iu {
     public void setPriceUpdateForClients(JsonObject priceUpdateForClients) {
         this.priceUpdateForClients = priceUpdateForClients;
     }
+
+    //GETTERS
 
     public User getAdmin() {
         return admin;
