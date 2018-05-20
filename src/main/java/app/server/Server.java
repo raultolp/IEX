@@ -27,7 +27,7 @@ class Server {
     }
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         SystemSettings systemSettings = new SystemSettings(args);
         colorPrintGreen("Starting IEX game server ...");
         System.out.println("Command line start options: server [-port=port_number]");
@@ -108,7 +108,7 @@ class Server {
                 }
             }
         } catch (Exception e) {
-            System.out.printf(textError("Server socket already in use or not available!"));
+            System.out.println(textError("Server socket already in use or not available!"));
         }
     }
 

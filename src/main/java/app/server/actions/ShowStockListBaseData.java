@@ -6,8 +6,6 @@ import java.io.IOException;
 
 import static app.server.MyUtils.createHeader;
 import static app.server.MyUtils.textError;
-import static app.server.StaticData.ANSI_RED;
-import static app.server.StaticData.ANSI_RESET;
 import static app.server.StaticData.availableStocks;
 
 //View stock list base data

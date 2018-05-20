@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static app.server.MyUtils.textError;
-import static app.server.StaticData.ANSI_RED;
-import static app.server.StaticData.ANSI_RESET;
 import static app.server.actions.ShowStockList.showStockList;
 
 // News on the company (last 10 news items)

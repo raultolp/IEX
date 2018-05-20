@@ -5,8 +5,6 @@ import app.server.*;
 import java.io.IOException;
 
 import static app.server.MyUtils.textError;
-import static app.server.StaticData.ANSI_RED;
-import static app.server.StaticData.ANSI_RESET;
 
 
 //View stock historical data
