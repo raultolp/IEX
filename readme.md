@@ -1,9 +1,11 @@
+##### +++ IEX Stock Exchange Game for Beginner Level Traders - Version 1.0 +++
+###### (C) 2018 Renata Siimon, Helena Rebane, Raul Tölp. All rights reserved.
 
 ##IMPLEMENTING SERVER-CLIENT:
 
 ###MUUDATUSED KLASSIDES:
 
-###SERVER:
+#####SERVER:
 
 -Lisatud on kliendiga suhtlemiseks klassid ***Server, ThreadForClientCommands*** ja ***ThreadForDataUpdates***.
 
@@ -18,7 +20,7 @@ klassi UpdatingPrices, et kogu update’imise loogika oleks ühes kohas koos.
 
 
 
-###CLIENT:
+#####CLIENT:
 
 -Lisatud on Serveriga suhtlemisega tegelevad klassid ***Client, ReceivingFromServer*** ja 
 ***SendingUserInput***.
@@ -40,7 +42,7 @@ portfelli kohta väljatrükkidena niigi.)
 
 ###SERVER-KLIENT LOOGIKA – LÕIMED jm:
 
-###SERVER
+#####SERVER
  Serveris luuakse hulk lõimesid. 
  
 -Kõigepealt luuakse lõim ***DataCollector*** (UpdatingPrices isend), mis tegeleb teatud intervalli 
@@ -82,7 +84,7 @@ portfelli seisu teada serverilt saadava ShowUserPortfolio väljatrükina.
 kliendi isendiga ta seotud on. (Selleks on Iu-sse lisatud vastavad mapid “clientThreads” ja 
 “clientIds”.) 
 
-###KLIENT: 
+#####CLIENT: 
 Klassis Client luuakse kaks lõime, millest üks ***(ReceivingFromServer)*** tegeleb serveri väljundi 
 vastuvõtmisega ja teine ***(SendingUserInput)*** serverile sisendi saatmisega. Kogu andmevahetus käib 
 ainult stringidega. Sisendi vastuvõtmisel kontrollitakse, kas tegu on hinnauuenduse stringiga (JSON 

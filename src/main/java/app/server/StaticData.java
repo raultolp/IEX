@@ -1,8 +1,3 @@
-/*
-+++ IEX Stock Exchange Game for Beginner Level Traders - Version 1.0 +++
-(C) 2018 Renata Siimon, Helena Rebane, Raul Tölp. All rights reserved.
-*/
-
 package app.server;
 
 public class StaticData {

@@ -5,7 +5,7 @@ class NewsItem extends IEXdata {
     private final String headline;
     private final String source;
     private final String website;
-    private String summary;
+    private final String summary;
     private String related;
 
     public NewsItem(String symbol, String time, String headline, String source,

@@ -3,7 +3,6 @@ package app.server;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class RemoteClientIO implements IO {
     private final DataOutputStream out;
