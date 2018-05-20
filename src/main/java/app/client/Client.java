@@ -1,6 +1,6 @@
 package app.client;
 
-import app.server.actions.SystemSettings;
+import app.server.SystemSettings;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

@@ -1,7 +1,5 @@
 package app.server;
 
-import app.server.actions.SystemSettings;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,7 +30,7 @@ class Server {
 
         //START SERVER
         try ( ServerSocket ss = new ServerSocket(systemSettings.getServerPort()) ) {
-            System.out.println("Starting IEX server: Server [-port=port_number]");
+            System.out.println("Starting IEX game server: Server [-port=port_number]");
             System.out.println("now listening on port: " + systemSettings.getServerPort());
 
             //START IU FOR SERVER (ADMIN)

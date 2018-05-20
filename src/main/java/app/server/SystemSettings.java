@@ -1,4 +1,4 @@
-package app.server.actions;
+package app.server;
 
 public class SystemSettings {
     private String serverHost = "localhost";
