@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 import static app.server.MyUtils.createHeader;
 
@@ -141,11 +142,29 @@ public class Company {
                 "Company name: " + companyName + "(" + website + ")\n" +
                 "CEO: " + CEO + "\n" +
                 "Sector: " + sector + " (" + industry + "),\n\n" +
-                "Description:\n" + description + "\n";
+                "Description:\n" + splitText(description) + "\n";
     }
 
     //TODO: (PRIORITY 3) IT WOULD BE POSSIBLE TO ALSO DOWNLOAD COMPANY LOGO:
     // https://iextrading.com/developer/docs/#logo
+
+    private String splitText(String text) {
+        StringTokenizer tok = new StringTokenizer(text, " ");
+        StringBuilder output = new StringBuilder(text.length());
+        int lineLen = 0;
+
+        while (tok.hasMoreTokens()) {
+            String word = tok.nextToken();
+
+            if (lineLen + word.length() > 80) {
+                output.append("\n");
+                lineLen = 0;
+            }
+            output.append(word + " ");
+            lineLen += word.length() + 1;
+        }
+        return output.toString();
+    }
 
     public String getCompanyName() {
         return companyName;
