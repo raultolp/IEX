@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static app.server.MyUtils.textError;
+import static app.server.MyUtils.textRed;
 import static app.server.actions.ShowStockList.showStockList;
 
 // News on the company (last 10 news items)
@@ -16,7 +16,7 @@ public class ShowStockNews implements CommandHandler {
     @Override
     public void handle(String command, Iu handler, IO io) throws Exception {
         if (command.equals("10")) {
-            showStockList(handler, io);
+            showStockList(handler, io, true);
             String name = MyUtils.enterStockName(io);
 
             if (Arrays.asList(handler.getAvailableStocks()).contains(name)) {
@@ -29,7 +29,7 @@ public class ShowStockNews implements CommandHandler {
                 }
                 io.println(stocknews.toString());
             } else {
-                io.println(textError("This stock is not available."));
+                io.println(textRed("This stock is not available."));
             }
         }
     }

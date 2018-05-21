@@ -2,9 +2,8 @@ package app.server.actions;
 
 import app.server.*;
 
-import static app.server.MyUtils.textError;
-import static app.server.StaticData.ANSI_RESET;
-import static app.server.StaticData.ANSI_YELLOW;
+import static app.server.MyUtils.textRed;
+import static app.server.MyUtils.textYellow;
 import static app.server.actions.ShowUsersList.showUsersList;
 
 //Set activeUser user
@@ -24,10 +23,10 @@ public class SetActiveUser implements CommandHandler {
                 if (index > -1) {
                     User activeUser = handler.getUserList().get(index);
                     handler.setActiveUser(activeUser);
-                    io.println(ANSI_YELLOW + "User " + name + " is now active." + ANSI_RESET);
+                    io.println(textYellow("User " + name + " is now active."));
                 }
             } else {
-               io.println(textError("Wrong input."));
+               io.println(textRed("Wrong input."));
             }
         }
     }

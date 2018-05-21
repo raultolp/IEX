@@ -10,9 +10,8 @@ import java.io.*;
 import java.util.List;
 
 import static app.server.MyUtils.colorPrintRed;
-import static app.server.MyUtils.textError;
-import static app.server.StaticData.ANSI_RESET;
-import static app.server.StaticData.ANSI_YELLOW;
+import static app.server.MyUtils.textRed;
+import static app.server.MyUtils.textYellow;
 
 //Save data file - saveData
 
@@ -25,7 +24,7 @@ public class SaveData implements CommandHandler {
             if (isAdmin) {
                 saveData(handler, io);
             } else {
-                io.println(textError("Wrong input."));
+                io.println(textRed("Wrong input."));
             }
         }
     }
@@ -74,8 +73,6 @@ public class SaveData implements CommandHandler {
         writer.write(gameAsString);
         writer.close();
         handler.setActiveGame(file);
-        System.out.println(ANSI_YELLOW + handler.getActiveGame().
-
-                getName() + " file saved." + ANSI_RESET);
+        System.out.println(textYellow(handler.getActiveGame().getName() + " file saved."));
     }
 }

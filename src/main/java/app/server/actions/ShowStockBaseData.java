@@ -4,7 +4,7 @@ import app.server.*;
 
 import java.io.IOException;
 
-import static app.server.MyUtils.textError;
+import static app.server.MyUtils.textRed;
 
 //View stock base data
 
@@ -37,7 +37,7 @@ public class ShowStockBaseData implements CommandHandler {
             io.println(masterPortfolio.getStock(stockSym).toString());
             io.println(MyUtils.externalLinks(stockSym));
         } catch (Exception e) {
-            io.println(textError("Stock information not available."));
+            io.println(textRed("Stock information not available."));
         }
     }
 }

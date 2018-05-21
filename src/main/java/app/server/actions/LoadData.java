@@ -10,9 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static app.server.MyUtils.textError;
-import static app.server.StaticData.ANSI_RESET;
-import static app.server.StaticData.ANSI_YELLOW;
+import static app.server.MyUtils.textRed;
+import static app.server.MyUtils.textYellow;
 
 //Load data file - loadData, listFiles
 
@@ -25,7 +24,7 @@ public class LoadData implements CommandHandler {
             if (isAdmin) {
                 loadData(handler, io);
             } else {
-                io.println(textError("Wrong input."));
+                io.println(textRed("Wrong input."));
             }
 
         }
@@ -74,7 +73,7 @@ public class LoadData implements CommandHandler {
 
             } finally {
                 handler.setActiveGame(file);
-                io.println(ANSI_YELLOW + handler.getActiveGame().getName() + " file loaded." + ANSI_RESET);
+                io.println(textYellow(handler.getActiveGame().getName() + " file loaded."));
             }
         }
     }

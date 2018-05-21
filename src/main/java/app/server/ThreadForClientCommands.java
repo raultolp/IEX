@@ -6,7 +6,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static app.server.MyUtils.createHeader;
+import static app.server.MyUtils.*;
 import static app.server.StaticData.*;
 
 class ThreadForClientCommands implements Runnable {
@@ -36,8 +36,8 @@ class ThreadForClientCommands implements Runnable {
             List<User> userList = new ArrayList<>(users);
 
             //LOGIN AND CREATION OF IU FOR USER:
-            io.println("\n" + ANSI_YELLOW + createHeader(mainTitle) + ANSI_RESET);
-            io.println(ANSI_BLUE + subTitle + ANSI_RESET);
+            io.println("\n" + textYellow(createHeader(mainTitle)));
+            io.println(textBlue(subTitle));
             io.print("Username: ");
             String username = io.getln();
             User user = new User(username, 1000000);
@@ -46,16 +46,15 @@ class ThreadForClientCommands implements Runnable {
             for (User userInList : userList) {
                 if (userInList.getUserName().equals(username)) {
                     user = userInList;
-                    io.println(ANSI_YELLOW + "Welcome back!" + ANSI_RESET);
+                    io.println(textYellow("Welcome back!"));
                     break;
                 }
 
             }
             if (!(userList.contains(user))) {
-                io.println(ANSI_GREEN + createHeader("Instructions") + ANSI_RESET);
+                io.println(textGreen(createHeader("Instructions")));
                 io.println(gameInstructions);
-                io.println("New user " + ANSI_GREEN + user.getUserName() + ANSI_RESET + " has been created. Welcome to the game!");
-
+                io.println("New user " + textGreen(user.getUserName()) + " has been created. Welcome to the game!");
             }
             Iu handler = new Iu(io, masterHandler, user, clientId); //Command handler for user
 
@@ -82,9 +81,9 @@ class ThreadForClientCommands implements Runnable {
             }
         } catch (SocketException e1) {
             System.out.println("client disconnected.");
-            System.out.print((masterHandler.getActiveGame() != null ? ANSI_BLUE + masterHandler.getActiveGame().getName() + ANSI_RESET :
-                    ANSI_RED + "(not saved)" + ANSI_RESET) +
-                    " / Active user:" + ANSI_GREEN + masterHandler.getActiveUser().getUserName() + ANSI_RESET + "> ");
+            System.out.print((masterHandler.getActiveGame() != null ? textBlue(masterHandler.getActiveGame().getName()) :
+                    textRed("(not saved)")) +
+                    " / Active user:" + textGreen(masterHandler.getActiveUser().getUserName()) + "> ");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

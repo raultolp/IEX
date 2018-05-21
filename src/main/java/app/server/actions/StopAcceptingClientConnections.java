@@ -4,7 +4,7 @@ import app.server.CommandHandler;
 import app.server.IO;
 import app.server.Iu;
 
-import static app.server.MyUtils.textError;
+import static app.server.MyUtils.textRed;
 
 public class StopAcceptingClientConnections implements CommandHandler {
     @Override
@@ -22,7 +22,7 @@ public class StopAcceptingClientConnections implements CommandHandler {
                 }
 
             } else {
-               io.println(textError("Wrong input."));
+               io.println(textRed("Wrong input."));
             }
         }
     }

@@ -72,6 +72,7 @@ public class StaticData {
             "   - There is limited amount of stocks you can buy.\n" +
             "   - Buy/Sell will be done with current MARKET price. No other transaction\n" +
             "     methods like LIMITED or STOP etc. orders are not implemented yet.\n" +
+            "     Current system does not count Bid/Ask price difference.\n" +
             "You can make your decisions based on information you can get from menu options.\n\n" +
             "From menu you can choose Game Top List that shows who has the best performance.\n" +
             "This game is for educational purposes only and no real money or nerves will be lost.\n" +

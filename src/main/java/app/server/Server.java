@@ -8,9 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static app.server.MyUtils.colorPrintGreen;
-import static app.server.MyUtils.createHeader;
-import static app.server.MyUtils.textError;
+import static app.server.MyUtils.*;
 import static app.server.StaticData.*;
 
 
@@ -94,7 +92,7 @@ class Server {
                             adminThread.interrupt();
 
                         }
-                        System.out.println(ANSI_YELLOW + "Bye-bye!" + ANSI_RESET);
+                        System.out.println(textYellow("Bye-bye!"));
                         break;
                     }
                 }
@@ -108,7 +106,7 @@ class Server {
                 }
             }
         } catch (Exception e) {
-            System.out.println(textError("Server socket already in use or not available!"));
+            System.out.println(textRed("Server socket already in use or not available!"));
         }
     }
 

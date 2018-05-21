@@ -49,9 +49,9 @@ public class Company {
                     CEO = pieces[5];
                     website = pieces[6];
 
-                    if (handler.isAdmin()) {
-                        System.out.println("Company info of " + symbol + " loaded from file.");
-                    }
+//                    if (handler.isAdmin()) {
+//                        System.out.println("Company info of " + symbol + " loaded from file.");
+//                    }
 
                     return true;
                 }

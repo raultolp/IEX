@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static app.server.MyUtils.textBlue;
+import static app.server.MyUtils.textGreen;
+import static app.server.MyUtils.textRed;
 import static app.server.StaticData.*;
 
 
@@ -120,15 +123,15 @@ public class Iu {
 
     private void commandPrompt() throws IOException {
         if (isAdmin) {
-            System.out.print((activeGame != null ? ANSI_BLUE + activeGame.getName() + ANSI_RESET :
-                    ANSI_RED + "(not saved)" + ANSI_RESET) +
-                    " / Active user:" + ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ");
+            System.out.print((activeGame != null ? textBlue(activeGame.getName()):
+                    textRed("(not saved)")) +
+                    " / Active user:" + textGreen(activeUser.getUserName()) + "> ");
         } else {
             String commandPromtAsString = "";
             if (activeGame != null) {
                 commandPromtAsString += activeGame.getName() + "(not saved) / Active user:";
             }
-            commandPromtAsString += ANSI_GREEN + activeUser.getUserName() + ANSI_RESET + "> ";
+            commandPromtAsString += textGreen(activeUser.getUserName()) + "> ";
             io.println(commandPromtAsString);
         }
     }

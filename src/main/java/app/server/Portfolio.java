@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static app.server.StaticData.ANSI_RESET;
-import static app.server.StaticData.ANSI_YELLOW;
+import static app.server.MyUtils.textYellow;
 
 public class Portfolio {
 
@@ -192,9 +191,9 @@ public class Portfolio {
         for (String symb : positions.keySet()) {
             double positionProfit = 0.0;
             if (isAdmin) {
-                report.append(ANSI_YELLOW + ">>> ").append(symb).append(ANSI_RESET).append('\n');
+                report.append(textYellow(">>> " + symb + "\n"));
             } else {
-                report.append(">>> ").append(symb).append('\n');
+                report.append(">>> ").append(symb).append("\n");
             }
 
             report.append("TYPE   DATE       TIME       VOLUME      PRICE    FEES   PAID/RECEIVED     PROFIT\n");

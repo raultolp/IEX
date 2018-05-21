@@ -22,22 +22,6 @@ public final class MyUtils {
 //        return text.matches("[0-9]+");
 //    }
 
-    public static void colorPrintYellow(String text) {
-        System.out.println(ANSI_YELLOW + text + ANSI_RESET);
-    }
-
-    public static void colorPrintRed(String text) {
-        System.out.println(ANSI_RED + text + ANSI_RESET);
-    }
-
-    public static void colorPrintGreen(String text) {
-        System.out.println(ANSI_GREEN + text + ANSI_RESET);
-    }
-
-    public static void colorPrintBlue(String text) {
-        System.out.println(ANSI_BLUE + text + ANSI_RESET);
-    }
-
     public static String enterUserName(Iu handler, boolean newUser, IO io) throws IOException {
         String name;
         do {
@@ -117,13 +101,42 @@ public final class MyUtils {
     }
 
     public static String externalLinks(String stockSym) {
-        return ANSI_GREEN + "More information:\n" + ANSI_RESET +
+        return textGreen("More information:\n") +
             "Yahoo finance summary : https://finance.yahoo.com/quote/" + stockSym.toUpperCase() + "?p=" + stockSym.toUpperCase() + "\n" +
             "Yahoo finance charts  : https://finance.yahoo.com/quote/" + stockSym.toUpperCase() + "/chart?p=" + stockSym.toUpperCase() + "\n";
     }
 
-    public static String textError(String text) {
+    public static String textRed(String text) {
         return ANSI_RED + text + ANSI_RESET;
     }
+
+    public static String textBlue(String text) {
+        return ANSI_BLUE + text + ANSI_RESET;
+    }
+
+    public static String textGreen(String text) {
+        return ANSI_GREEN + text + ANSI_RESET;
+    }
+
+    public static String textYellow(String text) {
+        return ANSI_YELLOW + text + ANSI_RESET;
+    }
+
+    public static void colorPrintYellow(String text) {
+        System.out.println(textYellow(text));
+    }
+
+    public static void colorPrintRed(String text) {
+        System.out.println(textRed(text));
+    }
+
+    public static void colorPrintGreen(String text) {
+        System.out.println(textGreen(text));
+    }
+
+    public static void colorPrintBlue(String text) {
+        System.out.println(textBlue(text));
+    }
+
 }
 

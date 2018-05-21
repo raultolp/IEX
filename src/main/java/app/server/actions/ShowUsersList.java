@@ -8,7 +8,7 @@ import app.server.User;
 import java.io.IOException;
 import java.util.List;
 
-import static app.server.MyUtils.textError;
+import static app.server.MyUtils.textRed;
 
 //List users
 
@@ -22,7 +22,7 @@ public class ShowUsersList implements CommandHandler {
             if (isAdmin) {
                 showUsersList(handler, io);
             } else {
-                io.println(textError("Wrong input."));
+                io.println(textRed("Wrong input."));
             }
         }
 

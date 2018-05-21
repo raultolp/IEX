@@ -5,7 +5,7 @@ import app.server.*;
 import java.io.IOException;
 
 import static app.server.MyUtils.createHeader;
-import static app.server.MyUtils.textError;
+import static app.server.MyUtils.textRed;
 import static app.server.StaticData.availableStocks;
 
 //View stock list base data
@@ -50,7 +50,7 @@ public class ShowStockListBaseData implements CommandHandler {
 
             io.println(report.toString());
         } catch (Exception e) {
-            io.println(textError("Stock information not available."));
+            io.println(textRed("Stock information not available."));
         }
     }
 }
