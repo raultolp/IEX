@@ -1,4 +1,4 @@
-### +++ IEX Stock Exchange Game for Beginner Level Traders - Version 1.0 +++
+## +++ IEX Stock Exchange Game for Beginner Level Traders - Version 1.0 +++
 ###### (C) 2018 Renata Siimon, Helena Rebane, Raul Tölp. All rights reserved.
 
 ### GAME INTRO
@@ -14,7 +14,8 @@ buy or sell stocks:
    - There is limited amount of stocks you can buy.
    - Buy/Sell will be done with current MARKET price. No other transaction
      methods like LIMITED or STOP etc. orders are not implemented yet.
-     Current system does not count Bid/Ask price difference.
+   - Current system does not count Bid/Ask price difference.
+     
 You can make your decisions based on information you can get from menu options.
 
 From menu you can choose Game Top List that shows who has the best performance.
