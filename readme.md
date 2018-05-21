@@ -19,7 +19,7 @@ buy or sell stocks:
 
 From menu you can choose Game Top List that shows who has the best performance.
 
-This game is for educational purposes only and no real money or nerves will be lost.
+***_This game is for educational purposes only and no real money or nerves will be lost._***
 
 Be smart or lucky!
 
