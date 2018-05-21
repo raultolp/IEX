@@ -8,7 +8,7 @@ real online prices and stock information. If you are already here, it means
 your game client is connected to game server that does all the transactions
 and provides all the information.
 
-You have created a user that will have one stock portfolio where you can\n" +
+You have created a user that will have one stock portfolio where you can
 buy or sell stocks:
    - There is limited amount of free money you can use.
    - There is limited amount of stocks you can buy.
@@ -20,6 +20,7 @@ You can make your decisions based on information you can get from menu options.
 From menu you can choose Game Top List that shows who has the best performance.
 
 This game is for educational purposes only and no real money or nerves will be lost.
+
 Be smart or lucky!
 
 ---------------------------------------------------------------------------
@@ -89,14 +90,14 @@ portfolio is created together with the user (portfolio is a field in the User cl
  data in the Portfolio class itself) are used when viewing the user’s portfolio, while the data in 
  Transaction class are used for generating the report on all transactions the user has made.
 
-JavaFX has been used for designing the User Interface. ***_/add something?/_***
+JavaFX has been used for designing the User Interface. ***_/still on progress .. tests made/_***
 
 
-##IMPLEMENTING SERVER-CLIENT:
+## IMPLEMENTING SERVER-CLIENT:
 
-###MUUDATUSED KLASSIDES:
+### MUUDATUSED KLASSIDES:
 
-#####SERVER:
+##### SERVER:
 
 -Lisatud on kliendiga suhtlemiseks klassid ***Server, ThreadForClientCommands*** ja ***ThreadForDataUpdates***.
 
@@ -110,7 +111,7 @@ kasutajaks on klient, siis saadetakse väljund DataOutputStreami /loetakse sisen
 klassi UpdatingPrices, et kogu update’imise loogika oleks ühes kohas koos.
 
 
-#####CLIENT:
+##### CLIENT:
 
 -Lisatud on Serveriga suhtlemisega tegelevad klassid ***Client, ReceivingFromServer*** ja 
 ***SendingUserInput***.
@@ -130,9 +131,9 @@ portfelli kohta väljatrükkidena niigi.)
 
 
 
-###SERVER-KLIENT LOOGIKA – LÕIMED jm:
+### SERVER-KLIENT LOOGIKA – LÕIMED jm:
 
-#####SERVER
+##### SERVER
  Serveris luuakse hulk lõimesid. 
  
 -Kõigepealt luuakse lõim ***DataCollector*** (UpdatingPrices isend), mis tegeleb teatud intervalli 
@@ -174,7 +175,7 @@ portfelli seisu teada serverilt saadava ShowUserPortfolio väljatrükina.
 kliendi isendiga ta seotud on. (Selleks on Iu-sse lisatud vastavad mapid “clientThreads” ja 
 “clientIds”.) 
 
-#####CLIENT: 
+##### CLIENT: 
 Klassis Client luuakse kaks lõime, millest üks ***(ReceivingFromServer)*** tegeleb serveri väljundi 
 vastuvõtmisega ja teine ***(SendingUserInput)*** serverile sisendi saatmisega. Kogu andmevahetus käib 
 ainult stringidega. Sisendi vastuvõtmisel kontrollitakse, kas tegu on hinnauuenduse stringiga (JSON 
@@ -185,7 +186,7 @@ endale välja nii nagu ta selle serverilt sai.
 
 //-------------------------------------
 
-###TODOs: Server ega Client ei sulgu praegu korrektselt... 
+### TODOs: Server ega Client ei sulgu praegu korrektselt... 
 
 _Veel todo-sid:_
 
