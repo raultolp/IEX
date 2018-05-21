@@ -1,23 +1,23 @@
-TODO LIST
+### TODO LIST
 -----------
-1. Priority
+#### 1. Priority
 -----------
 
 -----------
-2. Priority
+#### 2. Priority
 -----------
 - serveris kõikide logimist vajavate tegevuste logimine ühte faili
 - menüü süsteem lugeda failist (JSON vms)
 - aktsiate nimekiri lugeda failist
 
 -----------
-3. Priority
+#### 3. Priority
 -----------
 - Menüü valik: Stock technical analysis
 - Top võrdlus üldise turu indeksiga või SPY-ga
 
 --------------------------
-Lisaideed edasiarneduseks:
+#### Lisaideed edasiarneduseks:
 --------------------------
 
 1. Kliendi UI:
@@ -39,12 +39,12 @@ Lisaideed edasiarneduseks:
     - TECHNICAL ANALYSIS 2: kui mingi näitaja väärtus jõuab sellisele tasemele, siis osta mulle aktsiaid / saada mulle email vms
 
 -----------
-Code Review
+#### Code Review
 -----------
 1. versiooni code review: https://docs.google.com/document/d/1V0i4ERb-X_gyJ2nOwEq_U6HcQoKT2cRasGIIky2rlv4/edit
 
 --------
-TESTIDA: TODO
+#### TESTIDA: TODO
 --------
 - Kasutajanimeks sobib tühik
 - Kui käsuks panna numbri asemel tühik, jookseb client kokku.
