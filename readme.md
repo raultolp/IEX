@@ -1,4 +1,4 @@
-##### +++ IEX Stock Exchange Game for Beginner Level Traders - Version 1.0 +++
+### +++ IEX Stock Exchange Game for Beginner Level Traders - Version 1.0 +++
 ###### (C) 2018 Renata Siimon, Helena Rebane, Raul Tölp. All rights reserved.
 
 ### GAME INTRO
@@ -22,9 +22,8 @@ From menu you can choose Game Top List that shows who has the best performance.
 This game is for educational purposes only and no real money or nerves will be lost.
 Be smart or lucky!
 
-##---------------------------------------------------------------------------
+---------------------------------------------------------------------------
 
-draft
 # IEX Stock Exchange Game for Beginners  
 _Authors: Raul Tölp, Õie Renata Siimon and Helena Rebane_
 
