@@ -15,8 +15,7 @@ buy or sell stocks:
    - Buy/Sell will be done with current MARKET price. No other transaction
      methods like LIMITED or STOP etc. orders are not implemented yet.
    - Current system does not count Bid/Ask price difference.
-     
-You can make your decisions based on information you can get from menu options.
+   - You can make your decisions based on information you can get from menu options.
 
 From menu you can choose Game Top List that shows who has the best performance.
 
@@ -100,31 +99,31 @@ JavaFX has been used for designing the User Interface. ***_/still on progress ..
 
 ##### SERVER:
 
--Lisatud on kliendiga suhtlemiseks klassid ***Server, ThreadForClientCommands*** ja ***ThreadForDataUpdates***.
+- Lisatud on kliendiga suhtlemiseks klassid ***Server, ThreadForClientCommands*** ja ***ThreadForDataUpdates***.
 
--Peaklassi Iu on üsna palju muudetud ja osa sellest on tõstetud klassi Server.
+- Peaklassi Iu on üsna palju muudetud ja osa sellest on tõstetud klassi Server.
 
--Kõigis klassides on muudetud I/O. Täpsemalt on igale poole, kus varem kasutati skännerit ja 
+- Kõigis klassides on muudetud I/O. Täpsemalt on igale poole, kus varem kasutati skännerit ja 
 väljaprintimist, lisatud tingimus, et kui kasutajaks on admin, siis prindib ja skännib, aga kui 
 kasutajaks on klient, siis saadetakse väljund DataOutputStreami /loetakse sisend DataInputStreamist.
  
--Pisem muudatus: Klassi Portfolio alt on hindade update’imisega tegelevad meetodid tõstetud ümber 
+- Pisem muudatus: Klassi Portfolio alt on hindade update’imisega tegelevad meetodid tõstetud ümber 
 klassi UpdatingPrices, et kogu update’imise loogika oleks ühes kohas koos.
 
 
 ##### CLIENT:
 
--Lisatud on Serveriga suhtlemisega tegelevad klassid ***Client, ReceivingFromServer*** ja 
+- Lisatud on Serveriga suhtlemisega tegelevad klassid ***Client, ReceivingFromServer*** ja 
 ***SendingUserInput***.
 
--Ülejäänud klassid (st Portfolio/Transaction/Position...) on võetud varasemast, et FX saaks kasutada
+- Ülejäänud klassid (st Portfolio/Transaction/Position...) on võetud varasemast, et FX saaks kasutada
  sisendina sama struktuuriga andmeid mis varem. Alternatiivina saaks FX (kui see ikka tuleb) võtta 
  portfellide andmed otse JSON stringidest ja teha nendega mida iganes vaja (st mitte luua/uuendada 
  vahepeal Portfolio jm isendeid, vaid otse oma andmetabeleid). Mõnes neist klassidest on tehtud 
  väikseid muutusi (nt Portfoliost kustutatud Buy/Sell meetod ja ülejäänutest muid meetodeid, mida 
  kliendil vaja ei ole). 
  
--UpdatingPrices klassi (samuti vajalik vaid FX jaoks) on kliendi puhul rohkem muudetud, sest see 
+- UpdatingPrices klassi (samuti vajalik vaid FX jaoks) on kliendi puhul rohkem muudetud, sest see 
 peab tegelema Serverilt JSON stringina saadud MasterPortfolio hinna update’ide ja kasutaja portfelli 
 update’ide põhjal mõlema portfelli uuendamisega. (Kasutaja portfelli update’imise osa on sealt hetkel 
 veel puudu. Käsurea versiooni jaoks ei ole seda ka vaja, sest kasutaja saab serverilt info oma 
@@ -137,17 +136,17 @@ portfelli kohta väljatrükkidena niigi.)
 ##### SERVER
  Serveris luuakse hulk lõimesid. 
  
--Kõigepealt luuakse lõim ***DataCollector*** (UpdatingPrices isend), mis tegeleb teatud intervalli 
+- Kõigepealt luuakse lõim ***DataCollector*** (UpdatingPrices isend), mis tegeleb teatud intervalli 
 (nt 10 sek) tagant IEX APIst andmete allalaadimisega ja portfellide uuendamisega, et uusi turuhindu
  arvesse võtta. 
  
--Siis luuakse admini (serveri haldaja ja ühtlasi endiselt ka kasutaja, kellele kuulub MasterPortfolio)
+- Siis luuakse admini (serveri haldaja ja ühtlasi endiselt ka kasutaja, kellele kuulub MasterPortfolio)
  jaoks lõim ***adminThread*** ja antakse adminile tema käskude haldamiseks kasutada Iu isend masterHandler.
   Adminil on sama menüü nagu enne (menüüpunktide järjestust on veidi muudetud), v.a lisatud on 
   menüüpunkt “Accept Client Connections” (vastav klass (“AcceptClientConnections”) on lisatud ka 
   “actions” kausta ja vastav väli (“acceptConnections”) Iu-sse).  
   
--Seejärel hakatakse vastu võtma klientide ühendusi – sellega tegeleb lõim ***UserThreadFactory***. Iga 
+- Seejärel hakatakse vastu võtma klientide ühendusi – sellega tegeleb lõim ***UserThreadFactory***. Iga 
 kliendi jaoks luuakse kaks lõime:
 
 b) ***ThreadForClientCommands*** kliendi käskude haldamiseks. Selles lõimes tuvastatakse kasutajanimi, 
@@ -169,9 +168,9 @@ portfelli seisu teada serverilt saadava ShowUserPortfolio väljatrükina.
 - Kuna mõlemad threadid kasutavad sama socketit, siis selleks, et nende vahel konflikte ei tekiks,
  on ühele antud suurem prioriteet.
  
--Kõigile klientidele loodud threadid pannakse listidesse, et neid oleks võimalik korraga sulgeda. 
+- Kõigile klientidele loodud threadid pannakse listidesse, et neid oleks võimalik korraga sulgeda. 
 
--Kliendi ühenduse loomisel antakse kliendile clientId, et ThreadForDataUpdates saaks selle järgi 
+- Kliendi ühenduse loomisel antakse kliendile clientId, et ThreadForDataUpdates saaks selle järgi 
 (pärast seda, kui kliendile vastav User on loodud/olemasolev tuvastatud) kindlaks teha, millise 
 kliendi isendiga ta seotud on. (Selleks on Iu-sse lisatud vastavad mapid “clientThreads” ja 
 “clientIds”.) 
@@ -189,17 +188,10 @@ endale välja nii nagu ta selle serverilt sai.
 
 ### TODOs: Server ega Client ei sulgu praegu korrektselt... 
 
-_Veel todo-sid:_
+Veel todo-sid:
 
-_-Lisama peaks kliendi ühenduste lõpetamise loogika, kui klient valib “Quit”, või kui admin valib “Quit”._
+- Lisama peaks kliendi ühenduste lõpetamise loogika, kui klient valib “Quit”, või kui admin valib “Quit”._
  
-_-Kliendi kustutamine ei toimi endiselt korrektselt (see probleem oli ka enne). _
-
-_-Serverisse peaks lisama tingimuse, et kui masterHandleril on väli “acceptConnections” false, siis 
-ei võtaks ühendusi vastu._
-
-_-Võiks lisada menüüpunkti “Stop accepting client connections”._
-
-_-Kui teeme ka FX-i, siis tuleks lisada kliendi UpdatingPrices klassi kasutaja portfelli update’imise 
+- Kui teeme ka FX-i, siis tuleks lisada kliendi UpdatingPrices /klassi kasutaja portfelli update’imise 
 osa, mis sealt hetkel on veel puudu. (Käsurea versiooni jaoks ei ole seda ka vaja, sest kasutaja saab 
-serverilt info oma portfelli kohta väljatrükkidena niigi.)_
+serverilt info oma portfelli kohta väljatrükkidena niigi.)
