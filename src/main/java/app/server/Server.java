@@ -105,7 +105,7 @@ class Server {
                     thread.interrupt();
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(textRed("Server socket already in use or not available!"));
         }
     }
